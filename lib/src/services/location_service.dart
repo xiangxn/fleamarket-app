@@ -1,20 +1,20 @@
 import 'package:amap_location/amap_location.dart';
+import 'package:fleamarket/src/common/data_api.dart';
 // import 'package:amap_location_fluttify/amap_location_fluttify.dart';
 import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/common/utils.dart';
 import 'package:fleamarket/src/models/district.dart';
-import 'package:fleamarket/src/services/api.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationService{
-  Api _api ;
+  DataApi _api ;
   String _adcode ;
   District _district ;
 
   District get district => _district;
   String get locationAdcode => _adcode;
 
-  LocationService(Api api){
+  LocationService(DataApi api){
     _api = api;
     updateLocation();
     fetchDistricts();

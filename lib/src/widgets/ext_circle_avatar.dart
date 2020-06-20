@@ -42,12 +42,6 @@ class ExtCircleAvatar extends StatelessWidget{
         },
       );
     }
-    // else{
-    //   return CircleAvatar(
-    //     backgroundColor: Colors.white,
-    //     backgroundImage: Image.asset(ICON_PATH, cacheWidth: intSize, cacheHeight: intSize).image,
-    //   );
-    // }
   }
 
   @override

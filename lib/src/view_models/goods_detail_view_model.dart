@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 class GoodsDetailViewModel extends BaseViewModel{
   GoodsDetailViewModel(BuildContext context, Goods goods) : super(context){
     _goodsService = Provider.of<GoodsService>(context, listen: false);
-    _accountService = Provider.of<AccountService>(context, listen: false);
     _goods = goods;
     /// 因为实现了addScopedWillPopCallback，所以详情页面无法滑动返回
     /// 实现回退监听主要目的是页面返回时，更新列表上的对象，如果用户在详情里点了收藏，那么列表也应该展示最新的数据，而不用去拉取服务
@@ -22,8 +21,6 @@ class GoodsDetailViewModel extends BaseViewModel{
   }
 
   GoodsService _goodsService;
-  AccountService _accountService;
-  ModalRoute _route;
   Goods _goods;
   bool _hasFocus;
 
@@ -34,15 +31,15 @@ class GoodsDetailViewModel extends BaseViewModel{
     if(!super.busy){
       super.setBusy();
       var process ;
-      if(_goods.hasCollection(super.user.userid)){
-        process = _goodsService.unfavorite(super.user?.userid ?? 0, _goods.productId);
+      if(_goods.hasCollection(accountService.user['userid'])){
+        process = _goodsService.unfavorite(accountService.user['userid'] ?? 0, _goods.productId);
       }else{
-        process = _goodsService.favorite(super.user?.userid ?? 0, _goods.productId);
+        process = _goodsService.favorite(accountService.user['userid'] ?? 0, _goods.productId);
       }
       ExtResult res = await super.processing(process, showLoading: false, showToast: false);
       if(res.code == 0){
-        _goods.collectionFlag = _goods.hasCollection(super.user.userid) ? 0 : 1;
-        _goods.collections += _goods.hasCollection(super.user.userid) ? 1 : -1;
+        _goods.collectionFlag = _goods.hasCollection(accountService.user['userid']) ? 0 : 1;
+        _goods.collections += _goods.hasCollection(accountService.user['userid']) ? 1 : -1;
         notifyListeners();
       }
       super.setBusy();
@@ -54,9 +51,9 @@ class GoodsDetailViewModel extends BaseViewModel{
       super.setBusy();
       var process ;
       if(_hasFocus){
-        process = _accountService.unfocus(super.user?.userid, _goods.seller.userid);
+        process = accountService.unFollow(accountService.user['userid'], _goods.seller.userid);
       }else{
-        process = _accountService.focus(super.user?.userid, _goods.seller.userid);
+        process = accountService.follow(accountService.user['userid'], _goods.seller.userid);
       }
       ExtResult res = await super.processing(process, showLoading: false, showToast: false);
       if(res.code == 0){
@@ -68,7 +65,7 @@ class GoodsDetailViewModel extends BaseViewModel{
   }
 
   fetchGoodsInfo() async {
-    var process = _goodsService.fetchGoodsInfo(_goods.productId, super.user?.userid ?? 0);
+    var process = _goodsService.fetchGoodsInfo(_goods.productId, accountService.user['userid'] ?? 0);
     ExtResult res = await super.processing(process, showLoading: false);
     if(res.code == 0){
       _goods = _goods.merge(res.data);

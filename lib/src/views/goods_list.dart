@@ -1,6 +1,5 @@
 import 'package:fleamarket/src/models/ext_page.dart';
 import 'package:fleamarket/src/models/goods.dart';
-import 'package:fleamarket/src/models/user.dart';
 import 'package:fleamarket/src/view_models/goods_list_view_model.dart';
 import 'package:fleamarket/src/views/base_view.dart';
 import 'package:fleamarket/src/widgets/custom_refresh_indicator.dart';
@@ -40,8 +39,8 @@ class _GoodsList extends State<GoodsList> with AutomaticKeepAliveClientMixin{
     }
   }
 
-  Icon _buildFavoriteIcon(Goods goods, User user){
-    bool isFavorite = goods.hasCollection(user?.userid ?? 0);
+  Icon _buildFavoriteIcon(Goods goods, dynamic user){
+    bool isFavorite = goods.hasCollection(user['userid'] ?? 0);
     return Icon(
       isFavorite ? Icons.favorite : Icons.favorite_border, 
       size: 14,
@@ -155,7 +154,7 @@ class _GoodsList extends State<GoodsList> with AutomaticKeepAliveClientMixin{
                                         )
                                       ),
                                       SizedBox(width: 4),
-                                      _buildFavoriteIcon(goods, model.user)
+                                      _buildFavoriteIcon(goods, model.currentUser)
                                     ],
                                   ),
                                   onTap: () => model.favorite(goodsPage.data, i),

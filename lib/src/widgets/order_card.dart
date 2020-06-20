@@ -50,8 +50,8 @@ class OrderCard extends StatelessWidget{
       model: OrderCardViewModel(context, order, updateOrder),
       builder: (_, model, __){
         ExtLocale locale = model.locale;
-        User curUser = model.order.masterUser(model.user.userid);
-        bool isSell = model.order.isSell(model.user.userid);
+        User curUser = model.order.masterUser(model.userId);
+        bool isSell = model.order.isSell(model.userId);
         // if(model.order.seller == null){
         //   curUser = model.order.buyer;
         //   isSell = true;

@@ -12,17 +12,16 @@ import 'package:fleamarket/src/models/ext_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cryptor/cryptor.dart';
 
-class Utils{
-
-  static Future<void> initSharedPreferences() async{
+class Utils {
+  static Future<void> initSharedPreferences() async {
     _prefs = await SharedPreferences.getInstance();
-    return ;
+    return;
   }
 
-  static SharedPreferences _prefs ;
+  static SharedPreferences _prefs;
 
   static SharedPreferences get prefs => _prefs;
 
@@ -31,35 +30,43 @@ class Utils{
   //   return json.decode(res)[key];
   // }
 
-  static Future<dynamic> getJson(String path) async{
+  static String encrypt(String password, String src) {
+    return Cryptor.encrypt(src, password);
+  }
+
+  static String decrypt(String password, String encrypted) {
+    return Cryptor.decrypt(encrypted, password);
+  }
+
+  static Future<dynamic> getJson(String path) async {
     String res = await rootBundle.loadString(path);
     return json.decode(res);
   }
 
-  static setStore(String key, dynamic val){
+  static setStore(String key, dynamic val) {
     assert(key != null && val != null);
-    if(val is bool){
+    if (val is bool) {
       _prefs.setBool(key, val);
-    }else if(val is int){
+    } else if (val is int) {
       _prefs.setInt(key, val);
-    }else if(val is double){
+    } else if (val is double) {
       _prefs.setDouble(key, val);
-    }else if(val is String){
+    } else if (val is String) {
       _prefs.setString(key, val);
-    }else if(val is List<String>){
+    } else if (val is List<String>) {
       print('set list string');
       _prefs.setStringList(key, val);
-    }else{
+    } else {
       _prefs.setString(key, json.encode(val));
     }
   }
 
-  static dynamic getStore(String key, [bool autoConver = false]){
+  static dynamic getStore(String key, [bool autoConver = false]) {
     assert(key != null);
     var res = _prefs.get(key);
-    if(autoConver && res != null){
+    if (autoConver && res != null) {
       return json.decode(res);
-    }else{
+    } else {
       return res;
     }
   }
@@ -69,72 +76,23 @@ class Utils{
     return res;
   }
 
-  static List<EOSPrivateKey> generateKeys(String phone, String password){
+  static List<EOSPrivateKey> generateKeys(String phone, String password) {
     EOSPrivateKey ownerKey = EOSPrivateKey.fromSeed('$phone $password owner');
     EOSPrivateKey activeKey = EOSPrivateKey.fromSeed('$phone $password active');
-    return [
-      ownerKey,
-      activeKey
-    ];
+    EOSPrivateKey authKey = EOSPrivateKey.fromSeed('$phone $password auth');
+    return [ownerKey, activeKey, authKey];
   }
 
-  /// 0 owner
-  /// 1 active
-  static EOSPrivateKey recoverKey([int inx = 1]){
-    String keys = getStore(KEYS);
-    if(keys == null){
-      return null;
-    }else{
-      int len = (keys.length / 2).round();
-      keys = reverseKey(keys);
-      return EOSPrivateKey.fromString(keys.substring(inx * len, (inx + 1) * len));
-    }
-  }
-
-  static String reverseKey(String str){
-    List<String> list = str.split('');
-    for(int i = 0 ; i < (str.length / 3).round() ; i++){
-      int inx = i + 1;
-      String tmp = list[inx];
-      list[inx] = list[list.length - inx];
-      list[list.length - inx] = tmp;
-    }
-    return list.join();
-  }
-
-  static saveKeys(List<EOSPrivateKey> keys){
-    setStore(KEYS, reverseKey(keys[0].toString() + keys[1].toString()));
-  }
-
-  static bool validateKey(String phone, String password){
+  static bool validateKey(String phone, String password) {
     List<EOSPrivateKey> keys = generateKeys(phone, password);
-    return keys[0].toEOSPublicKey().toString() == recoverKey(0).toEOSPublicKey().toString() && 
-           keys[1].toEOSPublicKey().toString() == recoverKey(1).toEOSPublicKey().toString();
+    final owner = getStore(KEY_OWNER);
+    final active = getStore(KEY_ACTIVE);
+    final auth = getStore(KEY_AUTH);
+    final k0 = decrypt(password, owner);
+    final k1 = decrypt(password, active);
+    final k2 = decrypt(password, auth);
+    return keys[0].toString() == k0 && keys[1].toString() == k1 && keys[2].toString() == k2;
   }
-
-  // static Future<Location> getLocation() async {
-  //   Map<PermissionGroup, PermissionStatus> permission = await PermissionHandler().requestPermissions([PermissionGroup.locationWhenInUse]);
-  //   if(permission[PermissionGroup.locationWhenInUse] == PermissionStatus.granted){
-  //     Location location = await AmapLocation.fetchLocation();
-  //     return location;
-  //   }
-  //   return null;
-  // }
-
-  // static Future<String> getLocationString() async {
-  //   DateTime start = DateTime.now();
-  //   Location location = await Utils.getLocation();
-  //   if(location != null){
-  //     String province = await location.province;
-  //     String city = await location.city;
-  //     String district = await location.district;
-  //     String xx = await location.adCode;
-  //     print(xx);
-  //     print('获取地址耗时 ${DateTime.now().difference(start).inMilliseconds}');
-  //     return '$province $city $district';
-  //   }
-  //   return null;
-  // }
 
   static Future<Uint8List> getImageData(String path) async {
     Response res = await Dio().get(path, options: Options(responseType: ResponseType.bytes));
@@ -146,15 +104,15 @@ class Utils{
   static Future<ExtImage> getImage(String path, [int width, int height]) async {
     assert(path != null && path.length > 0);
     Uint8List bytes;
-    if(path.startsWith('http')){
+    if (path.startsWith('http')) {
       Response res = await Dio().get(path, options: Options(responseType: ResponseType.bytes));
       bytes = Uint8List.fromList(res.data);
-    }else{
+    } else {
       bytes = await File(path).readAsBytes();
     }
     Image tmp = Image.memory(bytes, cacheWidth: width, cacheHeight: height);
     Completer<ExtImage> cp = Completer();
-    tmp.image.resolve(ImageConfiguration()).addListener(ImageStreamListener((ImageInfo info, bool _){
+    tmp.image.resolve(ImageConfiguration()).addListener(ImageStreamListener((ImageInfo info, bool _) {
       cp.complete(ExtImage(tmp, info.image.width, info.image.height));
     }));
     return cp.future;
@@ -163,13 +121,14 @@ class Utils{
   static reports(Object obj, StackTrace stack) async {
     DeviceInfoPlugin device = DeviceInfoPlugin();
     String str;
-    _buildStr(id, system, version, model){
+    _buildStr(id, system, version, model) {
       return 'ID: $id \nSystem: $system \nVersion: $version \nmodel: $model \n';
     }
-    if(Platform.isAndroid){
+
+    if (Platform.isAndroid) {
       AndroidDeviceInfo info = await device.androidInfo;
       str = _buildStr(info.androidId, 'android', 'V ${info.version.release} API ${info.version.sdkInt}', info.model);
-    }else if(Platform.isIOS){
+    } else if (Platform.isIOS) {
       IosDeviceInfo info = await device.iosInfo;
       str = _buildStr(info.identifierForVendor, info.systemName, info.systemVersion, info.utsname.machine);
     }
@@ -180,15 +139,14 @@ class Utils{
     print(stack);
   }
 
-  static Key randomKey(){
-    return Key(DateTime.now().toIso8601String()+Random.secure().nextInt(10000).toString());
+  static Key randomKey() {
+    return Key(DateTime.now().toIso8601String() + Random.secure().nextInt(10000).toString());
   }
 
-  static formatDateTime(String dateString){
-    if(dateString == null){
+  static formatDateTime(String dateString) {
+    if (dateString == null) {
       return null;
     }
     return DateTime.parse(dateString);
   }
-
 }

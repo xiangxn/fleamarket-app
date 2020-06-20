@@ -12,6 +12,6 @@ class MineFansViewModel extends BaseViewModel {
   AccountService _accountService;
 
   Future<ExtResult> fetchFans({int pageNo, int pageSize}) {
-    return _accountService.fetchFans(super.user.userid, pageNo, pageSize);
+    return _accountService.fetchFans(userId, pageNo, pageSize);
   }
 }

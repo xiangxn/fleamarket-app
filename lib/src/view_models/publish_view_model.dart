@@ -72,7 +72,7 @@ class PublishViewModel extends BaseViewModel{
     super.setBusy();
     if(_goods.productId != null){
       _isUpdate = true;
-      var process = _goodsService.fetchGoodsInfo(_goods.productId, super.user.userid);
+      var process = _goodsService.fetchGoodsInfo(_goods.productId, userId);
       ExtResult res = await super.processing(process, showLoading: false);
       if(res.code == 0){
         _goods = res.data;

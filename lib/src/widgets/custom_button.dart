@@ -1,3 +1,4 @@
+import 'package:fleamarket/src/common/style.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget{
@@ -42,7 +43,7 @@ class CustomButton extends StatelessWidget{
         },
         disabledTextColor: Colors.white,
         disabledColor: Colors.grey,
-        color: active ?? true ? color ?? Colors.green : Colors.white,
+        color: active ?? true ? color ?? Style.mainColor : Colors.white,
         textColor: active ?? true ? Colors.white : Colors.grey[600],
         padding: EdgeInsets.all(0.0),
         shape: RoundedRectangleBorder(

@@ -88,7 +88,7 @@ class SearchViewModel extends BaseViewModel{
       _goodsPage.incres();
     }
     // TODO: 根据搜索条件查询商品列表
-    var process = _goodsService.fetchGoodsList(super.user?.userid ?? 0, 0, _goodsPage.pageNo, _goodsPage.pageSize);
+    var process = _goodsService.fetchGoodsList(userId, 0, _goodsPage.pageNo, _goodsPage.pageSize);
     ExtResult res = await super.processing(process, showLoading: false);
     if(res.code == 0){
       res.data.update(_goodsPage.data);

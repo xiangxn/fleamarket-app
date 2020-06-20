@@ -1,3 +1,4 @@
+import 'package:fleamarket/src/common/style.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
 import 'package:fleamarket/src/view_models/login_view_model.dart';
 import 'package:fleamarket/src/views/base_view.dart';
@@ -8,27 +9,24 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class Login extends StatelessWidget{
-
-  Widget _buildPhoneField(LoginViewModel model, [Key key]){
+class Login extends StatelessWidget {
+  Widget _buildPhoneField(LoginViewModel model, [Key key]) {
     return TextFormInput(
       spKey: key,
       margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
       keyboardType: TextInputType.number,
       hintText: model.locale.translation('login.phone'),
       prefixIcon: FontAwesomeIcons.phoneAlt,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(11)
-      ],
+      inputFormatters: [LengthLimitingTextInputFormatter(11)],
       onSaved: model.phone,
       validator: model.validatePhone,
     );
   }
 
-  Widget _buildPwdField(LoginViewModel model){
+  Widget _buildPwdField(LoginViewModel model) {
     return Selector<LoginViewModel, bool>(
       selector: (_, provider) => provider.obscure,
-      builder: (_, obscure, __){
+      builder: (_, obscure, __) {
         return TextFormInput(
           margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
           obscure: obscure,
@@ -38,7 +36,10 @@ class Login extends StatelessWidget{
           validator: model.validatePassword,
           enableInteractiveSelection: false,
           suffixIcon: IconButton(
-            icon: Icon(obscure ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye, size: 16,),
+            icon: Icon(
+              obscure ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye,
+              size: 16,
+            ),
             onPressed: model.setObscure,
           ),
         );
@@ -46,7 +47,7 @@ class Login extends StatelessWidget{
     );
   }
 
-  Widget _buildMasterBtn(String text, Function onTap){
+  Widget _buildMasterBtn(String text, Function onTap) {
     return Container(
       margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
       width: double.infinity,
@@ -58,11 +59,11 @@ class Login extends StatelessWidget{
     );
   }
 
-  Widget _buildVcodeField(LoginViewModel model){
+  Widget _buildVcodeField(LoginViewModel model) {
     var locale = model.locale;
     return Selector<LoginViewModel, int>(
       selector: (_, provider) => provider.vcodeCounter,
-      builder: (_, vcodeCounter, __){
+      builder: (_, vcodeCounter, __) {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -73,9 +74,7 @@ class Login extends StatelessWidget{
                 prefixIcon: FontAwesomeIcons.envelope,
                 validator: model.validateVcode,
                 onSaved: model.vcode,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(6)
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(6)],
                 hintText: locale.translation('login.vcode'),
               ),
             ),
@@ -84,9 +83,7 @@ class Login extends StatelessWidget{
               child: CustomButton(
                 padding: EdgeInsets.all(16),
                 width: 120,
-                text: vcodeCounter > 0 
-                  ? locale.translation('login.vcode_counter', [vcodeCounter.toString()]) 
-                  : locale.translation('login.get_vcode'),
+                text: vcodeCounter > 0 ? locale.translation('login.vcode_counter', [vcodeCounter.toString()]) : locale.translation('login.get_vcode'),
                 onTap: vcodeCounter == 0 ? model.sendVcode : null,
               ),
             )
@@ -96,15 +93,13 @@ class Login extends StatelessWidget{
     );
   }
 
-  Widget _buildRecommendedField(LoginViewModel model){
+  Widget _buildRecommendedField(LoginViewModel model) {
     return TextFormInput(
       margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
       // keyboardType: TextInputType.emailAddress,
       hintText: model.locale.translation('login.recommended'),
       prefixIcon: FontAwesomeIcons.userFriends,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(12)
-      ],
+      inputFormatters: [LengthLimitingTextInputFormatter(12)],
       onSaved: model.recommended,
       validator: model.validateRecommended,
     );
@@ -114,7 +109,7 @@ class Login extends StatelessWidget{
   Widget build(BuildContext context) {
     return BaseView<LoginViewModel>(
       model: LoginViewModel(context),
-      builder: (_, model, __){
+      builder: (_, model, __) {
         ExtLocale locale = model.locale;
         return Scaffold(
           appBar: AppBar(
@@ -122,55 +117,57 @@ class Login extends StatelessWidget{
             centerTitle: true,
           ),
           body: GestureDetector(
-            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-            child: Column(
-              children: <Widget>[
-                TabBar(
-                  controller: model.tabController,
-                  labelColor: Colors.green,
-                  unselectedLabelColor: Colors.black,
-                  tabs: model.tabs.map((f) => Tab(text: f,)).toList(),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 30),
-                    child: TabBarView(
-                      controller: model.tabController,
-                      children: <Widget>[
-                        // view 1 ===============
-                        Form(
-                          key: model.loginFormKey,
-                          child: Column(
-                            children: <Widget>[
-                              _buildPhoneField(model),
-                              _buildPwdField(model),
-                              _buildMasterBtn(locale.translation('login.login_text'), model.login)
-                            ],
-                          ),
-                        ),
-                        // View 2 =================
-                        SingleChildScrollView(
-                          physics: ClampingScrollPhysics(),
-                          child: Form(
-                            key: model.registerFormKey,
-                            child: Column(
-                              children: <Widget>[
-                                _buildPhoneField(model, model.phoneKey),
-                                _buildPwdField(model),
-                                _buildVcodeField(model),
-                                _buildRecommendedField(model),
-                                _buildMasterBtn(locale.translation('login.register_text'), model.register)
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    )
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              child: Column(
+                children: <Widget>[
+                  TabBar(
+                    controller: model.tabController,
+                    labelColor: Style.mainColor,
+                    unselectedLabelColor: Colors.black,
+                    tabs: model.tabs
+                        .map((f) => Tab(
+                              text: f,
+                            ))
+                        .toList(),
                   ),
-                )
-              ],
-            )
-          ),
+                  Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.only(top: 30),
+                        child: TabBarView(
+                          controller: model.tabController,
+                          children: <Widget>[
+                            // view 1 ===============
+                            Form(
+                              key: model.loginFormKey,
+                              child: Column(
+                                children: <Widget>[
+                                  _buildPhoneField(model),
+                                  _buildPwdField(model),
+                                  _buildMasterBtn(locale.translation('login.login_text'), model.login)
+                                ],
+                              ),
+                            ),
+                            // View 2 =================
+                            SingleChildScrollView(
+                              physics: ClampingScrollPhysics(),
+                              child: Form(
+                                key: model.registerFormKey,
+                                child: Column(
+                                  children: <Widget>[
+                                    _buildPhoneField(model, model.phoneKey),
+                                    _buildPwdField(model),
+                                    _buildVcodeField(model),
+                                    _buildRecommendedField(model),
+                                    _buildMasterBtn(locale.translation('login.register_text'), model.register)
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
+                  )
+                ],
+              )),
         );
       },
     );

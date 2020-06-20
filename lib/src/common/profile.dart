@@ -36,21 +36,21 @@ const String PROVINCE_LV = 'province';
 const String CITY_LV = 'city';
 const String DISTRICT_LV = 'district';
 
-/// path 
-const String ICON_PATH = 'assets/icon.png';
-
 /// other
+const String GRPC_HOST = 'api.bitsflea.com';
 const String VCODE_TIMER = 'vcodeTimer';
 const String USER = 'user';
-const String KEYS = 'keys';
+const String KEY_OWNER = 'owner';
+const String KEY_ACTIVE = 'active';
+const String KEY_AUTH = 'auth';
 const String SEARCH_HISTORY = 'searchHistory';
 const String TOKEN = 'token';
 const String TOKEN_TIMER = 'tokenTimer';
 const String CACHE_DISTRICT = 'cacheDisrict';
 const String INTERFACE_VERSION = '1.0.0';
-// const String BASE_URL = 'http://39.108.100.40:3000/common';
+const String BASE_URL = 'http://39.108.100.40:3000/common';
 const String DEFAULT_HEAD = 'http://39.108.100.40:3000/images/icon.png';
-const String BASE_URL = 'http://192.168.0.106:8081/common';
+//const String BASE_URL = 'http://192.168.0.106:8081/common';
 const String GET_METHOD = 'GET';
 const String POST_METHOD = 'POST';
 

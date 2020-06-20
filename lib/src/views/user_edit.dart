@@ -39,7 +39,7 @@ class UserEdit extends StatelessWidget{
                   children: [
                     LineButtonItem(
                       text: locale.translation('user_edit.head'),
-                      suffix: ExtCircleAvatar(model.user?.head, 60, data: model.photo?.data, strokeWidth: 0),
+                      suffix: ExtCircleAvatar(model.currentUser['head'], 60, data: model.photo?.data, strokeWidth: 0),
                       onTap: model.changeHead,
                     ),
                     LineButtonItem(
@@ -52,7 +52,7 @@ class UserEdit extends StatelessWidget{
                           maxLines: 1,
                           decoration: InputDecoration(
                             isDense: true,
-                            hintText: model.user.nickname,
+                            hintText: model.currentUser['nickname'],
                             contentPadding: EdgeInsets.symmetric(vertical: 0),
                             border: InputBorder.none
                           ),

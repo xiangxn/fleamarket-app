@@ -1,5 +1,5 @@
 import 'package:fleamarket/src/common/style.dart';
-import 'package:fleamarket/src/models/address.dart';
+import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
 import 'package:fleamarket/src/view_models/edit_address_view_model.dart';
 import 'package:fleamarket/src/views/base_view.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 
 class EditAddress extends StatelessWidget{
   EditAddress({Key key, @required this.address}) : super(key: key);
-  final Address address;
+  final AddressRequest address;
 
   Widget _buildLine({String text, String hint, TextInputType inputType, int maxLength, TextEditingController controller, Function onTap}){
     List<TextInputFormatter> formatters = [];

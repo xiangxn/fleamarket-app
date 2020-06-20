@@ -1,6 +1,6 @@
+import 'package:fleamarket/src/common/data_api.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
 import 'package:fleamarket/src/models/ext_system.dart';
-import 'package:fleamarket/src/services/api.dart';
 import 'package:fleamarket/src/services/account_service.dart';
 import 'package:fleamarket/src/services/goods_service.dart';
 import 'package:fleamarket/src/services/location_service.dart';
@@ -12,26 +12,31 @@ class ProviderSetup{
   /// 不依赖任何其他服务来执行其逻辑的服务
   static List<SingleChildWidget> independentServices = [
     // Provider(
-    //   create: (_) => Api(),
+    //   create: (_) => DataApi(),
     // ),
-    ProxyProvider<ExtLocale, Api>(
-      update: (context, locale, api) => Api(locale),
+    ProxyProvider<ExtLocale, DataApi>(
+      //update: (context, locale, api) => Api(locale),
+      update: (context, locale, api){
+        final api = DataApi();
+        api.init();
+        return api;
+      },
     )
   ];
 
   /// 对应各个模块功能的服务，依赖于先前注册的服务
   static List<SingleChildWidget> dependentServices = [
-    ProxyProvider<Api, AccountService>(
+    ProxyProvider<DataApi, AccountService>(
       update: (context, api, accountService) => AccountService(api)
     ),
-    ProxyProvider<Api, GoodsService>(
+    ProxyProvider<DataApi, GoodsService>(
       update: (context, api, goodsService) => GoodsService(api)
     ),
-    ProxyProvider<Api, LocationService>(
+    ProxyProvider<DataApi, LocationService>(
       lazy: false,
       update: (context, api, locationService) => LocationService(api)
     ),
-    ProxyProvider<Api, OrderService>(
+    ProxyProvider<DataApi, OrderService>(
       update: (context, api, orderService) => OrderService(api)
     )
   ];

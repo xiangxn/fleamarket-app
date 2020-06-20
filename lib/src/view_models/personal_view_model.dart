@@ -10,53 +10,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class PersonalViewModel extends BaseViewModel{
-  AccountService _accountService ;
-  HomeViewModel _homeViewModel ;
+class PersonalViewModel extends BaseViewModel {
+  HomeViewModel _homeViewModel;
   ExtSystem _extSystem;
   ScrollController _controller;
 
   ExtSystem get extSystem => _extSystem;
   ScrollController get controller => _controller;
 
-  PersonalViewModel(BuildContext context, HomeViewModel homeViewModel) : super(context){
-    _accountService = Provider.of<AccountService>(context, listen: false);
+  PersonalViewModel(BuildContext context, HomeViewModel homeViewModel) : super(context) {
     _homeViewModel = homeViewModel;
     _extSystem = Provider.of<ExtSystem>(context, listen: false);
     _controller = ScrollController();
   }
 
   Future<void> refreshUser() async {
-    if(super.user != null){
-      var process = _accountService.fetchUser(super.user.userid);
-      ExtResult res = await super.processing(process, showLoading: false);
-      if(_accountService.updateUser(res.data)){
-        notifyListeners();
-        refreshToken();
-      }
+    if (currentUser != null) {
+      var process = accountService.fetchUser(userId);
+      final res = await super.processing(process, showLoading: false);
+      notifyListeners();
     }
-    return ;
-  }
-
-  refreshToken() async {
-    if(super.user != null){
-      String token = Utils.getStore(TOKEN);
-      String tokenTimer = Utils.getStore(TOKEN_TIMER) ?? '1900-01-01';
-      int diff = DateTime.now().difference(DateTime.parse(tokenTimer)).inHours;
-      if(diff > TIMER_TOKEN){
-        _accountService.refreshToken(super.user.userid, token);
-      }
-    }
+    return;
   }
 
   logout() async {
-    _accountService.logout(super.user.userid);
+    accountService.logout(userId);
     _homeViewModel.setPage(0);
     _controller.animateTo(0, duration: Duration(milliseconds: 10), curve: Curves.easeIn);
   }
 
   copy() {
-    Clipboard.setData(ClipboardData(text: super.user.eosid));
+    Clipboard.setData(ClipboardData(text: userEosId));
     super.toast(super.locale.translation('personal.copy'));
   }
 
@@ -65,8 +49,8 @@ class PersonalViewModel extends BaseViewModel{
   }
 
   /// 申请评审员
-  tryReviewer(){
-    print(super.user.creditValue);
+  tryReviewer() {
+    
   }
 
   @override
@@ -77,7 +61,6 @@ class PersonalViewModel extends BaseViewModel{
 
   @override
   void onResumed() {
-    refreshToken();
+    
   }
-
 }

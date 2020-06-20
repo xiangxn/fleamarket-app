@@ -1,7 +1,7 @@
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'package:fleamarket/src/common/ext_dialog.dart';
+import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/common/style.dart';
-import 'package:fleamarket/src/common/utils.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 
 class MineKeys extends StatelessWidget{
 
-  Widget _buildCard(BuildContext context, ExtLocale locale, String title, int keyInx){
-    EOSPrivateKey key = Utils.recoverKey(keyInx);
+  Widget _buildCard(BuildContext context, ExtLocale locale, String title, String keyName){
+    EOSPrivateKey key = EOSPrivateKey.fromRandom();
     String pubKey = key.toEOSPublicKey().toString();
     return InkWell(
       onTap: (){
@@ -55,8 +55,9 @@ class MineKeys extends StatelessWidget{
       ),
       body: Column(
         children: <Widget>[
-          _buildCard(context, locale, 'Owner Public Key', 0),
-          _buildCard(context, locale, 'Active Public Key', 1),
+          _buildCard(context, locale, 'Owner Public Key', KEY_OWNER),
+          _buildCard(context, locale, 'Active Public Key', KEY_ACTIVE),
+          _buildCard(context, locale, 'Auth Public Key', KEY_AUTH),
         ],
       ),
     );

@@ -23,7 +23,7 @@ class MineFavoriteViewModel extends BaseViewModel{
       _page.clean();
     }
     super.setBusy();
-    var process = _goodsService.fetchFavorite(super.user?.userid, _page.pageNo, _page.pageSize);
+    var process = _goodsService.fetchFavorite(userId, _page.pageNo, _page.pageSize);
     ExtResult res = await super.processing(process, showLoading: false);
     if(res.code == 0){
       _page = res.data..update(_page.data);

@@ -40,7 +40,7 @@ class Personal extends StatelessWidget{
       model: model,
       builder: (_, model, __){
         return Selector<PersonalViewModel, User>(
-          selector: (_, provider) => provider.user,
+          selector: (_, provider) => provider.currentUser,
           builder: (_, user, __){
             print('***** personal user update {user.collectionTotal}');
             ExtLocale locale = model.locale;

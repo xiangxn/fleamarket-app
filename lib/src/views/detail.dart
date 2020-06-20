@@ -193,7 +193,7 @@ class Detail extends StatelessWidget{
                     padding: EdgeInsets.all(10),
                     child: Row(
                       children: <Widget>[
-                        _buildBottomButton(locale.translation('detail.favorite'), 1, model.goods.hasCollection(model.user.userid), model.favorite),
+                        _buildBottomButton(locale.translation('detail.favorite'), 1, model.goods.hasCollection(model.userId), model.favorite),
                         _buildBottomButton(locale.translation('detail.focus'), 2, model.hasFocus, model.focus),
                         // _buildBottomButton('留言', 0, false, (){}),
                         Spacer(),

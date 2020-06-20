@@ -20,7 +20,7 @@ class HomeViewModel extends BaseViewModel{
 
   setPage(int inx) async {
     if(_pageInx != inx){
-      if(inx == 1 && super.user == null){
+      if(inx == 1 && super.accountService.locked){
         var res = await super.pushNamed(LOGIN_ROUTE);
         if(res == 0){
           _pageInx = inx;
@@ -34,10 +34,10 @@ class HomeViewModel extends BaseViewModel{
   }
 
   toPublish() async {
-    if(super.user != null){
-      var res = await super.pushNamed(PUBLISH_ROUTE);
+    if(super.accountService.user != null){
+      await super.pushNamed(PUBLISH_ROUTE);
     }else{
-      var res = await super.pushNamed(LOGIN_ROUTE);
+      await super.pushNamed(LOGIN_ROUTE);
     }
     
   }

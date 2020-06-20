@@ -52,7 +52,7 @@ class Home extends StatelessWidget{
                         icon: Icon(
                           icon, 
                           size: 24, 
-                          color: pageInx == inx ? Colors.green : Colors.grey
+                          color: pageInx == inx ? Style.mainColor : Colors.grey
                         ),
                         onPressed: () => model.setPage(inx),
                       ),

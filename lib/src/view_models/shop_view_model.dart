@@ -61,10 +61,10 @@ class ShopViewModel extends BaseViewModel implements TickerProvider{
     }else{
       page.incres();
     }
-    var process = _goodsService.fetchGoodsList(super.user?.userid ?? 0, category.id, page.pageNo, page.pageSize);
+    var process = _goodsService.fetchGoodsList(userId, category.id, page.pageNo, page.pageSize);
     ExtResult res = await super.processing(process, showLoading: false, showToast: false);
     if(res.code == 0){
-      res.data?.data?.forEach((g) => g.faceUserId = super.user?.userid ?? 0);
+      res.data?.data?.forEach((g) => g.faceUserId = userId ?? 0);
       res.data?.data?.forEach((g){
         print('goods face user id ${g.faceUserId}');
       });

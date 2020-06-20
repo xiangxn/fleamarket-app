@@ -46,8 +46,8 @@ class OrderDetail extends StatelessWidget{
     return BaseView<OrderDetailViewModel>(
       model: OrderDetailViewModel(context, order),
       builder: (_, model, loading){
-        User curUser = model.order.masterUser(model.user.userid);
-        bool isSell = model.order.isSell(model.user.userid);
+        User curUser = model.order.masterUser(model.userId);
+        bool isSell = model.order.isSell(model.userId);
         ExtLocale locale = model.locale;
         return Scaffold(
           appBar: AppBar(

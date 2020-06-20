@@ -12,6 +12,6 @@ class MineInviteViewModel extends BaseViewModel{
   AccountService _accountService;
 
   Future<ExtResult> fetchInvite({int pageNo, int pageSize}) {
-    return _accountService.fetchFocus(super.user.userid, pageNo, pageSize);
+    return _accountService.fetchFocus(userId, pageNo, pageSize);
   }
 }

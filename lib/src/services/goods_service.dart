@@ -1,10 +1,10 @@
+import 'package:fleamarket/src/common/data_api.dart';
 import 'package:fleamarket/src/common/result_conversion.dart';
 import 'package:fleamarket/src/models/category.dart';
 import 'package:fleamarket/src/models/ext_result.dart';
-import 'package:fleamarket/src/services/api.dart';
 
 class GoodsService{
-  Api _api;
+  DataApi _api;
 
   List<Category> _categories = [];
   List<dynamic> _symbols ;
@@ -12,7 +12,7 @@ class GoodsService{
   List<Category> get categories => _categories;
   List<dynamic> get symbols => _symbols;
 
-  GoodsService(Api api){
+  GoodsService(DataApi api){
     _api = api;
     _symbols = [
       {'key': 'BOS', 'value': 'BOS' },
@@ -42,22 +42,22 @@ class GoodsService{
     return ResultConversion.excute(res, ResultTypes.Goods);
   }
 
-  Future<ExtResult> favorite(int userid, int productId){
+  Future<bool> favorite(int userid, int productId){
     return _api.favorite(userid, productId);
   }
 
-  Future<ExtResult> unfavorite(int userid, int productId){
-    return _api.unfavorite(userid, productId);
+  Future<bool> unfavorite(int userid, int productId){
+    return _api.unFavorite(userid, productId);
   }
 
-  Future<ExtResult> fetchFavorite(int userid, int pageNo, int pageSize) async {
-    ExtResult res = await _api.fetchCollectionByUser(userid, pageNo, pageSize);
-    return ResultConversion.excute(res, ResultTypes.GoodsPage);
+  Future<dynamic> fetchFavorite(int userid, int pageNo, int pageSize) async {
+    final res = await _api.fetchFavoriteByUser(userid, pageNo, pageSize);
+    return res;
   }
 
   Future<ExtResult> fetchPublish(int userid, int pageNo, int pageSize) async {
-    ExtResult res = await _api.fetchPublishByUser(userid, pageNo, pageSize);
-    return ResultConversion.excute(res, ResultTypes.GoodsPage);
+    final res = await _api.fetchPublishByUser(userid, pageNo, pageSize);
+    return res;
   }
 
 }

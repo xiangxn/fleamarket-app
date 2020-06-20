@@ -12,7 +12,7 @@ class MineBuyViewModel extends BaseViewModel{
   OrderService _orderService;
 
   Future<ExtResult> fetchOrders({int pageNo, int pageSize}){
-    return _orderService.fetchBuyOrders(super.user.userid, pageNo, pageSize);
+    return _orderService.fetchBuyOrders(userId, pageNo, pageSize);
   }
 
 }

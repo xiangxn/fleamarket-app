@@ -1,4 +1,4 @@
-import 'package:fleamarket/src/models/address.dart';
+import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/ext_result.dart';
 import 'package:fleamarket/src/services/account_service.dart';
 import 'package:fleamarket/src/services/location_service.dart';
@@ -8,23 +8,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EditAddressViewModel extends BaseViewModel{
-  EditAddressViewModel(BuildContext context, Address address) : super(context){
+  EditAddressViewModel(BuildContext context, AddressRequest address) : super(context){
     _address = address;
-    _accountService = Provider.of(context, listen: false);
     _locationService = Provider.of(context, listen: false);
     if(_address == null){
-      _address = Address();
-      _address.position = _locationService.getAddress();
+      _address = AddressRequest();
+      _position = _locationService.getAddress();
     }
     _consigneeController.text = _address.name ?? '';
     _phoneController.text = _address.phone ?? '';
-    _positionController.text = _address.position ?? '';
+    _positionController.text = _position ?? '';
     _detailController.text = _address.address ?? '';
     _postcodeController.text = _address.postcode ?? '';
   }
 
-  AccountService _accountService;
-  Address _address ;
+  AddressRequest _address ;
+  String _position;
   TextEditingController _consigneeController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _positionController = TextEditingController();
@@ -32,7 +31,7 @@ class EditAddressViewModel extends BaseViewModel{
   TextEditingController _postcodeController = TextEditingController();
   LocationService _locationService;
 
-  Address get address => _address;
+  AddressRequest get address => _address;
   TextEditingController get consigneeController => _consigneeController;
   TextEditingController get phoneController => _phoneController;
   TextEditingController get positionController => _positionController;
@@ -74,8 +73,8 @@ class EditAddressViewModel extends BaseViewModel{
     );
     String adcode = await super.dialog(screen);
     if(adcode != null){
-      _address.position = _locationService.getAddress(adcode);
-      _positionController.text = _address.position;
+      _position = _locationService.getAddress(adcode);
+      _positionController.text = _position;
       notifyListeners();
     }
   }
@@ -83,17 +82,17 @@ class EditAddressViewModel extends BaseViewModel{
   submit() async {
     FocusScope.of(context).requestFocus(FocusNode());
     if(validate()){
-      _address.userid = super.user.userid;
+      _address.userid = accountService.user.userid;
       _address.name = _consigneeController.text;
       _address.phone = _phoneController.text;
-      _address.position = _positionController.text;
+      _position = _positionController.text;
       _address.address = _detailController.text;
       _address.postcode = _postcodeController.text.isEmpty ? '000000' : _postcodeController.text;
       var process;
-      if(_address.id != null){
-        process = _accountService.updAddress(_address);
+      if(_address.rid != null){
+        process = accountService.updAddress(_address);
       }else{
-        process = _accountService.addAddress(_address);
+        process = this.accountService.addAddress(_address);
       }
       ExtResult res = await super.processing(process);
       if(res.success){
