@@ -35,7 +35,7 @@ class Utils {
   }
 
   static String decrypt(String password, String encrypted) {
-    return Cryptor.decrypt(encrypted, password);
+      return Cryptor.decrypt(encrypted, password);
   }
 
   static Future<dynamic> getJson(String path) async {

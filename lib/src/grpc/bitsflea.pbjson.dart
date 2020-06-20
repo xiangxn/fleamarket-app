@@ -10,22 +10,14 @@ const BaseReply$json = const {
   '2': const [
     const {'1': 'code', '3': 1, '4': 1, '5': 5, '10': 'code'},
     const {'1': 'msg', '3': 2, '4': 1, '5': 9, '10': 'msg'},
-  ],
-};
-
-const SearchReply$json = const {
-  '1': 'SearchReply',
-  '2': const [
-    const {'1': 'status', '3': 1, '4': 1, '5': 11, '6': '.bitsflea.BaseReply', '10': 'status'},
-    const {'1': 'data', '3': 2, '4': 1, '5': 9, '10': 'data'},
-  ],
-};
-
-const TokenReply$json = const {
-  '1': 'TokenReply',
-  '2': const [
-    const {'1': 'status', '3': 1, '4': 1, '5': 11, '6': '.bitsflea.BaseReply', '10': 'status'},
-    const {'1': 'token', '3': 2, '4': 1, '5': 9, '10': 'token'},
+    const {
+      '1': 'data',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Any',
+      '10': 'data'
+    },
   ],
 };
 
@@ -55,15 +47,33 @@ const User$json = const {
     const {'1': 'head', '3': 6, '4': 1, '5': 9, '10': 'head'},
     const {'1': 'creditValue', '3': 7, '4': 1, '5': 5, '10': 'creditValue'},
     const {'1': 'referrer', '3': 8, '4': 1, '5': 9, '10': 'referrer'},
-    const {'1': 'lastActiveTime', '3': 9, '4': 1, '5': 9, '10': 'lastActiveTime'},
+    const {
+      '1': 'lastActiveTime',
+      '3': 9,
+      '4': 1,
+      '5': 9,
+      '10': 'lastActiveTime'
+    },
     const {'1': 'postsTotal', '3': 10, '4': 1, '5': 5, '10': 'postsTotal'},
     const {'1': 'sellTotal', '3': 11, '4': 1, '5': 5, '10': 'sellTotal'},
     const {'1': 'buyTotal', '3': 12, '4': 1, '5': 5, '10': 'buyTotal'},
-    const {'1': 'referralTotal', '3': 13, '4': 1, '5': 5, '10': 'referralTotal'},
+    const {
+      '1': 'referralTotal',
+      '3': 13,
+      '4': 1,
+      '5': 5,
+      '10': 'referralTotal'
+    },
     const {'1': 'point', '3': 14, '4': 1, '5': 9, '10': 'point'},
     const {'1': 'isReviewer', '3': 15, '4': 1, '5': 5, '10': 'isReviewer'},
     const {'1': 'followTotal', '3': 16, '4': 1, '5': 5, '10': 'followTotal'},
-    const {'1': 'favoriteTotal', '3': 17, '4': 1, '5': 5, '10': 'favoriteTotal'},
+    const {
+      '1': 'favoriteTotal',
+      '3': 17,
+      '4': 1,
+      '5': 5,
+      '10': 'favoriteTotal'
+    },
     const {'1': 'fansTotal', '3': 18, '4': 1, '5': 5, '10': 'fansTotal'},
   ],
 };
@@ -79,14 +89,6 @@ const RegisterRequest$json = const {
     const {'1': 'referral', '3': 6, '4': 1, '5': 9, '10': 'referral'},
     const {'1': 'authkey', '3': 7, '4': 1, '5': 9, '10': 'authkey'},
     const {'1': 'phoneEncrypt', '3': 8, '4': 1, '5': 9, '10': 'phoneEncrypt'},
-  ],
-};
-
-const RegisterReply$json = const {
-  '1': 'RegisterReply',
-  '2': const [
-    const {'1': 'status', '3': 1, '4': 1, '5': 11, '6': '.bitsflea.BaseReply', '10': 'status'},
-    const {'1': 'data', '3': 2, '4': 1, '5': 11, '6': '.bitsflea.User', '10': 'data'},
   ],
 };
 
@@ -162,4 +164,3 @@ const SetDefaultAddrRequest$json = const {
     const {'1': 'rid', '3': 2, '4': 1, '5': 5, '10': 'rid'},
   ],
 };
-

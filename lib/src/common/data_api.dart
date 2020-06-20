@@ -1,11 +1,10 @@
-import 'package:fleamarket/src/models/ext_result.dart';
 import 'package:grpc/grpc.dart';
 import '../grpc/bitsflea.pb.dart';
 import '../grpc/bitsflea.pbgrpc.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
-import 'dart:convert';
 import 'profile.dart';
 import 'utils.dart';
+import '../grpc/google/protobuf/wrappers.pb.dart';
 
 class DataApi {
   BitsFleaClient _client;
@@ -39,6 +38,7 @@ class DataApi {
     String token = Utils.getStore(TOKEN) ?? "0";
     final diff = DateTime.now().difference(_lastTokenTime);
     if (force == false && diff.inHours < 2 && token != "0") {
+      print("token:" + token);
       return token;
     }
     final request = RefreshTokenRequest();
@@ -46,66 +46,76 @@ class DataApi {
     request.token = token;
     request.time = ((new DateTime.now().millisecondsSinceEpoch) / 1000).floor();
     request.sign = _authKey.signString(request.phone + request.token + request.time.toString()).toString();
-    //print(request.sign);
     final res = await _client.refreshToken(request);
-    if (res.status.code == 0) {
-      token = res.token;
+    if (res.code == 0) {
+      var st = StringValue();
+      res.data.unpackInto(st);
+      token = st.value;
       _lastTokenTime = DateTime.now();
       await Utils.setStore(TOKEN, token);
     }
     //print(res);
+    print("token:" + token);
     return token;
   }
 
-  Future<dynamic> getUserByPhone(String phone) async {
+  Future<BaseReply> getUserByPhone(String phone) async {
     final token = await getToken();
     final query = "{ users(phone:\"" +
         phone +
         "\") { edges{ node { userid,eosid,phone,status,nickname,head,creditValue,referrer,lastActiveTime,postsTotal,sellTotal,buyTotal," +
-        "referralTotal,point,isReviewer,favoriteTotal,collectionTotal,fansTotal,authKey } } } }";
-    final res = await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    //print(res);
-    if (res.status.code == 0 && res.data.length > 0) {
-      final data = json.decode(res.data);
-      final e = data['users']['edges'];
-      if (e.length > 0) return e[0]['node'];
+        "referralTotal,point,isReviewer,favoriteTotal,followTotal,fansTotal,authKey } } } }";
+    try {
+      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+    } on GrpcError catch (e) {
+      var reply = BaseReply();
+      reply.code = e.code;
+      reply.msg = e.message;
+      return reply;
     }
-    return null;
+    //print(res);
+    // if (res.status.code == 0 && res.data.length > 0) {
+    //   final data = json.decode(res.data);
+    //   final e = data['users']['edges'];
+    //   if (e.length > 0) return e[0]['node'];
+    // }
+    // return null;
   }
 
-  Future<dynamic> getUserByEosid(String eosid) async {
+  Future<BaseReply> getUserByEosid(String eosid) async {
     final token = await getToken();
     final query = "{ users(eosid:\"" +
         eosid +
         "\") { edges{ node { userid,eosid,phone,status,nickname,head,creditValue,referrer,lastActiveTime,postsTotal,sellTotal,buyTotal," +
-        "referralTotal,point,isReviewer,favoriteTotal,collectionTotal,fansTotal,authKey } } } }";
-    final res = await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    //print(res);
-    if (res.status.code == 0 && res.data.length > 0) {
-      final data = json.decode(res.data);
-      final e = data['users']['edges'];
-      if (e.length > 0) return e[0]['node'];
+        "referralTotal,point,isReviewer,favoriteTotal,followTotal,fansTotal,authKey } } } }";
+    try {
+      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+    } on GrpcError catch (e) {
+      var reply = BaseReply();
+      reply.code = e.code;
+      reply.msg = e.message;
+      return reply;
     }
-    return null;
   }
 
-  Future<dynamic> getUserByUserid(int uid) async {
+  Future<BaseReply> getUserByUserid(int uid) async {
     final token = await getToken();
+
     final query = "{ users(userid:" +
         uid.toString() +
         ") { edges{ node { userid,eosid,phone,status,nickname,head,creditValue,referrer,lastActiveTime,postsTotal,sellTotal,buyTotal," +
-        "referralTotal,point,isReviewer,favoriteTotal,collectionTotal,fansTotal,authKey } } } }";
-    final res = await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    //print(res);
-    if (res.status.code == 0 && res.data.length > 0) {
-      final data = json.decode(res.data);
-      final e = data['users']['edges'];
-      if (e.length > 0) return e[0]['node'];
+        "referralTotal,point,isReviewer,favoriteTotal,followTotal,fansTotal,authKey } } } }";
+    try {
+      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+    } on GrpcError catch (e) {
+      var reply = BaseReply();
+      reply.code = e.code;
+      reply.msg = e.message;
+      return reply;
     }
-    return null;
   }
 
-  Future<RegisterReply> register(String phone, String ownerPubKey, String activePubKey,
+  Future<BaseReply> register(String phone, String ownerPubKey, String activePubKey,
       {String nickname, String smsCode, String referral, String authKey, String phoneEncrypt}) async {
     //final token = await getToken();
     var request = RegisterRequest();
@@ -118,7 +128,14 @@ class DataApi {
     if (authKey != null) request.authkey = authKey;
     if (phoneEncrypt != null) request.phoneEncrypt = phoneEncrypt;
     //final res = await _client.register(request, options: CallOptions(metadata: {'token': token}));
-    return await _client.register(request);
+    try {
+      return await _client.register(request);
+    } on GrpcError catch (e) {
+      var reply = BaseReply();
+      reply.code = e.code;
+      reply.msg = e.message;
+      return reply;
+    }
   }
 
   Future<bool> sendSmsCode(String phone, [int codeType = 10]) async {
@@ -152,7 +169,7 @@ class DataApi {
     return false;
   }
 
-  Future<dynamic> getFollowByFollower(int userid, int pageNo, int pageSize) async {
+  Future<BaseReply> getFollowByFollower(int userid, int pageNo, int pageSize) async {
     final token = await getToken();
     var query = "{followByFollower(userid:" +
         userid.toString() +
@@ -162,17 +179,17 @@ class DataApi {
         pageSize.toString() +
         ")" +
         " {user{userid,eosid,status,nickname,head}}}";
-    final res = await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    //print(res);
-    if (res.status.code == 0 && res.data.length > 0) {
-      final data = json.decode(res.data);
-      final e = data['followByFollower'];
-      if (e.length > 0) return e;
+    try {
+      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+    } on GrpcError catch (e) {
+      var reply = BaseReply();
+      reply.code = e.code;
+      reply.msg = e.message;
+      return reply;
     }
-    return null;
   }
 
-  Future<dynamic> getFollowByUser(int userid, int pageNo, int pageSize) async {
+  Future<BaseReply> getFollowByUser(int userid, int pageNo, int pageSize) async {
     final token = await getToken();
     var query = "{followByUser(userid:" +
         userid.toString() +
@@ -182,27 +199,27 @@ class DataApi {
         pageSize.toString() +
         ")" +
         " {follower{userid,eosid,status,nickname,head}}}";
-    final res = await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    //print(res);
-    if (res.status.code == 0) {
-      final data = json.decode(res.data);
-      final e = data['followByUser'];
-      if (e.length > 0) return e;
+    try {
+      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+    } on GrpcError catch (e) {
+      var reply = BaseReply();
+      reply.code = e.code;
+      reply.msg = e.message;
+      return reply;
     }
-    return null;
   }
 
-  Future<dynamic> getRecAddrByUser(int userid) async {
+  Future<BaseReply> getRecAddrByUser(int userid) async {
     final token = await getToken();
     var query = "{recAddrByUser(userid:" + userid.toString() + "){rid,province,city,district,phone,name,address,postcode,default}}";
-    final res = await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    //print(res);
-    if (res.status.code == 0) {
-      final data = json.decode(res.data);
-      final e = data['recAddrByUser'];
-      if (e.length > 0) return e;
+    try {
+      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+    } on GrpcError catch (e) {
+      var reply = BaseReply();
+      reply.code = e.code;
+      reply.msg = e.message;
+      return reply;
     }
-    return null;
   }
 
   Future<bool> setDefaultAddr(int id, int userid) async {

@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/common/utils.dart';
 import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
+import 'package:fleamarket/src/grpc/google/protobuf/wrappers.pb.dart';
 import '../common/data_api.dart';
 
 class AccountService {
@@ -40,9 +42,6 @@ class AccountService {
       ownerStr = Utils.encrypt(password, keys[0].toString());
       activeStr = Utils.encrypt(password, keys[1].toString());
       authStr = Utils.encrypt(password, keys[2].toString());
-      Utils.setStore(KEY_OWNER, ownerStr);
-      Utils.setStore(KEY_ACTIVE, activeStr);
-      Utils.setStore(KEY_AUTH, authStr);
       flag = true;
     }
     if (flag) {
@@ -50,9 +49,19 @@ class AccountService {
       _api.setKey(_authKey);
       _api.setPhone(phone);
       var result = await _api.getUserByPhone(phone);
-      if (result != null) {
-        if (_authKey.toEOSPublicKey().toString() == result['authKey'].toString()) {
-          _user = result;
+      if (result.code == 0) {
+        final str = StringValue();
+        result.data.unpackInto(str);
+        dynamic data = jsonDecode(str.value)['users']['edges'];
+        if (data.length > 0) {
+          data = data[0]['node'];
+        }
+        //print("data:$data");
+        if (_authKey.toEOSPublicKey().toString() == data['authKey'].toString()) {
+          Utils.setStore(KEY_OWNER, ownerStr);
+          Utils.setStore(KEY_ACTIVE, activeStr);
+          Utils.setStore(KEY_AUTH, authStr);
+          _user = data;
           _lock = false;
           _ownerKey = EOSPrivateKey.fromString(Utils.decrypt(password, ownerStr));
           _activeKey = EOSPrivateKey.fromString(Utils.decrypt(password, activeStr));
@@ -68,20 +77,25 @@ class AccountService {
 
   Future<BaseReply> register(String phone, String password, String smsCode, String referral) async {
     List<EOSPrivateKey> keys = Utils.generateKeys(phone, password);
-    Utils.setStore(KEY_OWNER, Utils.encrypt(password, keys[0].toString()));
-    Utils.setStore(KEY_ACTIVE, Utils.encrypt(password, keys[1].toString()));
-    Utils.setStore(KEY_AUTH, Utils.encrypt(password, keys[2].toString()));
-    final res = await _api.register(phone, keys[0].toEOSPublicKey().toString(), keys[1].toEOSPublicKey().toString(), smsCode: smsCode, referral: referral);
-    if (res.status.code == 0) {
+    final res = await _api.register(phone, keys[0].toEOSPublicKey().toString(), keys[1].toEOSPublicKey().toString(),
+        smsCode: smsCode, referral: referral, authKey: keys[2].toEOSPublicKey().toString());
+    if (res.code == 0) {
+      Utils.setStore(KEY_OWNER, Utils.encrypt(password, keys[0].toString()));
+      Utils.setStore(KEY_ACTIVE, Utils.encrypt(password, keys[1].toString()));
+      Utils.setStore(KEY_AUTH, Utils.encrypt(password, keys[2].toString()));
       _lock = false;
       _ownerKey = keys[0];
       _activeKey = keys[1];
       _authKey = keys[2];
       _api.setKey(_authKey);
       _api.setPhone(phone);
-      _user = await _api.getUserByUserid(res.data.userid);
+      var user = User();
+      res.data.unpackInto(user);
+      _user = user.toProto3Json();
+      //_user = await _api.getUserByUserid(user.userid);
+      //return BaseReply();
     }
-    return res.status;
+    return res;
   }
 
   Future<bool> validateReferral(String eosid) async {

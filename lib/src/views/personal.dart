@@ -39,10 +39,9 @@ class Personal extends StatelessWidget{
     return BaseView<PersonalViewModel>(
       model: model,
       builder: (_, model, __){
-        return Selector<PersonalViewModel, User>(
+        return Selector<PersonalViewModel, dynamic>(
           selector: (_, provider) => provider.currentUser,
           builder: (_, user, __){
-            print('***** personal user update {user.collectionTotal}');
             ExtLocale locale = model.locale;
             return CustomRefreshIndicator(
               onRefresh: model.refreshUser,
@@ -57,7 +56,7 @@ class Personal extends StatelessWidget{
                       child: Row(
                         children: <Widget>[
                           GestureDetector(
-                            child: ExtCircleAvatar(user?.head, 80, strokeWidth: 0),
+                            child: ExtCircleAvatar(user['head'], 80, strokeWidth: 0),
                             onTap: model.toEdit,
                           ),
                           Expanded(
@@ -68,13 +67,13 @@ class Personal extends StatelessWidget{
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(user?.nickname ?? '-', style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.bold, fontSize: 15),),
+                                  Text(user['nickname'] ?? '-', style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.bold, fontSize: 15),),
                                   Padding(
                                     padding: EdgeInsets.symmetric(vertical: 8),
                                     child: Row(
                                       children: <Widget>[
                                         Icon(
-                                          user?.isReviewer == 0 ? 
+                                          user['isReviewer'] == 0 ? 
                                             FontAwesomeIcons.solidUser :
                                             FontAwesomeIcons.userTie ,
                                           color: Colors.grey[700],
@@ -83,7 +82,7 @@ class Personal extends StatelessWidget{
                                         Padding(
                                           padding: EdgeInsets.only(left: 10),
                                           child: Text(
-                                            user?.isReviewer == 0 ? 
+                                            user['isReviewer'] == 0 ? 
                                               locale.translation('personal.user_normal') :
                                               locale.translation('personal.user_reviewer') ,
                                             style: TextStyle(
@@ -102,7 +101,7 @@ class Personal extends StatelessWidget{
                                         style: TextStyle(color: Colors.grey[700]),
                                         children: <TextSpan>[
                                           TextSpan(
-                                            text: user?.eosid ?? '0',
+                                            text: user['eosid'] ?? '0',
                                             style: TextStyle(color: Colors.black),
                                           )
                                         ]
@@ -138,17 +137,17 @@ class Personal extends StatelessWidget{
                         children: <Widget>[
                           _buildChunk(
                             locale.translation('personal.favorite'), 
-                            user?.collectionTotal ?? 0,
+                            user['followTotal'] ?? 0,
                             () => model.pushNamed(MINE_FAVORITE_ROUTE)
                           ),
                           _buildChunk(
                             locale.translation('personal.focus'), 
-                            user?.favoriteTotal ?? 0,
+                            user['favoriteTotal'] ?? 0,
                             () => model.pushNamed(MINE_FOCUS_ROUTE)
                           ),
                           _buildChunk(
                             locale.translation('personal.fans'), 
-                            user?.fansTotal ?? 0,
+                            user['fansTotal'] ?? 0,
                             () => model.pushNamed(MINE_FANS_ROUTE)
                           ),
                         ]
@@ -158,25 +157,25 @@ class Personal extends StatelessWidget{
                       children: [
                         LineButtonItem(
                           text: locale.translation('personal.mine_publish'), 
-                          subText: (user?.postsTotal ?? 0).toString(), 
+                          subText: (user['postsTotal'] ?? 0).toString(), 
                           prefixIcon: Icons.shop, 
                           onTap: () => model.pushNamed(MINE_PUBLISH_ROUTE)
                         ),
                         LineButtonItem(
                           text: locale.translation('personal.mine_buy'), 
-                          subText: (user?.buyTotal ?? 0).toString(), 
+                          subText: (user['buyTotal'] ?? 0).toString(), 
                           prefixIcon: Icons.archive,
                           onTap: () => model.pushNamed(MINE_BUY_ROUTE),
                         ),
                         LineButtonItem(
                           text: locale.translation('personal.mine_sell'), 
-                          subText: (user?.sellTotal ?? 0).toString(), 
+                          subText: (user['sellTotal'] ?? 0).toString(), 
                           prefixIcon: Icons.unarchive,
                           onTap: () => model.pushNamed(MINE_SELL_ROUTE),
                         ),
                         LineButtonItem(
                           text: locale.translation('personal.mine_recommended'), 
-                          subText: (user?.referralTotal ?? 0).toString(), 
+                          subText: (user['referralTotal'] ?? 0).toString(), 
                           prefixIcon: Icons.account_box,
                           onTap: () => model.pushNamed(MINE_INVITE_ROUTE),
                         ),
@@ -215,7 +214,7 @@ class Personal extends StatelessWidget{
                           prefixIcon: Icons.account_balance,
                           onTap: () => model.pushNamed(MINE_VOTE_ROUTE),
                         ),
-                        user?.isReviewer == 0 ? 
+                        user['isReviewer'] == 0 ? 
                         LineButtonItem(
                           text: locale.translation('personal.try_reviewer'), 
                           prefixIcon: Icons.assignment_ind,

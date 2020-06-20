@@ -69,9 +69,14 @@ class LoginViewModel extends BaseViewModel implements TickerProvider {
   login() async {
     if (_loginFormKey.currentState.validate()) {
       _loginFormKey.currentState.save();
-      loading(true);
+      loading();
       accountService.login(_phone, _password).then((val) {
-        updateUser();
+        loading();
+        if (val) {
+          pop(false);
+        }else{
+          alert("登录失败");
+        }
       });
     }
   }
@@ -79,18 +84,12 @@ class LoginViewModel extends BaseViewModel implements TickerProvider {
   register() async {
     if (_registerFormKey.currentState.validate()) {
       _registerFormKey.currentState.save();
-      super.loading();
       final recommendedRes = await checkRecommended();
       if (recommendedRes) {
-        final res = await accountService.register(_phone, _password, _vcode, _recommended);
-        super.loading();
-        if (res != null) {
-          updateUser();
-        } else {
-          super.toast("注册失败");
-        }
+        final res = accountService.register(_phone, _password, _vcode, _recommended);
+        await processing(res);
+        pop(0);
       } else {
-        super.loading();
         super.toast("无效的引荐人");
       }
     }

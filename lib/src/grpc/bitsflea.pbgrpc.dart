@@ -15,27 +15,27 @@ export 'bitsflea.pb.dart';
 
 class BitsFleaClient extends $grpc.Client {
   static final _$register =
-      $grpc.ClientMethod<$0.RegisterRequest, $0.RegisterReply>(
+      $grpc.ClientMethod<$0.RegisterRequest, $0.BaseReply>(
           '/bitsflea.BitsFlea/Register',
           ($0.RegisterRequest value) => value.writeToBuffer(),
-          ($core.List<$core.int> value) => $0.RegisterReply.fromBuffer(value));
+          ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
   static final _$sendSmsCode = $grpc.ClientMethod<$0.SmsRequest, $0.BaseReply>(
       '/bitsflea.BitsFlea/SendSmsCode',
       ($0.SmsRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
   static final _$refreshToken =
-      $grpc.ClientMethod<$0.RefreshTokenRequest, $0.TokenReply>(
+      $grpc.ClientMethod<$0.RefreshTokenRequest, $0.BaseReply>(
           '/bitsflea.BitsFlea/RefreshToken',
           ($0.RefreshTokenRequest value) => value.writeToBuffer(),
-          ($core.List<$core.int> value) => $0.TokenReply.fromBuffer(value));
+          ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
   static final _$referral = $grpc.ClientMethod<$0.EosidRequest, $0.BaseReply>(
       '/bitsflea.BitsFlea/Referral',
       ($0.EosidRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
-  static final _$search = $grpc.ClientMethod<$0.SearchRequest, $0.SearchReply>(
+  static final _$search = $grpc.ClientMethod<$0.SearchRequest, $0.BaseReply>(
       '/bitsflea.BitsFlea/Search',
       ($0.SearchRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.SearchReply.fromBuffer(value));
+      ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
   static final _$transaction =
       $grpc.ClientMethod<$0.TransactionRequest, $0.BaseReply>(
           '/bitsflea.BitsFlea/Transaction',
@@ -86,7 +86,7 @@ class BitsFleaClient extends $grpc.Client {
   BitsFleaClient($grpc.ClientChannel channel, {$grpc.CallOptions options})
       : super(channel, options: options);
 
-  $grpc.ResponseFuture<$0.RegisterReply> register($0.RegisterRequest request,
+  $grpc.ResponseFuture<$0.BaseReply> register($0.RegisterRequest request,
       {$grpc.CallOptions options}) {
     final call = $createCall(_$register, $async.Stream.fromIterable([request]),
         options: options);
@@ -101,7 +101,7 @@ class BitsFleaClient extends $grpc.Client {
     return $grpc.ResponseFuture(call);
   }
 
-  $grpc.ResponseFuture<$0.TokenReply> refreshToken(
+  $grpc.ResponseFuture<$0.BaseReply> refreshToken(
       $0.RefreshTokenRequest request,
       {$grpc.CallOptions options}) {
     final call = $createCall(
@@ -117,7 +117,7 @@ class BitsFleaClient extends $grpc.Client {
     return $grpc.ResponseFuture(call);
   }
 
-  $grpc.ResponseFuture<$0.SearchReply> search($0.SearchRequest request,
+  $grpc.ResponseFuture<$0.BaseReply> search($0.SearchRequest request,
       {$grpc.CallOptions options}) {
     final call = $createCall(_$search, $async.Stream.fromIterable([request]),
         options: options);
@@ -204,13 +204,13 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
   $core.String get $name => 'bitsflea.BitsFlea';
 
   BitsFleaServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.RegisterRequest, $0.RegisterReply>(
+    $addMethod($grpc.ServiceMethod<$0.RegisterRequest, $0.BaseReply>(
         'Register',
         register_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.RegisterRequest.fromBuffer(value),
-        ($0.RegisterReply value) => value.writeToBuffer()));
+        ($0.BaseReply value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.SmsRequest, $0.BaseReply>(
         'SendSmsCode',
         sendSmsCode_Pre,
@@ -218,14 +218,14 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.SmsRequest.fromBuffer(value),
         ($0.BaseReply value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.RefreshTokenRequest, $0.TokenReply>(
+    $addMethod($grpc.ServiceMethod<$0.RefreshTokenRequest, $0.BaseReply>(
         'RefreshToken',
         refreshToken_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
             $0.RefreshTokenRequest.fromBuffer(value),
-        ($0.TokenReply value) => value.writeToBuffer()));
+        ($0.BaseReply value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.EosidRequest, $0.BaseReply>(
         'Referral',
         referral_Pre,
@@ -233,13 +233,13 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.EosidRequest.fromBuffer(value),
         ($0.BaseReply value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.SearchRequest, $0.SearchReply>(
+    $addMethod($grpc.ServiceMethod<$0.SearchRequest, $0.BaseReply>(
         'Search',
         search_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.SearchRequest.fromBuffer(value),
-        ($0.SearchReply value) => value.writeToBuffer()));
+        ($0.BaseReply value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.TransactionRequest, $0.BaseReply>(
         'Transaction',
         transaction_Pre,
@@ -314,7 +314,7 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
         ($0.BaseReply value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.RegisterReply> register_Pre(
+  $async.Future<$0.BaseReply> register_Pre(
       $grpc.ServiceCall call, $async.Future<$0.RegisterRequest> request) async {
     return register(call, await request);
   }
@@ -324,7 +324,7 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
     return sendSmsCode(call, await request);
   }
 
-  $async.Future<$0.TokenReply> refreshToken_Pre($grpc.ServiceCall call,
+  $async.Future<$0.BaseReply> refreshToken_Pre($grpc.ServiceCall call,
       $async.Future<$0.RefreshTokenRequest> request) async {
     return refreshToken(call, await request);
   }
@@ -334,7 +334,7 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
     return referral(call, await request);
   }
 
-  $async.Future<$0.SearchReply> search_Pre(
+  $async.Future<$0.BaseReply> search_Pre(
       $grpc.ServiceCall call, $async.Future<$0.SearchRequest> request) async {
     return search(call, await request);
   }
@@ -389,15 +389,15 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
     return upload(call, await request);
   }
 
-  $async.Future<$0.RegisterReply> register(
+  $async.Future<$0.BaseReply> register(
       $grpc.ServiceCall call, $0.RegisterRequest request);
   $async.Future<$0.BaseReply> sendSmsCode(
       $grpc.ServiceCall call, $0.SmsRequest request);
-  $async.Future<$0.TokenReply> refreshToken(
+  $async.Future<$0.BaseReply> refreshToken(
       $grpc.ServiceCall call, $0.RefreshTokenRequest request);
   $async.Future<$0.BaseReply> referral(
       $grpc.ServiceCall call, $0.EosidRequest request);
-  $async.Future<$0.SearchReply> search(
+  $async.Future<$0.BaseReply> search(
       $grpc.ServiceCall call, $0.SearchRequest request);
   $async.Future<$0.BaseReply> transaction(
       $grpc.ServiceCall call, $0.TransactionRequest request);
