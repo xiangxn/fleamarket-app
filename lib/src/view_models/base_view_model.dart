@@ -59,16 +59,20 @@ class BaseViewModel extends ChangeNotifier implements WidgetsBindingObserver {
 
   toast(String msg, {bool showToast = true}) {
     if (showToast) {
-      Timer(Duration(milliseconds: 0), () => ExtDialog.toast(context, msg));
+      WidgetsBinding.instance.addPostFrameCallback( (_) => ExtDialog.toast(context, msg));
     }
   }
 
-  Future<dynamic> alert(String msg, [String title]) {
-    return ExtDialog.alert(context, msg, title);
+  alert(String msg, {String title, Function callback}) {
+    WidgetsBinding.instance.addPostFrameCallback( (_) {
+      ExtDialog.alert(context, msg, title).then((val) => callback ?? null);
+    });
   }
 
-  Future<dynamic> confirm(String msg, [String title]) {
-    return ExtDialog.confirm(context, msg, title);
+  confirm(String msg, {String title, Function callback}) {
+    WidgetsBinding.instance.addPostFrameCallback( (_) {
+      ExtDialog.confirm(context, msg, title).then((val) => callback ?? null);
+    });
   }
 
   Future<T> pushNamed<T>(String routeName, {Object arguments}) {
