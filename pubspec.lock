@@ -106,8 +106,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.9"
-  eosdart_ecc:
+  eosdart:
     dependency: "direct main"
+    description:
+      name: eosdart
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.4.4"
+  eosdart_ecc:
+    dependency: transitive
     description:
       name: eosdart_ecc
       url: "https://pub.flutter-io.cn"
@@ -214,6 +221,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.6.3+1"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.0.1"
   matcher:
     dependency: transitive
     description:

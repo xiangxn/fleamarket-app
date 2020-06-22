@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:fleamarket/src/common/ext_dialog.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
-import 'package:fleamarket/src/models/ext_result.dart';
 import 'package:fleamarket/src/services/account_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +40,7 @@ class BaseViewModel extends ChangeNotifier implements WidgetsBindingObserver {
     var res = await process;
     loading(showLoading, msg);
     // await Future.delayed(Duration(milliseconds: 10));
-    if (res.code == 0) {
-    } else {
+    if (res.code != 0) {
       toast(res.msg, showToast: showToast);
     }
     return res;

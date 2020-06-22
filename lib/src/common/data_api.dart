@@ -5,6 +5,7 @@ import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'profile.dart';
 import 'utils.dart';
 import '../grpc/google/protobuf/wrappers.pb.dart';
+import 'package:eosdart/eosdart.dart';
 
 class DataApi {
   BitsFleaClient _client;
@@ -47,6 +48,7 @@ class DataApi {
     request.time = ((new DateTime.now().millisecondsSinceEpoch) / 1000).floor();
     request.sign = _authKey.signString(request.phone + request.token + request.time.toString()).toString();
     final res = await _client.refreshToken(request);
+    print("token_result:$res");
     if (res.code == 0) {
       var st = StringValue();
       res.data.unpackInto(st);
@@ -247,6 +249,31 @@ class DataApi {
     final token = await getToken();
     final res = await _client.delAddress(addr, options: CallOptions(metadata: {'token': token}));
     return res.code == 0;
+  }
+
+  Future<bool> setProfile(EOSPrivateKey actKey, String eosid, {String head, String nickname}) async {
+    TransactionRequest tr = TransactionRequest();
+    tr.sign = 0;
+    EOSClient client = EOSClient("", "v1", privateKeys: [actKey.toString()]);
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = eosid
+        ..permission = 'active'
+    ];
+    Map data = {'eosid': eosid};
+    if (head != null) data['head'] = head;
+    if (nickname != null) data['nickname'] = nickname;
+    List<Action> actions = [
+      Action()
+        ..account = CONTRACT_NAME
+        ..name = 'setprofile'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+    client.pushTransaction(transaction, broadcast: false).then((trx) {
+      print(trx);
+    });
   }
 
   Future<dynamic> fetchCategorier() async {}

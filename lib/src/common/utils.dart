@@ -35,7 +35,7 @@ class Utils {
   }
 
   static String decrypt(String password, String encrypted) {
-      return Cryptor.decrypt(encrypted, password);
+    return Cryptor.decrypt(encrypted, password);
   }
 
   static Future<dynamic> getJson(String path) async {
@@ -83,11 +83,11 @@ class Utils {
     return [ownerKey, activeKey, authKey];
   }
 
-  static bool validateKey(String phone, String password) {
-    List<EOSPrivateKey> keys = generateKeys(phone, password);
-    final owner = getStore(KEY_OWNER);
-    final active = getStore(KEY_ACTIVE);
-    final auth = getStore(KEY_AUTH);
+  static bool validateKey(String phone, String password, {String owner, String active, String auth, List<EOSPrivateKey> keys}) {
+    if (keys == null) keys = generateKeys(phone, password);
+    if (owner == null) owner = getStore(KEY_OWNER);
+    if (active == null) active = getStore(KEY_ACTIVE);
+    if (auth == null) auth = getStore(KEY_AUTH);
     final k0 = decrypt(password, owner);
     final k1 = decrypt(password, active);
     final k2 = decrypt(password, auth);

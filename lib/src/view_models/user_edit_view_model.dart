@@ -3,12 +3,12 @@ import 'package:fleamarket/src/views/photos_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_photos_manager/simple_photo.dart';
 
-class UserEditViewModel extends BaseViewModel{
-  UserEditViewModel(BuildContext context) : super(context){
+class UserEditViewModel extends BaseViewModel {
+  UserEditViewModel(BuildContext context) : super(context) {
     _controller = TextEditingController();
   }
 
-  SimplePhoto _photo ;
+  SimplePhoto _photo;
   TextEditingController _controller;
 
   SimplePhoto get photo => _photo;
@@ -19,16 +19,17 @@ class UserEditViewModel extends BaseViewModel{
       title: super.locale.translation('publish.photos_selector'),
     );
     List<SimplePhoto> photos = await super.dialog(screen);
-    if(photos != null && photos.length != 0){
+    if (photos != null && photos.length != 0) {
       _photo = photos[0];
       // notifyListeners();
     }
   }
 
-  submit(){
-    //TODO: 处理更新用户业务
-    super.pop();
-  }  
+  submit() {
+    // loading();
+    // accountService.setProfile("", "").then((result) {});
+    pop();
+  }
 
   @override
   void dispose() {

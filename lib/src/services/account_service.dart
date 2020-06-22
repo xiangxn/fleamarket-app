@@ -27,53 +27,29 @@ class AccountService {
   }
 
   Future<bool> login(String phone, String password) async {
-    var flag = false;
-    var ownerStr = Utils.getStore(KEY_OWNER);
-    var activeStr = Utils.getStore(KEY_ACTIVE);
-    var authStr = Utils.getStore(KEY_AUTH);
-    if (ownerStr != null && activeStr != null && authStr != null) {
-      try {
-        flag = Utils.validateKey(phone, password);
-      } catch (e) {
-        flag = false;
+    final keys = Utils.generateKeys(phone, password);
+    _api.setKey(keys[2]);
+    _api.setPhone(phone);
+    //print("${keys[0].toEOSPublicKey().toString()}_${keys[1].toEOSPublicKey().toString()}_${keys[2].toEOSPublicKey().toString()}");
+    final result = await _api.getUserByPhone(phone);
+    if (result.code == 0) {
+      final str = StringValue();
+      result.data.unpackInto(str);
+      dynamic data = jsonDecode(str.value)['users']['edges'];
+      if (data.length > 0) {
+        data = data[0]['node'];
       }
-    } else {
-      final keys = Utils.generateKeys(phone, password);
-      ownerStr = Utils.encrypt(password, keys[0].toString());
-      activeStr = Utils.encrypt(password, keys[1].toString());
-      authStr = Utils.encrypt(password, keys[2].toString());
-      flag = true;
-    }
-    if (flag) {
-      _authKey = EOSPrivateKey.fromString(Utils.decrypt(password, authStr));
-      _api.setKey(_authKey);
-      _api.setPhone(phone);
-      var result = await _api.getUserByPhone(phone);
-      //print("result: $result");
-      if (result.code == 0) {
-        final str = StringValue();
-        result.data.unpackInto(str);
-        dynamic data = jsonDecode(str.value)['users']['edges'];
-        if (data.length > 0) {
-          data = data[0]['node'];
-        }
-        //print("data:$data");
-        if (_authKey.toEOSPublicKey().toString() == data['authKey'].toString()) {
-          Utils.setStore(KEY_OWNER, ownerStr);
-          Utils.setStore(KEY_ACTIVE, activeStr);
-          Utils.setStore(KEY_AUTH, authStr);
-          _user = data;
-          _lock = false;
-          _ownerKey = EOSPrivateKey.fromString(Utils.decrypt(password, ownerStr));
-          _activeKey = EOSPrivateKey.fromString(Utils.decrypt(password, activeStr));
-        } else {
-          flag = false;
-        }
-      } else {
-        flag = false;
+      //print("data============:$data");
+      if (keys[2].toEOSPublicKey().toString() == data['authKey'].toString()) {
+        _user = data;
+        _lock = false;
+        _ownerKey = keys[0];
+        _activeKey = keys[1];
+        _authKey = keys[2];
+        return true;
       }
     }
-    return flag;
+    return false;
   }
 
   Future<BaseReply> register(String phone, String password, String smsCode, String referral) async {
@@ -81,9 +57,9 @@ class AccountService {
     final res = await _api.register(phone, keys[0].toEOSPublicKey().toString(), keys[1].toEOSPublicKey().toString(),
         smsCode: smsCode, referral: referral, authKey: keys[2].toEOSPublicKey().toString());
     if (res.code == 0) {
-      Utils.setStore(KEY_OWNER, Utils.encrypt(password, keys[0].toString()));
-      Utils.setStore(KEY_ACTIVE, Utils.encrypt(password, keys[1].toString()));
-      Utils.setStore(KEY_AUTH, Utils.encrypt(password, keys[2].toString()));
+      // Utils.setStore(KEY_OWNER, Utils.encrypt(password, keys[0].toString()));
+      // Utils.setStore(KEY_ACTIVE, Utils.encrypt(password, keys[1].toString()));
+      // Utils.setStore(KEY_AUTH, Utils.encrypt(password, keys[2].toString()));
       _lock = false;
       _ownerKey = keys[0];
       _activeKey = keys[1];
@@ -93,6 +69,7 @@ class AccountService {
       var user = User();
       res.data.unpackInto(user);
       _user = user.toProto3Json();
+      //print("user:$user");
       //_user = await _api.getUserByUserid(user.userid);
       //return BaseReply();
     }
@@ -101,6 +78,7 @@ class AccountService {
 
   Future<bool> validateReferral(String eosid) async {
     final res = await _api.getUserByEosid(eosid);
+    print("res:$res");
     return res != null;
   }
 
@@ -124,6 +102,10 @@ class AccountService {
   updateToken(String token) {
     Utils.setStore(TOKEN, token);
     Utils.setStore(TOKEN_TIMER, DateTime.now().toIso8601String());
+  }
+
+  Future<bool> setProfile({String head, String nickname}) async {
+    return await _api.setProfile(activeKey, user['eosid'], head: head, nickname: nickname);
   }
 
   logout(int id) {

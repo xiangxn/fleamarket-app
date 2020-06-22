@@ -74,24 +74,26 @@ class LoginViewModel extends BaseViewModel implements TickerProvider {
         loading();
         if (val) {
           pop(0);
-        }else{
-          alert("登录失败");
+        } else {
+          toast("登录失败");
         }
       });
     }
   }
 
-  register() async {
+  register() {
     if (_registerFormKey.currentState.validate()) {
       _registerFormKey.currentState.save();
-      final recommendedRes = await checkRecommended();
-      if (recommendedRes) {
-        final res = accountService.register(_phone, _password, _vcode, _recommended);
-        await processing(res);
-        pop(0);
-      } else {
-        super.toast("无效的引荐人");
-      }
+      checkRecommended().then((result) {
+        if (result) {
+          final res = accountService.register(_phone, _password, _vcode, _recommended);
+          processing(res).then((result) {
+            if (result.code == 0) pop(0);
+          });
+        } else {
+          super.toast("无效的引荐人");
+        }
+      });
     }
   }
 
