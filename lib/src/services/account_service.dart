@@ -49,6 +49,7 @@ class AccountService {
       _api.setKey(_authKey);
       _api.setPhone(phone);
       var result = await _api.getUserByPhone(phone);
+      //print("result: $result");
       if (result.code == 0) {
         final str = StringValue();
         result.data.unpackInto(str);

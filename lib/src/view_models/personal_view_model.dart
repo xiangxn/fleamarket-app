@@ -23,7 +23,7 @@ class PersonalViewModel extends BaseViewModel {
   Future<void> refreshUser() async {
     if (currentUser != null) {
       var process = accountService.fetchUser(userId);
-      final res = await super.processing(process, showLoading: false);
+      await super.processing(process, showLoading: false);
       notifyListeners();
     }
     return;

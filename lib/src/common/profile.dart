@@ -37,8 +37,8 @@ const String CITY_LV = 'city';
 const String DISTRICT_LV = 'district';
 
 /// other
-//const String GRPC_HOST = 'api.bitsflea.com';
-const String GRPC_HOST = '127.0.0.1';
+const String GRPC_HOST = 'api.bitsflea.com';
+//const String GRPC_HOST = '127.0.0.1';
 const String VCODE_TIMER = 'vcodeTimer';
 const String USER = 'user';
 const String KEY_OWNER = 'owner';

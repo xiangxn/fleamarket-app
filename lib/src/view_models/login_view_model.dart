@@ -66,14 +66,14 @@ class LoginViewModel extends BaseViewModel implements TickerProvider {
     super.pop(0);
   }
 
-  login() async {
+  login() {
     if (_loginFormKey.currentState.validate()) {
       _loginFormKey.currentState.save();
       loading();
       accountService.login(_phone, _password).then((val) {
         loading();
         if (val) {
-          pop(false);
+          pop(0);
         }else{
           alert("登录失败");
         }
