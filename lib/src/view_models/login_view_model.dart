@@ -75,7 +75,10 @@ class LoginViewModel extends BaseViewModel implements TickerProvider {
         if (val) {
           pop(0);
         }else{
-          alert("登录失败");
+          // alert("登录失败");
+          alert("登录失败", callback: (v){
+            print('alert result $v');
+          });
         }
       });
     }
