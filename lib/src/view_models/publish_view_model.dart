@@ -12,8 +12,8 @@ import 'package:fleamarket/src/views/photos_selector.dart';
 import 'package:fleamarket/src/views/type_selector.dart';
 import 'package:fleamarket/src/widgets/number_pad.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_photos_manager/simple_photos_manager.dart';
 
 class PublishViewModel extends BaseViewModel{
   GoodsService _goodsService ;
@@ -30,7 +30,7 @@ class PublishViewModel extends BaseViewModel{
   double _pricingAmount = 0;
   double _freightAmount = 0;
   String _symbol ;
-  List<SimplePhoto> _photos = [];
+  List<AssetEntity> _photos = [];
   int _maxCount = 8;
   bool _isUpdate = false;
   Goods _goods ;
@@ -87,10 +87,12 @@ class PublishViewModel extends BaseViewModel{
     _symbol = _goods.symbol ?? _goodsService.symbols.first['key'];
 
     _goods.imgs = _goods.imgs ?? List<String>();
-    _photos = await Future.wait(_goods.imgs.map<Future<SimplePhoto>>((path) async {
-      Uint8List imgData = await Utils.getImageData(path);
-      return SimplePhoto(path, 0, 0, 0, imgData);
-    }).toList());
+    // _photos = await Future.wait(_goods.imgs.map<Future<AssetEntity>>((path) async {
+    //   Uint8List imgData = await Utils.getImageData(path);
+    //   var ae = AssetEntity(id:path);
+    //   ae.
+    //   return SimplePhoto(path, 0, 0, 0, imgData);
+    // }).toList());
     super.setBusy();
     notifyListeners();
   }
@@ -144,7 +146,7 @@ class PublishViewModel extends BaseViewModel{
       maxCount: _maxCount,
       selectedPhotos: [..._photos],
     );
-    List<SimplePhoto> photos = await super.dialog(screen);
+    List<AssetEntity> photos = await super.dialog(screen);
     if(photos != null && photos.length != 0){
       _photos = photos;
     }

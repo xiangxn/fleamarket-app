@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/common/utils.dart';
-import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/ext_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';

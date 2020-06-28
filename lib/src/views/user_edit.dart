@@ -1,4 +1,5 @@
 import 'package:fleamarket/src/common/style.dart';
+import 'package:fleamarket/src/common/utils.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
 import 'package:fleamarket/src/view_models/user_edit_view_model.dart';
 import 'package:fleamarket/src/views/base_view.dart';
@@ -6,6 +7,7 @@ import 'package:fleamarket/src/widgets/ext_circle_avatar.dart';
 import 'package:fleamarket/src/widgets/line_button_group.dart';
 import 'package:fleamarket/src/widgets/line_button_item.dart';
 import 'package:flutter/material.dart';
+import '../common/profile.dart';
 
 class UserEdit extends StatelessWidget{
   @override
@@ -39,7 +41,7 @@ class UserEdit extends StatelessWidget{
                   children: [
                     LineButtonItem(
                       text: locale.translation('user_edit.head'),
-                      suffix: ExtCircleAvatar(model.currentUser['head'], 60, data: model.photo?.data, strokeWidth: 0),
+                      suffix: ExtCircleAvatar(URL_IPFS_GATEWAY+Utils.getUserAttr(model.currentUser,'head'), 60, data: model.photo, strokeWidth: 0),
                       onTap: model.changeHead,
                     ),
                     LineButtonItem(
@@ -52,7 +54,7 @@ class UserEdit extends StatelessWidget{
                           maxLines: 1,
                           decoration: InputDecoration(
                             isDense: true,
-                            hintText: model.currentUser['nickname'],
+                            hintText: Utils.getUserAttr(model.currentUser,'nickname'),
                             contentPadding: EdgeInsets.symmetric(vertical: 0),
                             border: InputBorder.none
                           ),

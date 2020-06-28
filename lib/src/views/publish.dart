@@ -8,7 +8,8 @@ import 'package:fleamarket/src/widgets/line_button_group.dart';
 import 'package:fleamarket/src/widgets/line_button_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:simple_photos_manager/simple_photos_manager.dart';
+import 'package:photo_manager/photo_manager.dart';
+import '../common/utils.dart';
 import 'base_view.dart';
 
 class Publish extends StatelessWidget{
@@ -103,7 +104,7 @@ class Publish extends StatelessWidget{
                         shrinkWrap: true,
                         itemCount: model.photosCount,
                         itemBuilder: (_, i){
-                          SimplePhoto photo = i < model.photos.length ? model.photos[i] : null;
+                          AssetEntity photo = i < model.photos.length ? model.photos[i] : null;
                           return GestureDetector(
                             onTap: model.selectPhotos,
                             child: DecoratedBox(
@@ -114,7 +115,7 @@ class Publish extends StatelessWidget{
                               child: photo != null ? 
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(4),
-                                  child: Image.memory(photo.data, fit: BoxFit.cover),
+                                  child: Utils.createImage(photo.thumbData),
                                 ) :
                                 Icon(
                                   Icons.add,

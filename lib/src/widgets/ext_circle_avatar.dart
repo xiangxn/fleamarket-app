@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/widgets/ext_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 class ExtCircleAvatar extends StatelessWidget {
   ExtCircleAvatar(this.url, this.size, {Key key, this.strokeWidth = 3, this.strokeColor = Colors.white, this.data}) : super(key: key);
@@ -11,14 +12,19 @@ class ExtCircleAvatar extends StatelessWidget {
   final double size;
   final double strokeWidth;
   final Color strokeColor;
-  final Uint8List data;
+  final AssetEntity data;
 
-  _buildImg() {
+  _createImg() {
     int intSize = this.size.round();
-    if (this.data != null) {
-      return CircleAvatar(
-        backgroundColor: Colors.white,
-        backgroundImage: Image.memory(this.data, cacheWidth: intSize, cacheHeight: intSize).image,
+    if (data != null) {
+      return FutureBuilder(
+        future: data.thumbData,
+        builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+          return CircleAvatar(
+            backgroundColor: Colors.white,
+            backgroundImage: Image.memory(snapshot.data, cacheWidth: intSize, cacheHeight: intSize).image,
+          );
+        },
       );
     } else {
       return ExtNetworkImage(
@@ -33,8 +39,8 @@ class ExtCircleAvatar extends StatelessWidget {
       );
     }
   }
-
   String get getUrl {
+    print("url:${this.url}");
     if (this.url == null || this.url == "") return DEFAULT_HEAD;
     return this.url;
   }
@@ -49,7 +55,7 @@ class ExtCircleAvatar extends StatelessWidget {
         border: Border.all(color: this.strokeColor, width: this.strokeWidth),
         borderRadius: BorderRadius.all(Radius.circular(this.size / 2)),
       ),
-      child: _buildImg(),
+      child: _createImg(),
     );
   }
 }

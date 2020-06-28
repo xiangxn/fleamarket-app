@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'package:fleamarket/src/common/profile.dart';
@@ -46,6 +47,21 @@ class AccountService {
         _ownerKey = keys[0];
         _activeKey = keys[1];
         _authKey = keys[2];
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> refreshUser() async {
+    if (_user == null) return false;
+    final result = await _api.getUserByUserid(_user['userid']);
+    if (result.code == 0) {
+      var str = StringValue();
+      result.data.unpackInto(str);
+      dynamic data = jsonDecode(str.value)['users']['edges'];
+      if (data.length > 0) {
+        _user = data[0]['node'];
         return true;
       }
     }
@@ -99,13 +115,27 @@ class AccountService {
     return await _api.unFollow(userid, follower);
   }
 
-  updateToken(String token) {
-    Utils.setStore(TOKEN, token);
-    Utils.setStore(TOKEN_TIMER, DateTime.now().toIso8601String());
-  }
-
-  Future<bool> setProfile({String head, String nickname}) async {
-    return await _api.setProfile(activeKey, user['eosid'], head: head, nickname: nickname);
+  Future<bool> setProfile({Uint8List head, String nickname}) async {
+    //print("user: $user");
+    if (head == null && nickname == null) return true;
+    String headHash;
+    String nn;
+    if (head != null) {
+      final result = await _api.uploadFile(head);
+      if (result.code == 0) {
+        headHash = result.msg;
+      }
+    }
+    if (nickname != null && nickname.length > 0) {
+      nn = nickname;
+    }
+    //print("head:$headHash, nickname:$nn");
+    final result = await _api.setProfile(activeKey, user['eosid'], head: headHash, nickname: nn);
+    if (result) {
+      if (headHash != null) _user['head'] = headHash;
+      if (nickname != null) _user['nickname'] = nickname;
+    }
+    return result;
   }
 
   logout(int id) {

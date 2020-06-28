@@ -149,4 +149,17 @@ class Utils {
     }
     return DateTime.parse(dateString);
   }
+
+  static Image createImage(Future<Uint8List> fu) {
+    Image img;
+    fu.then((imgData) {
+      img = Image.memory(imgData, fit: BoxFit.cover);
+    });
+    return img;
+  }
+
+  static dynamic getUserAttr(dynamic user, String att) {
+    if (user != null) return user[att];
+    return null;
+  }
 }

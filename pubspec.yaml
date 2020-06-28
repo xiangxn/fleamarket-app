@@ -44,11 +44,8 @@ dependencies:
   provider: ^4.0.4
   tuple: ^1.0.3
   amap_location: ^0.2.0
-  simple_photos_manager: {
-    git: {
-      url: https://github.com/bulangnisi/simple_photos_manager.git
-    }
-  }
+  photo_manager: ^0.5.3+1
+  
 
 dev_dependencies:
   #flutter_test:

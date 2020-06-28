@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:grpc/grpc.dart';
 import '../grpc/bitsflea.pb.dart';
 import '../grpc/bitsflea.pbgrpc.dart';
@@ -6,6 +9,7 @@ import 'profile.dart';
 import 'utils.dart';
 import '../grpc/google/protobuf/wrappers.pb.dart';
 import 'package:eosdart/eosdart.dart';
+import 'package:eosdart/src/serialize.dart' as ser;
 
 class DataApi {
   BitsFleaClient _client;
@@ -252,17 +256,19 @@ class DataApi {
   }
 
   Future<bool> setProfile(EOSPrivateKey actKey, String eosid, {String head, String nickname}) async {
+    final token = await getToken();
     TransactionRequest tr = TransactionRequest();
     tr.sign = 0;
-    EOSClient client = EOSClient("", "v1", privateKeys: [actKey.toString()]);
+    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
     List<Authorization> auth = [
       Authorization()
         ..actor = eosid
         ..permission = 'active'
     ];
     Map data = {'eosid': eosid};
-    if (head != null) data['head'] = head;
-    if (nickname != null) data['nickname'] = nickname;
+    data['head'] = head;
+    data['nickname'] = nickname;
+    //print("head-data:$data");
     List<Action> actions = [
       Action()
         ..account = CONTRACT_NAME
@@ -271,9 +277,33 @@ class DataApi {
         ..data = data
     ];
     Transaction transaction = Transaction()..actions = actions;
-    client.pushTransaction(transaction, broadcast: false).then((trx) {
-      print(trx);
-    });
+    final serTrxArgs = await client.pushTransaction(transaction, broadcast: false);
+    //print("serTrxArgs:$serTrxArgs");
+    final trx = {
+      'signatures': serTrxArgs.signatures,
+      'compression': 0,
+      'packed_context_free_data': '',
+      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
+    };
+    tr.sign = 0;
+    tr.trx = jsonEncode(trx);
+    //print("trx:$tr");
+    try {
+      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
+      //print("result:$result");
+      return result.code == 0;
+    } on GrpcError catch (e) {
+      print(e.message);
+      return false;
+    }
+  }
+
+  Future<BaseReply> uploadFile(Uint8List file) async {
+    final token = await getToken();
+    FileRequest request = FileRequest();
+    request.file = file;
+    request.name = "head.jpg";
+    return _client.upload(request, options: CallOptions(metadata: {'token': token}));
   }
 
   Future<dynamic> fetchCategorier() async {}

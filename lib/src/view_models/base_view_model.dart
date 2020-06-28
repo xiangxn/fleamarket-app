@@ -22,6 +22,10 @@ class BaseViewModel extends ChangeNotifier implements WidgetsBindingObserver {
   dynamic get currentUser => this.accountService.user;
   int get userId => this.currentUser['userid'] ?? 0;
   String get userEosId => this.currentUser['eosid'] ?? "";
+  String get userHead {
+    if (currentUser != null) return currentUser['head'];
+    return null;
+  }
 
   // 禁止使用这种方式获取参数，这会导致view回退时重新build一次再dispose
   // 在路由上传参，并在view上接收参数的方式不会导致这样的问题
@@ -59,18 +63,18 @@ class BaseViewModel extends ChangeNotifier implements WidgetsBindingObserver {
 
   toast(String msg, {bool showToast = true}) {
     if (showToast) {
-      WidgetsBinding.instance.addPostFrameCallback( (_) => ExtDialog.toast(context, msg));
+      WidgetsBinding.instance.addPostFrameCallback((_) => ExtDialog.toast(context, msg));
     }
   }
 
   alert(String msg, {String title, Function callback}) {
-    WidgetsBinding.instance.addPostFrameCallback( (_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       ExtDialog.alert(context, msg, title).then((val) => callback ?? null);
     });
   }
 
   confirm(String msg, {String title, Function callback}) {
-    WidgetsBinding.instance.addPostFrameCallback( (_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       ExtDialog.confirm(context, msg, title).then((val) => callback ?? null);
     });
   }
