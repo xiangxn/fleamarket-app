@@ -85,9 +85,6 @@ class AccountService {
       var user = User();
       res.data.unpackInto(user);
       _user = user.toProto3Json();
-      //print("user:$user");
-      //_user = await _api.getUserByUserid(user.userid);
-      //return BaseReply();
     }
     return res;
   }

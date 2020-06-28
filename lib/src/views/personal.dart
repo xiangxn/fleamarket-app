@@ -36,6 +36,7 @@ class Personal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<PersonalViewModel>(
+      listen: true,
       model: model,
       builder: (_, model, __) {
         return Selector<PersonalViewModel, dynamic>(

@@ -37,7 +37,6 @@ class UserEditViewModel extends BaseViewModel {
     loading();
     if (result) {
       pop();
-      notifyListeners();
     } else {
       toast("保存失败");
     }
