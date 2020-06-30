@@ -200,6 +200,7 @@ class User extends $pb.GeneratedMessage {
     ..a<$core.int>(17, 'favoriteTotal', $pb.PbFieldType.O3,
         protoName: 'favoriteTotal')
     ..a<$core.int>(18, 'fansTotal', $pb.PbFieldType.O3, protoName: 'fansTotal')
+    ..aOS(19, 'authKey', protoName: 'authKey')
     ..hasRequiredFields = false;
 
   User._() : super();
@@ -438,6 +439,18 @@ class User extends $pb.GeneratedMessage {
   $core.bool hasFansTotal() => $_has(17);
   @$pb.TagNumber(18)
   void clearFansTotal() => clearField(18);
+
+  @$pb.TagNumber(19)
+  $core.String get authKey => $_getSZ(18);
+  @$pb.TagNumber(19)
+  set authKey($core.String v) {
+    $_setString(18, v);
+  }
+
+  @$pb.TagNumber(19)
+  $core.bool hasAuthKey() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearAuthKey() => clearField(19);
 }
 
 class RegisterRequest extends $pb.GeneratedMessage {

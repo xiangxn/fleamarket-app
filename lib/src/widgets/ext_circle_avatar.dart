@@ -39,9 +39,8 @@ class ExtCircleAvatar extends StatelessWidget {
       );
     }
   }
+
   String get getUrl {
-    print("url:${this.url}");
-    if (this.url == null || this.url == "") return DEFAULT_HEAD;
     return this.url;
   }
 

@@ -1,6 +1,7 @@
 import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/common/style.dart';
 import 'package:fleamarket/src/common/utils.dart';
+import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
 import 'package:fleamarket/src/view_models/personal_view_model.dart';
 import 'package:fleamarket/src/views/base_view.dart';
@@ -39,7 +40,7 @@ class Personal extends StatelessWidget {
       listen: true,
       model: model,
       builder: (_, model, __) {
-        return Selector<PersonalViewModel, dynamic>(
+        return Selector<PersonalViewModel, User>(
           selector: (_, provider) => provider.currentUser,
           builder: (_, user, __) {
             ExtLocale locale = model.locale;
@@ -56,7 +57,7 @@ class Personal extends StatelessWidget {
                         child: Row(
                           children: <Widget>[
                             GestureDetector(
-                              child: ExtCircleAvatar(URL_IPFS_GATEWAY+Utils.getUserAttr(user, 'head'), 80, strokeWidth: 0),
+                              child: ExtCircleAvatar(user?.head, 80, strokeWidth: 0),
                               onTap: model.toEdit,
                             ),
                             Expanded(
@@ -68,7 +69,7 @@ class Personal extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      Utils.getUserAttr(user,'nickname') ?? '-',
+                                      user?.nickname ?? '-',
                                       style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.bold, fontSize: 15),
                                     ),
                                     Padding(
@@ -76,14 +77,14 @@ class Personal extends StatelessWidget {
                                       child: Row(
                                         children: <Widget>[
                                           Icon(
-                                            Utils.getUserAttr(user,'isReviewer') == 0 ? FontAwesomeIcons.solidUser : FontAwesomeIcons.userTie,
+                                            user?.isReviewer == 0 ? FontAwesomeIcons.solidUser : FontAwesomeIcons.userTie,
                                             color: Colors.grey[700],
                                             size: 16,
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(left: 10),
                                             child: Text(
-                                                Utils.getUserAttr(user,'isReviewer') == 0
+                                                user?.isReviewer == 0
                                                     ? locale.translation('personal.user_normal')
                                                     : locale.translation('personal.user_reviewer'),
                                                 style: TextStyle(color: Colors.grey[900])),
@@ -99,7 +100,7 @@ class Personal extends StatelessWidget {
                                             style: TextStyle(color: Colors.grey[700]),
                                             children: <TextSpan>[
                                               TextSpan(
-                                                text: Utils.getUserAttr(user,'eosid') ?? '0',
+                                                text: user?.eosid ?? '0',
                                                 style: TextStyle(color: Colors.black),
                                               )
                                             ]),
@@ -126,32 +127,32 @@ class Personal extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         margin: EdgeInsets.only(bottom: 10, top: 20),
                         child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
-                          _buildChunk(locale.translation('personal.favorite'), Utils.getUserAttr(user,'followTotal') ?? 0, () => model.pushNamed(MINE_FAVORITE_ROUTE)),
-                          _buildChunk(locale.translation('personal.focus'), Utils.getUserAttr(user,'favoriteTotal') ?? 0, () => model.pushNamed(MINE_FOCUS_ROUTE)),
-                          _buildChunk(locale.translation('personal.fans'), Utils.getUserAttr(user,'fansTotal') ?? 0, () => model.pushNamed(MINE_FANS_ROUTE)),
+                          _buildChunk(locale.translation('personal.favorite'), user?.followTotal ?? 0, () => model.pushNamed(MINE_FAVORITE_ROUTE)),
+                          _buildChunk(locale.translation('personal.focus'), user?.favoriteTotal ?? 0, () => model.pushNamed(MINE_FOCUS_ROUTE)),
+                          _buildChunk(locale.translation('personal.fans'), user?.fansTotal ?? 0, () => model.pushNamed(MINE_FANS_ROUTE)),
                         ]),
                       ),
                       LineButtonGroup(children: [
                         LineButtonItem(
                             text: locale.translation('personal.mine_publish'),
-                            subText: (Utils.getUserAttr(user,'postsTotal') ?? 0).toString(),
+                            subText: (user?.postsTotal ?? 0).toString(),
                             prefixIcon: Icons.shop,
                             onTap: () => model.pushNamed(MINE_PUBLISH_ROUTE)),
                         LineButtonItem(
                           text: locale.translation('personal.mine_buy'),
-                          subText: (Utils.getUserAttr(user,'buyTotal') ?? 0).toString(),
+                          subText: (user?.buyTotal ?? 0).toString(),
                           prefixIcon: Icons.archive,
                           onTap: () => model.pushNamed(MINE_BUY_ROUTE),
                         ),
                         LineButtonItem(
                           text: locale.translation('personal.mine_sell'),
-                          subText: (Utils.getUserAttr(user,'sellTotal') ?? 0).toString(),
+                          subText: (user?.sellTotal ?? 0).toString(),
                           prefixIcon: Icons.unarchive,
                           onTap: () => model.pushNamed(MINE_SELL_ROUTE),
                         ),
                         LineButtonItem(
                           text: locale.translation('personal.mine_recommended'),
-                          subText: (Utils.getUserAttr(user,'referralTotal') ?? 0).toString(),
+                          subText: (user?.referralTotal ?? 0).toString(),
                           prefixIcon: Icons.account_box,
                           onTap: () => model.pushNamed(MINE_INVITE_ROUTE),
                         ),
@@ -182,7 +183,7 @@ class Personal extends StatelessWidget {
                             prefixIcon: Icons.account_balance,
                             onTap: () => model.pushNamed(MINE_VOTE_ROUTE),
                           ),
-                          Utils.getUserAttr(user,'isReviewer') == 0
+                          user?.isReviewer == 0
                               ? LineButtonItem(
                                   text: locale.translation('personal.try_reviewer'),
                                   prefixIcon: Icons.assignment_ind,

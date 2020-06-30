@@ -43,7 +43,7 @@ class DataApi {
     String token = Utils.getStore(TOKEN) ?? "0";
     final diff = DateTime.now().difference(_lastTokenTime);
     if (force == false && diff.inHours < 2 && token != "0") {
-      print("token:" + token);
+      print("token 0:" + token);
       return token;
     }
     final request = RefreshTokenRequest();
@@ -52,7 +52,7 @@ class DataApi {
     request.time = ((new DateTime.now().millisecondsSinceEpoch) / 1000).floor();
     request.sign = _authKey.signString(request.phone + request.token + request.time.toString()).toString();
     final res = await _client.refreshToken(request);
-    print("token_result:$res");
+    //print("token_result:$res");
     if (res.code == 0) {
       var st = StringValue();
       res.data.unpackInto(st);
@@ -61,7 +61,7 @@ class DataApi {
       await Utils.setStore(TOKEN, token);
     }
     //print(res);
-    print("token:" + token);
+    print("token 1:" + token);
     return token;
   }
 

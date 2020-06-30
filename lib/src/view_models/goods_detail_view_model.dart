@@ -1,7 +1,6 @@
 import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/models/ext_result.dart';
 import 'package:fleamarket/src/models/goods.dart';
-import 'package:fleamarket/src/services/account_service.dart';
 import 'package:fleamarket/src/services/goods_service.dart';
 import 'package:fleamarket/src/view_models/base_view_model.dart';
 import 'package:flutter/material.dart';
@@ -31,15 +30,15 @@ class GoodsDetailViewModel extends BaseViewModel{
     if(!super.busy){
       super.setBusy();
       var process ;
-      if(_goods.hasCollection(accountService.user['userid'])){
-        process = _goodsService.unfavorite(accountService.user['userid'] ?? 0, _goods.productId);
+      if(_goods.hasCollection(userId)){
+        process = _goodsService.unfavorite(userId, _goods.productId);
       }else{
-        process = _goodsService.favorite(accountService.user['userid'] ?? 0, _goods.productId);
+        process = _goodsService.favorite(userId, _goods.productId);
       }
       ExtResult res = await super.processing(process, showLoading: false, showToast: false);
       if(res.code == 0){
-        _goods.collectionFlag = _goods.hasCollection(accountService.user['userid']) ? 0 : 1;
-        _goods.collections += _goods.hasCollection(accountService.user['userid']) ? 1 : -1;
+        _goods.collectionFlag = _goods.hasCollection(userId) ? 0 : 1;
+        _goods.collections += _goods.hasCollection(userId) ? 1 : -1;
         notifyListeners();
       }
       super.setBusy();
@@ -51,9 +50,9 @@ class GoodsDetailViewModel extends BaseViewModel{
       super.setBusy();
       var process ;
       if(_hasFocus){
-        process = accountService.unFollow(accountService.user['userid'], _goods.seller.userid);
+        process = accountService.unFollow(userId, _goods.seller.userid);
       }else{
-        process = accountService.follow(accountService.user['userid'], _goods.seller.userid);
+        process = accountService.follow(userId, _goods.seller.userid);
       }
       ExtResult res = await super.processing(process, showLoading: false, showToast: false);
       if(res.code == 0){
@@ -65,7 +64,7 @@ class GoodsDetailViewModel extends BaseViewModel{
   }
 
   fetchGoodsInfo() async {
-    var process = _goodsService.fetchGoodsInfo(_goods.productId, accountService.user['userid'] ?? 0);
+    var process = _goodsService.fetchGoodsInfo(_goods.productId, userId);
     ExtResult res = await super.processing(process, showLoading: false);
     if(res.code == 0){
       _goods = _goods.merge(res.data);

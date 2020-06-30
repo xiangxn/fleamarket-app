@@ -11,20 +11,48 @@ import '../common/data_api.dart';
 
 class AccountService {
   DataApi _api;
-  dynamic _user;
+  User _user;
   bool _lock = true;
   EOSPrivateKey _ownerKey;
   EOSPrivateKey _activeKey;
   EOSPrivateKey _authKey;
 
-  get user => _user;
-  get locked => _lock;
-  get ownerKey => _ownerKey;
-  get activeKey => _activeKey;
-  get authKey => _authKey;
+  User get user => _user;
+  bool get locked => _lock;
+  EOSPrivateKey get ownerKey => _ownerKey;
+  EOSPrivateKey get activeKey => _activeKey;
+  EOSPrivateKey get authKey => _authKey;
 
   AccountService(DataApi api) {
     _api = api;
+  }
+
+  User _userFromMap(dynamic map) {
+    var user = User();
+    user.userid = map['userid'];
+    user.eosid = map['eosid'];
+    user.phone = map['phone'];
+    user.status = map['status'];
+    user.nickname = map['nickname'];
+    user.head = map['head'];
+    user.creditValue = map['creditValue'];
+    user.referrer = map['referrer'];
+    user.lastActiveTime = map['lastActiveTime'];
+    user.postsTotal = map['postsTotal'];
+    user.sellTotal = map['sellTotal'];
+    user.buyTotal = map['buyTotal'];
+    user.referralTotal = map['referralTotal'];
+    user.point = map['point'];
+    user.isReviewer = map['isReviewer'];
+    user.followTotal = map['followTotal'];
+    user.favoriteTotal = map['favoriteTotal'];
+    user.fansTotal = map['fansTotal'];
+    user.authKey = map['authKey'];
+    if (user.head != null && user.head != "")
+      user.head = URL_IPFS_GATEWAY + user.head;
+    else
+      user.head = DEFAULT_HEAD;
+    return user;
   }
 
   Future<bool> login(String phone, String password) async {
@@ -42,7 +70,7 @@ class AccountService {
       }
       //print("data============:$data");
       if (keys[2].toEOSPublicKey().toString() == data['authKey'].toString()) {
-        _user = data;
+        _user = _userFromMap(data);
         _lock = false;
         _ownerKey = keys[0];
         _activeKey = keys[1];
@@ -55,7 +83,7 @@ class AccountService {
 
   Future<bool> refreshUser() async {
     if (_user == null) return false;
-    final result = await _api.getUserByUserid(_user['userid']);
+    final result = await _api.getUserByUserid(_user.userid);
     if (result.code == 0) {
       var str = StringValue();
       result.data.unpackInto(str);
@@ -84,7 +112,7 @@ class AccountService {
       _api.setPhone(phone);
       var user = User();
       res.data.unpackInto(user);
-      _user = user.toProto3Json();
+      _user = user;
     }
     return res;
   }
@@ -127,10 +155,10 @@ class AccountService {
       nn = nickname;
     }
     //print("head:$headHash, nickname:$nn");
-    final result = await _api.setProfile(activeKey, user['eosid'], head: headHash, nickname: nn);
+    final result = await _api.setProfile(activeKey, user.eosid, head: headHash, nickname: nn);
     if (result) {
-      if (headHash != null) _user['head'] = headHash;
-      if (nickname != null) _user['nickname'] = nickname;
+      if (headHash != null) _user.head = URL_IPFS_GATEWAY + headHash;
+      if (nickname != null) _user.nickname = nickname;
     }
     return result;
   }

@@ -30,7 +30,7 @@ class GoodsListViewModel extends BaseViewModel {
         var process;
         int diff = 0;
         Goods goods = goodsList[i].clone();
-        bool isCollection = goods.hasCollection(accountService.user['userid']);
+        bool isCollection = goods.hasCollection(userId);
         if (isCollection) {
           process = _goodsService.unfavorite(userId, goods.productId);
           diff = -1;
@@ -44,7 +44,7 @@ class GoodsListViewModel extends BaseViewModel {
           goods.collections += isCollection ? -1 : 1;
           goodsList[i] = goods;
           goods.faceUserId = userId;
-          this.currentUser['favoriteTotal'] += diff;
+          this.currentUser.favoriteTotal += diff;
           notifyListeners();
         }
         super.setBusy();

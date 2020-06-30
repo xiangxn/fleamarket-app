@@ -75,6 +75,7 @@ const User$json = const {
       '10': 'favoriteTotal'
     },
     const {'1': 'fansTotal', '3': 18, '4': 1, '5': 5, '10': 'fansTotal'},
+    const {'1': 'authKey', '3': 19, '4': 1, '5': 9, '10': 'authKey'},
   ],
 };
 

@@ -1,3 +1,4 @@
+import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/ext_page.dart';
 import 'package:fleamarket/src/models/goods.dart';
 import 'package:fleamarket/src/view_models/goods_list_view_model.dart';
@@ -39,8 +40,8 @@ class _GoodsList extends State<GoodsList> with AutomaticKeepAliveClientMixin{
     }
   }
 
-  Icon _buildFavoriteIcon(Goods goods, dynamic user){
-    bool isFavorite = goods.hasCollection(user['userid'] ?? 0);
+  Icon _buildFavoriteIcon(Goods goods, User user){
+    bool isFavorite = goods.hasCollection(user?.userid ?? 0);
     return Icon(
       isFavorite ? Icons.favorite : Icons.favorite_border, 
       size: 14,

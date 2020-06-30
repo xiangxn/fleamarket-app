@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fleamarket/src/common/ext_dialog.dart';
+import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
 import 'package:fleamarket/src/services/account_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,12 +20,11 @@ class BaseViewModel extends ChangeNotifier implements WidgetsBindingObserver {
   AccountService get accountService => Provider.of<AccountService>(context, listen: false);
   ExtLocale get locale => Provider.of<ExtLocale>(context, listen: false);
   bool get busy => _busy;
-  dynamic get currentUser => this.accountService.user;
-  int get userId => this.currentUser['userid'] ?? 0;
-  String get userEosId => this.currentUser['eosid'] ?? "";
+  User get currentUser => this.accountService.user;
+  int get userId => this.currentUser?.userid ?? 0;
+  String get userEosId => this.currentUser.eosid ?? "";
   String get userHead {
-    if (currentUser != null) return currentUser['head'];
-    return null;
+    return currentUser?.head;
   }
 
   // 禁止使用这种方式获取参数，这会导致view回退时重新build一次再dispose
