@@ -43,7 +43,6 @@ class BaseViewModel extends ChangeNotifier implements WidgetsBindingObserver {
     loading(showLoading, msg);
     var res = await process;
     loading(showLoading, msg);
-    // await Future.delayed(Duration(milliseconds: 10));
     if (res.code != 0) {
       toast(res.msg, showToast: showToast);
     }

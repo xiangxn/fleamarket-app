@@ -1,3 +1,5 @@
+import 'package:fleamarket/src/common/utils.dart';
+import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/category.dart';
 import 'package:fleamarket/src/models/ext_page.dart';
 import 'package:fleamarket/src/models/ext_result.dart';
@@ -28,9 +30,9 @@ class ShopViewModel extends BaseViewModel implements TickerProvider{
   fetchCategorier() async {
     print('fetch categories');
     var process = _goodsService.fetchCategories();
-    ExtResult res = await super.processing(process, showLoading: false);
-    if(res.code == 0 && res.data != null && res.data.length > 0){
-      _categories = res.data;
+    BaseReply res = await super.processing(process, showLoading: false);
+    if(res.code == 0 ){
+      _categories = _goodsService.categories;
       _list = List<ExtPage<Goods>>.generate(_categories.length, (i) => ExtPage<Goods>());
       _tabController = TabController(length: _categories.length, vsync: this);
       await Future.wait(_list.map((p) => fetchGoodsList(page: p, isRefresh: true, notify: false)));
@@ -62,8 +64,9 @@ class ShopViewModel extends BaseViewModel implements TickerProvider{
       page.incres();
     }
     var process = _goodsService.fetchGoodsList(userId, category.id, page.pageNo, page.pageSize);
-    ExtResult res = await super.processing(process, showLoading: false, showToast: false);
+    final res = await super.processing(process, showLoading: false, showToast: false);
     if(res.code == 0){
+      //final data = Utils.convertEdgeList(res.data);
       res.data?.data?.forEach((g) => g.faceUserId = userId ?? 0);
       res.data?.data?.forEach((g){
         print('goods face user id ${g.faceUserId}');

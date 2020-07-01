@@ -66,19 +66,11 @@ class DataApi {
   }
 
   Future<BaseReply> getUserByPhone(String phone) async {
-    final token = await getToken();
     final query = "{ users(phone:\"" +
         phone +
         "\") { edges{ node { userid,eosid,phone,status,nickname,head,creditValue,referrer,lastActiveTime,postsTotal,sellTotal,buyTotal," +
         "referralTotal,point,isReviewer,favoriteTotal,followTotal,fansTotal,authKey } } } }";
-    try {
-      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    } on GrpcError catch (e) {
-      var reply = BaseReply();
-      reply.code = e.code;
-      reply.msg = e.message;
-      return reply;
-    }
+    return await _search(query);
     //print(res);
     // if (res.status.code == 0 && res.data.length > 0) {
     //   final data = json.decode(res.data);
@@ -89,36 +81,19 @@ class DataApi {
   }
 
   Future<BaseReply> getUserByEosid(String eosid) async {
-    final token = await getToken();
     final query = "{ users(eosid:\"" +
         eosid +
         "\") { edges{ node { userid,eosid,phone,status,nickname,head,creditValue,referrer,lastActiveTime,postsTotal,sellTotal,buyTotal," +
         "referralTotal,point,isReviewer,favoriteTotal,followTotal,fansTotal,authKey } } } }";
-    try {
-      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    } on GrpcError catch (e) {
-      var reply = BaseReply();
-      reply.code = e.code;
-      reply.msg = e.message;
-      return reply;
-    }
+    return await _search(query);
   }
 
   Future<BaseReply> getUserByUserid(int uid) async {
-    final token = await getToken();
-
     final query = "{ users(userid:" +
         uid.toString() +
         ") { edges{ node { userid,eosid,phone,status,nickname,head,creditValue,referrer,lastActiveTime,postsTotal,sellTotal,buyTotal," +
         "referralTotal,point,isReviewer,favoriteTotal,followTotal,fansTotal,authKey } } } }";
-    try {
-      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    } on GrpcError catch (e) {
-      var reply = BaseReply();
-      reply.code = e.code;
-      reply.msg = e.message;
-      return reply;
-    }
+    return await _search(query);
   }
 
   Future<BaseReply> register(String phone, String ownerPubKey, String activePubKey,
@@ -176,7 +151,6 @@ class DataApi {
   }
 
   Future<BaseReply> getFollowByFollower(int userid, int pageNo, int pageSize) async {
-    final token = await getToken();
     var query = "{followByFollower(userid:" +
         userid.toString() +
         ", pageNo:" +
@@ -185,18 +159,10 @@ class DataApi {
         pageSize.toString() +
         ")" +
         " {user{userid,eosid,status,nickname,head}}}";
-    try {
-      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    } on GrpcError catch (e) {
-      var reply = BaseReply();
-      reply.code = e.code;
-      reply.msg = e.message;
-      return reply;
-    }
+    return await _search(query);
   }
 
   Future<BaseReply> getFollowByUser(int userid, int pageNo, int pageSize) async {
-    final token = await getToken();
     var query = "{followByUser(userid:" +
         userid.toString() +
         ", pageNo:" +
@@ -205,27 +171,12 @@ class DataApi {
         pageSize.toString() +
         ")" +
         " {follower{userid,eosid,status,nickname,head}}}";
-    try {
-      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    } on GrpcError catch (e) {
-      var reply = BaseReply();
-      reply.code = e.code;
-      reply.msg = e.message;
-      return reply;
-    }
+    return await _search(query);
   }
 
   Future<BaseReply> getRecAddrByUser(int userid) async {
-    final token = await getToken();
     var query = "{recAddrByUser(userid:" + userid.toString() + "){rid,province,city,district,phone,name,address,postcode,default}}";
-    try {
-      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-    } on GrpcError catch (e) {
-      var reply = BaseReply();
-      reply.code = e.code;
-      reply.msg = e.message;
-      return reply;
-    }
+    return await _search(query);
   }
 
   Future<bool> setDefaultAddr(int id, int userid) async {
@@ -306,11 +257,38 @@ class DataApi {
     return _client.upload(request, options: CallOptions(metadata: {'token': token}));
   }
 
-  Future<dynamic> fetchCategorier() async {}
+  Future<BaseReply> _search(String query) async {
+    final token = await getToken();
+    try {
+      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+    } on GrpcError catch (e) {
+      var reply = BaseReply();
+      reply.code = e.code;
+      reply.msg = e.message;
+      return reply;
+    }
+  }
 
-  Future<dynamic> fetchGoodsList(int userid, int categoryId, int pageNo, int pageSize) async {}
+  Future<BaseReply> fetchCategorier() async {
+    String query = "{ categories { edges{ node { cid, view, parent} } } }";
+    return await _search(query);
+  }
 
-  Future<dynamic> fetchGoodsInfo(int productId, int userid) async {}
+  Future<BaseReply> fetchGoodsList(int categoryId, int pageNo, int pageSize, {int userid = 0}) async {
+    String query = "{productByCid(categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
+    if (userid > 0) query = "{productByCid(userid:$userid,categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
+    query += "{list{productId,title,price,collections,seller{head,nickname},imgs}}}";
+    return await _search(query);
+  }
+
+  Future<BaseReply> fetchGoodsInfo(int productId, {int userid = 0}) async {
+    String query = "{products(productId:$productId){edges{node{";
+    query += "productId,title,status,isNew,isReturns,transMethod,postage,position,releaseTime,desc,imgs,collections,price,saleMethod,stockCount,isRetail,";
+    query += "category{cid,view},";
+    query += "seller{userid,head,nickname,eosid}";
+    query += "}}}}";
+    return await _search(query);
+  }
 
   Future<bool> favorite(int userid, int productId) async {
     return true;
