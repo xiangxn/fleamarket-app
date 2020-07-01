@@ -1,27 +1,28 @@
-class User{
+import 'package:fleamarket/src/models/base_model.dart';
 
+class User extends BaseModel {
   User();
 
   String token;
   int userid;
   String eosid;
-  String phone;           //手机号
-  int status;             //状态 0 正常 1 锁定
-  String nickname;        //昵称
-  String head;            //头像
-  int creditValue;        //信用值
-  String referrer;        //我的邀请人eosid
-  String lastActiveTime;  //最后激活时间
-  int postsTotal;         //上传总数
-  int sellTotal;          //卖出总数
-  int buyTotal;           //购买总数
-  int referralTotal;      //引荐总数
-  int favoriteTotal;      //关注总数
-  int collectionTotal;    //收藏总数
-  int fansTotal;          //粉丝数
-  String point;           //平台资产总数
-  int isReviewer;         //评审员标示 0 评审员 1 普通用户
-  int vote;               //（临）票数
+  String phone; //手机号
+  int status; //状态 0 正常 1 锁定
+  String nickname; //昵称
+  String head; //头像
+  int creditValue; //信用值
+  String referrer; //我的邀请人eosid
+  String lastActiveTime; //最后激活时间
+  int postsTotal; //上传总数
+  int sellTotal; //卖出总数
+  int buyTotal; //购买总数
+  int referralTotal; //引荐总数
+  int favoriteTotal; //关注总数
+  int collectionTotal; //收藏总数
+  int fansTotal; //粉丝数
+  String point; //平台资产总数
+  int isReviewer; //评审员标示 0 评审员 1 普通用户
+  int vote; //（临）票数
 
   User.fromJson(Map<String, dynamic> json) {
     token = json['token'];
@@ -69,8 +70,12 @@ class User{
     return data;
   }
 
-  clone(){
+  clone() {
     return User.fromJson(this.toJson());
   }
 
+  @override
+  fromJson(Map<String, dynamic> json) {
+    return User.fromJson(json);
+  }
 }

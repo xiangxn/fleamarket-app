@@ -10,7 +10,9 @@ import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/grpc/google/protobuf/any.pb.dart';
 import 'package:fleamarket/src/grpc/google/protobuf/wrappers.pb.dart';
+import 'package:fleamarket/src/models/base_model.dart';
 import 'package:fleamarket/src/models/ext_image.dart';
+import 'package:fleamarket/src/models/ext_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -165,10 +167,17 @@ class Utils {
     return null;
   }
 
-  static List<dynamic> convertEdgeList(Any data,String key) {
+  static List<dynamic> convertEdgeList(Any data, String key) {
     var val = StringValue();
     data.unpackInto(val);
     final json = jsonDecode(val.value);
     return (json[key]['edges'] as List<dynamic>);
+  }
+
+  static ExtPage<T> convertPageList<T extends BaseModel>(Any data, T type) {
+    var val = StringValue();
+    data.unpackInto(val);
+    final json = jsonDecode(val.value);
+    return ExtPage<T>.fromJson(json, type);
   }
 }

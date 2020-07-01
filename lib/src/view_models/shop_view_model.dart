@@ -66,13 +66,9 @@ class ShopViewModel extends BaseViewModel implements TickerProvider{
     var process = _goodsService.fetchGoodsList(userId, category.id, page.pageNo, page.pageSize);
     final res = await super.processing(process, showLoading: false, showToast: false);
     if(res.code == 0){
-      //final data = Utils.convertEdgeList(res.data);
-      res.data?.data?.forEach((g) => g.faceUserId = userId ?? 0);
-      res.data?.data?.forEach((g){
-        print('goods face user id ${g.faceUserId}');
-      });
-      res.data.update(page.data);
-      _list[inx] = res.data;
+      final data = Utils.convertPageList<Goods>(res.data, new Goods());
+      data.update(page.data);
+      _list[inx] = data;
       if(notify){
         notifyListeners();
       }

@@ -1,38 +1,42 @@
-class ExtPage<T>{
+import 'dart:convert';
+
+import 'package:fleamarket/src/models/base_model.dart';
+
+class ExtPage<T extends BaseModel> {
   int pageNo;
   int pageSize;
   int totalCount;
   int totalPage;
   List<T> data;
 
-  ExtPage() 
-    : pageNo = 1,
-      pageSize = 20,
-      totalCount = 100,
-      totalPage = 100,
-      data = [];
+  ExtPage()
+      : pageNo = 1,
+        pageSize = 20,
+        totalCount = 100,
+        totalPage = 100,
+        data = [];
 
-  ExtPage.fromJson(Map<String, dynamic> json, Function format){
+  ExtPage.fromJson(Map<String, dynamic> json, T type) {
     this.pageNo = json['pageNo'];
     this.pageSize = json['pageSize'];
     this.totalCount = json['totalCount'];
-    this.totalPage = json['totalPage'];
-    this.data = json['data'] != null ? (json['data'] as List<dynamic>).map<T>((f) => format(f)).toList() : [];
+    this.totalPage = this.totalCount ~/ this.pageSize + (this.totalCount % this.pageSize == 0 ? 0 : 1);
+    this.data = json['list'] != null ? (json['list'] as List<dynamic>).map((f) => (type.fromJson(f) as T)).toList() : [];
   }
 
-  incres(){
-    this.pageNo ++;
-    if(this.pageNo >= this.totalPage){
+  incres() {
+    this.pageNo++;
+    if (this.pageNo >= this.totalPage) {
       this.pageNo = this.totalPage;
     }
   }
 
-  clean(){
+  clean() {
     this.pageNo = 1;
     this.data.clear();
   }
 
-  update(List<T> pre){
+  update(List<T> pre) {
     pre ??= [];
     this.data = [
       ...pre,
@@ -40,7 +44,12 @@ class ExtPage<T>{
     ];
   }
 
-  hasMore(){
+  hasMore() {
     return this.data.length < this.totalCount;
+  }
+
+  @override
+  String toString() {
+    return '{"pageNo":$pageNo,"pageSize":$pageSize,"totalCount":$totalCount,"totalPage":$totalPage,"data":$data}';
   }
 }

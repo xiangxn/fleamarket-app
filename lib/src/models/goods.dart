@@ -1,6 +1,7 @@
+import 'package:fleamarket/src/models/base_model.dart';
 import 'package:fleamarket/src/models/user.dart';
 
-class Goods{
+class Goods implements BaseModel {
   int id;
   int productId;
   String title;
@@ -26,7 +27,7 @@ class Goods{
 
   Goods();
 
-  Goods.fromJson(Map<String, dynamic> json){
+  Goods.fromJson(Map<String, dynamic> json) {
     this.id = json['id'];
     this.productId = json['productId'];
     this.title = json['title'];
@@ -48,7 +49,13 @@ class Goods{
     this.faceUserId = json['faceUserId'] ?? 0;
   }
 
-  toJson(){
+  @override
+  Goods fromJson(Map<String, dynamic> json) {
+    return Goods.fromJson(json);
+  }
+
+  @override
+  toJson() {
     Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['productId'] = this.productId;
@@ -72,15 +79,15 @@ class Goods{
     return data;
   }
 
-  Goods clone(){
+  Goods clone() {
     return Goods.fromJson(this.toJson());
   }
 
-  bool hasCollection(int userid){
+  bool hasCollection(int userid) {
     return userid == this.faceUserId && this.collectionFlag == 1;
   }
 
-  Goods merge(Goods goods){
+  Goods merge(Goods goods) {
     this.img = goods.imgs[0];
     return this;
   }
@@ -94,6 +101,4 @@ class Goods{
   double get totalAmount => priceAmount + postageAmount;
 
   String get total => '$totalAmount $symbol';
-
-
 }

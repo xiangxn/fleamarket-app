@@ -41,7 +41,7 @@ class ExtCircleAvatar extends StatelessWidget {
   }
 
   String get getUrl {
-    return this.url;
+    return this.url ?? DEFAULT_HEAD;
   }
 
   @override

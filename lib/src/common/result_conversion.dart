@@ -23,19 +23,19 @@ class ResultConversion {
           res.data = User.fromJson(res.data);
           break;
         case ResultTypes.UserPage:
-          res.data  = ExtPage<User>.fromJson(res.data, (json) => User.fromJson(json));
+          res.data  = ExtPage<User>.fromJson(res.data, new User());
           break;
         case ResultTypes.Goods:
           res.data = Goods.fromJson(res.data);     
           break;
         case ResultTypes.GoodsPage:
-          res.data = ExtPage<Goods>.fromJson(res.data, (json) => Goods.fromJson(json));     
+          res.data = ExtPage<Goods>.fromJson(res.data, new Goods());     
           break;
         case ResultTypes.Order:
           res.data = Order.fromJson(res.data);
           break;
         case ResultTypes.OrderPage:
-          res.data = ExtPage<Order>.fromJson(res.data, (json) => Order.fromJson(json));     
+          res.data = ExtPage<Order>.fromJson(res.data, new Order());     
           break;
         case ResultTypes.AddressList:
           if(res.data == null){
