@@ -100,7 +100,7 @@ class OrderCard extends StatelessWidget{
                       SizedBox(
                         width: 80,
                         height: 80,
-                        child: ExtNetworkImage(model.order.product.img, 
+                        child: ExtNetworkImage(model.order.product.imgs[0], 
                           imageBuilder: (_, imageProvider){
                             return ClipRRect(
                               borderRadius: BorderRadius.circular(4),

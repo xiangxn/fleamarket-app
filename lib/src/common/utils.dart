@@ -162,10 +162,10 @@ class Utils {
     return img;
   }
 
-  static dynamic getUserAttr(dynamic user, String att) {
-    if (user != null) return user[att];
-    return null;
-  }
+  // static dynamic getUserAttr(dynamic user, String att) {
+  //   if (user != null) return user[att];
+  //   return null;
+  // }
 
   static List<dynamic> convertEdgeList(Any data, String key) {
     var val = StringValue();
@@ -174,10 +174,11 @@ class Utils {
     return (json[key]['edges'] as List<dynamic>);
   }
 
-  static ExtPage<T> convertPageList<T extends BaseModel>(Any data, T type) {
+  static ExtPage<T> convertPageList<T extends BaseModel>(Any data, T type, String key) {
     var val = StringValue();
     data.unpackInto(val);
     final json = jsonDecode(val.value);
-    return ExtPage<T>.fromJson(json, type);
+    //print("convertPageList$json");
+    return ExtPage<T>.fromJson(json[key], type);
   }
 }

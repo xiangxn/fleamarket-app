@@ -258,9 +258,10 @@ class DataApi {
   }
 
   Future<BaseReply> _search(String query) async {
-    final token = await getToken();
+    //final token = await getToken();
     try {
-      return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+      //return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
+      return await _client.search(SearchRequest()..query = query);
     } on GrpcError catch (e) {
       var reply = BaseReply();
       reply.code = e.code;
@@ -277,7 +278,7 @@ class DataApi {
   Future<BaseReply> fetchGoodsList(int categoryId, int pageNo, int pageSize, {int userid = 0}) async {
     String query = "{productByCid(categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
     if (userid > 0) query = "{productByCid(userid:$userid,categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
-    query += "{list{productId,title,price,collections,seller{head,nickname},imgs}}}";
+    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{head,nickname},imgs}}}";
     return await _search(query);
   }
 
@@ -291,16 +292,48 @@ class DataApi {
   }
 
   Future<bool> favorite(int userid, int productId) async {
-    return true;
+    final token = await getToken();
+    FavoriteRequest request = FavoriteRequest();
+    request.user = userid;
+    request.product = productId;
+    try {
+      final result = await _client.favorite(request, options: CallOptions(metadata: {'token': token}));
+      return result.code == 0;
+    } on GrpcError catch (e) {
+      print(e.message);
+      return false;
+    }
   }
 
   Future<bool> unFavorite(int userid, int productId) async {
-    return true;
+    final token = await getToken();
+    FavoriteRequest request = FavoriteRequest();
+    request.user = userid;
+    request.product = productId;
+    try {
+      final result = await _client.unFavorite(request, options: CallOptions(metadata: {'token': token}));
+      return result.code == 0;
+    } on GrpcError catch (e) {
+      print(e.message);
+      return false;
+    }
   }
 
-  Future<dynamic> fetchFavoriteByUser(int userid, int pageNo, int pageSize) async {}
+  Future<BaseReply> fetchFavoriteByUser(int userid, int pageNo, int pageSize) async {
+    String query = "{favoriteByUser(userid:$userid, pageNo:$pageNo, pageSize:$pageSize)";
+    query += "{pageNo,pageSize,totalCount,list{";
+    query += "productId,title,price,collections,seller{head,nickname},imgs";
+    query += "}}}";
+    return await _search(query);
+  }
 
-  Future<dynamic> fetchPublishByUser(int userid, int pageNo, int pageSize) async {}
+  Future<BaseReply> fetchPublishByUser(int userid, int pageNo, int pageSize) async {
+    String query = "{productByPublisher(userid:$userid, pageNo:$pageNo, pageSize:$pageSize)";
+    query += "{pageNo,pageSize,totalCount,list{";
+    query += "productId,title,price,collections,seller{head,nickname},imgs";
+    query += "}}}";
+    return await _search(query);
+  }
 
   Future<dynamic> fetchDistricts() async {}
 

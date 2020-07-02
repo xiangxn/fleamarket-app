@@ -72,7 +72,7 @@ class MinePublish extends StatelessWidget{
                                     child: SizedBox(
                                       width: 70,
                                       height: 70,
-                                      child: ExtNetworkImage(goods.img, 
+                                      child: ExtNetworkImage(goods.imgs[0], 
                                         imageBuilder: (_, imageProvider){
                                           return ClipRRect(
                                             borderRadius: BorderRadius.circular(4),

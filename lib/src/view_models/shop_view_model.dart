@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-class ShopViewModel extends BaseViewModel implements TickerProvider{
-  GoodsService _goodsService ;
-  List<Category> _categories ;
+class ShopViewModel extends BaseViewModel implements TickerProvider {
+  GoodsService _goodsService;
+  List<Category> _categories;
   List<ExtPage<Goods>> _list = [];
   TabController _tabController;
-  
+
   List<Category> get categories => _categories;
   TabController get tabController => _tabController;
 
-  ShopViewModel(BuildContext context) : super(context){
+  ShopViewModel(BuildContext context) : super(context) {
     _goodsService = Provider.of(context, listen: false);
     // _types = _goodsService.types;
     fetchCategorier();
@@ -31,14 +31,15 @@ class ShopViewModel extends BaseViewModel implements TickerProvider{
     print('fetch categories');
     var process = _goodsService.fetchCategories();
     BaseReply res = await super.processing(process, showLoading: false);
-    if(res.code == 0 ){
+    if (res.code == 0) {
       _categories = _goodsService.categories;
       _list = List<ExtPage<Goods>>.generate(_categories.length, (i) => ExtPage<Goods>());
       _tabController = TabController(length: _categories.length, vsync: this);
       await Future.wait(_list.map((p) => fetchGoodsList(page: p, isRefresh: true, notify: false)));
       notifyListeners();
-    }else if(res.code == -2){
+    } else if (res.code == -2) {
       print('网络错误');
+
       /// 网络错误情况重试
       await Future.delayed(Duration(seconds: 6));
       fetchCategorier();
@@ -58,24 +59,24 @@ class ShopViewModel extends BaseViewModel implements TickerProvider{
   fetchGoodsList({ExtPage<Goods> page, bool isRefresh = false, bool notify = true}) async {
     int inx = _list.indexOf(page);
     Category category = _categories[inx];
-    if(isRefresh){
+    if (isRefresh) {
       page.clean();
-    }else{
+    } else {
       page.incres();
     }
     var process = _goodsService.fetchGoodsList(userId, category.id, page.pageNo, page.pageSize);
     final res = await super.processing(process, showLoading: false, showToast: false);
-    if(res.code == 0){
-      final data = Utils.convertPageList<Goods>(res.data, new Goods());
+    if (res.code == 0) {
+      var data = Utils.convertPageList<Goods>(res.data, new Goods(), "productByCid");
       data.update(page.data);
       _list[inx] = data;
-      if(notify){
+      if (notify) {
         notifyListeners();
       }
     }
   }
 
-  ExtPage getGoodsList(Category category){
+  ExtPage getGoodsList(Category category) {
     int inx = _categories.indexOf(category);
     return _list[inx];
   }

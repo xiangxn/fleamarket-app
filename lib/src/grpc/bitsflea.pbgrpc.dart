@@ -54,9 +54,9 @@ class BitsFleaClient extends $grpc.Client {
           '/bitsflea.BitsFlea/Favorite',
           ($0.FavoriteRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
-  static final _$unCollect =
+  static final _$unFavorite =
       $grpc.ClientMethod<$0.FavoriteRequest, $0.BaseReply>(
-          '/bitsflea.BitsFlea/UnCollect',
+          '/bitsflea.BitsFlea/UnFavorite',
           ($0.FavoriteRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
   static final _$address = $grpc.ClientMethod<$0.AddressRequest, $0.BaseReply>(
@@ -153,9 +153,10 @@ class BitsFleaClient extends $grpc.Client {
     return $grpc.ResponseFuture(call);
   }
 
-  $grpc.ResponseFuture<$0.BaseReply> unCollect($0.FavoriteRequest request,
+  $grpc.ResponseFuture<$0.BaseReply> unFavorite($0.FavoriteRequest request,
       {$grpc.CallOptions options}) {
-    final call = $createCall(_$unCollect, $async.Stream.fromIterable([request]),
+    final call = $createCall(
+        _$unFavorite, $async.Stream.fromIterable([request]),
         options: options);
     return $grpc.ResponseFuture(call);
   }
@@ -270,8 +271,8 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.FavoriteRequest.fromBuffer(value),
         ($0.BaseReply value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.FavoriteRequest, $0.BaseReply>(
-        'UnCollect',
-        unCollect_Pre,
+        'UnFavorite',
+        unFavorite_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.FavoriteRequest.fromBuffer(value),
@@ -359,9 +360,9 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
     return favorite(call, await request);
   }
 
-  $async.Future<$0.BaseReply> unCollect_Pre(
+  $async.Future<$0.BaseReply> unFavorite_Pre(
       $grpc.ServiceCall call, $async.Future<$0.FavoriteRequest> request) async {
-    return unCollect(call, await request);
+    return unFavorite(call, await request);
   }
 
   $async.Future<$0.BaseReply> address_Pre(
@@ -407,7 +408,7 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.FollowRequest request);
   $async.Future<$0.BaseReply> favorite(
       $grpc.ServiceCall call, $0.FavoriteRequest request);
-  $async.Future<$0.BaseReply> unCollect(
+  $async.Future<$0.BaseReply> unFavorite(
       $grpc.ServiceCall call, $0.FavoriteRequest request);
   $async.Future<$0.BaseReply> address(
       $grpc.ServiceCall call, $0.AddressRequest request);

@@ -1,3 +1,4 @@
+import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/common/style.dart';
 import 'package:fleamarket/src/models/ext_locale.dart';
 import 'package:fleamarket/src/models/goods.dart';
@@ -19,10 +20,10 @@ class Detail extends StatelessWidget{
   final Goods goods;
 
   Widget _buildImg(GoodsDetailViewModel model, int inx){
-    String img = inx == 0 ? goods.img : model.goods.imgs[inx];
-    Widget imgWidget = ExtNetworkImage('https://$img', borderRadius: BorderRadius.circular(4));
+    String img = model.goods.imgs[inx];
+    Widget imgWidget = ExtNetworkImage('$URL_IPFS_GATEWAY$img', borderRadius: BorderRadius.circular(4));
     Widget child = inx == 0 ? Hero(
-        tag: 'goodsImg${goods.img.hashCode}${goods.productId}',
+        tag: 'goodsImg${goods.imgs[0].hashCode}${goods.productId}',
         child: imgWidget
       ) : imgWidget ;
     return Card(

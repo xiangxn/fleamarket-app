@@ -1,3 +1,4 @@
+import 'package:fleamarket/src/common/profile.dart';
 import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/ext_page.dart';
 import 'package:fleamarket/src/models/goods.dart';
@@ -78,9 +79,9 @@ class _GoodsList extends State<GoodsList> with AutomaticKeepAliveClientMixin{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Hero(
-                            tag: 'goodsImg${goods.img.hashCode}${goods.productId}',
+                            tag: 'goodsImg${goods.imgs[0].hashCode}${goods.productId}',
                             child: ExtNetworkImage(
-                              'https://${goods.img}',
+                              '$URL_IPFS_GATEWAY${goods.imgs[0]}',
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                               onTap: () => model.toDetail(goodsPage.data, i),
                             ),

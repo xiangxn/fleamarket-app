@@ -1,4 +1,5 @@
 import 'package:fleamarket/src/common/profile.dart';
+import 'package:fleamarket/src/common/utils.dart';
 import 'package:fleamarket/src/models/ext_result.dart';
 import 'package:fleamarket/src/models/goods.dart';
 import 'package:fleamarket/src/services/goods_service.dart';
@@ -6,10 +7,11 @@ import 'package:fleamarket/src/view_models/base_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class GoodsDetailViewModel extends BaseViewModel{
-  GoodsDetailViewModel(BuildContext context, Goods goods) : super(context){
+class GoodsDetailViewModel extends BaseViewModel {
+  GoodsDetailViewModel(BuildContext context, Goods goods) : super(context) {
     _goodsService = Provider.of<GoodsService>(context, listen: false);
     _goods = goods;
+
     /// 因为实现了addScopedWillPopCallback，所以详情页面无法滑动返回
     /// 实现回退监听主要目的是页面返回时，更新列表上的对象，如果用户在详情里点了收藏，那么列表也应该展示最新的数据，而不用去拉取服务
     /// 与获取路由方式相同，以这样的方式添加pop监听，会导致回退的时候view重新build，所以采用在view里嵌套WillPopScope来实现
@@ -27,16 +29,16 @@ class GoodsDetailViewModel extends BaseViewModel{
   bool get hasFocus => _hasFocus;
 
   favorite() async {
-    if(!super.busy){
+    if (!super.busy) {
       super.setBusy();
-      var process ;
-      if(_goods.hasCollection(userId)){
+      var process;
+      if (_goods.hasCollection(userId)) {
         process = _goodsService.unfavorite(userId, _goods.productId);
-      }else{
+      } else {
         process = _goodsService.favorite(userId, _goods.productId);
       }
-      ExtResult res = await super.processing(process, showLoading: false, showToast: false);
-      if(res.code == 0){
+      final res = await super.processing(process, showLoading: false, showToast: false);
+      if (res) {
         _goods.collectionFlag = _goods.hasCollection(userId) ? 0 : 1;
         _goods.collections += _goods.hasCollection(userId) ? 1 : -1;
         notifyListeners();
@@ -46,16 +48,16 @@ class GoodsDetailViewModel extends BaseViewModel{
   }
 
   focus() async {
-    if(!super.busy){
+    if (!super.busy) {
       super.setBusy();
-      var process ;
-      if(_hasFocus){
+      var process;
+      if (_hasFocus) {
         process = accountService.unFollow(userId, _goods.seller.userid);
-      }else{
+      } else {
         process = accountService.follow(userId, _goods.seller.userid);
       }
-      ExtResult res = await super.processing(process, showLoading: false, showToast: false);
-      if(res.code == 0){
+      final res = await super.processing(process, showLoading: false, showToast: false);
+      if (res) {
         _hasFocus = !_hasFocus;
         notifyListeners();
       }
@@ -65,24 +67,28 @@ class GoodsDetailViewModel extends BaseViewModel{
 
   fetchGoodsInfo() async {
     var process = _goodsService.fetchGoodsInfo(_goods.productId, userId);
-    ExtResult res = await super.processing(process, showLoading: false);
-    if(res.code == 0){
-      _goods = _goods.merge(res.data);
-      notifyListeners();
+    final res = await super.processing(process, showLoading: false);
+    if (res.code == 0) {
+      final data = Utils.convertEdgeList(res.data, "products");
+      final gs = data.map((c) => Goods.fromJson(c['node'])).toList();
+      if (gs.length > 0) {
+        _goods = gs[0];
+        notifyListeners();
+      }
     }
   }
 
-  checkFocus(){
+  checkFocus() {
     //TODO: 从服务端验证是否已关注
     _hasFocus = false;
   }
 
-  Future<bool> onBack(){
+  Future<bool> onBack() {
     super.pop(_goods);
     return Future.value(false);
   }
 
-  toPreOrder(){
+  toPreOrder() {
     super.pushNamed(PRE_ORDER_ROUTE, arguments: _goods);
   }
 
@@ -90,5 +96,4 @@ class GoodsDetailViewModel extends BaseViewModel{
   void dispose() {
     super.dispose();
   }
-
 }

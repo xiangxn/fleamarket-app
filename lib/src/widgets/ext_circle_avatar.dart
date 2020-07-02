@@ -41,7 +41,10 @@ class ExtCircleAvatar extends StatelessWidget {
   }
 
   String get getUrl {
-    return this.url ?? DEFAULT_HEAD;
+    if (this.url == null || this.url.isEmpty)
+      return DEFAULT_HEAD;
+    else
+      return this.url.startsWith("http://") ? this.url : URL_IPFS_GATEWAY + this.url;
   }
 
   @override

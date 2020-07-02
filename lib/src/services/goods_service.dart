@@ -45,20 +45,20 @@ class GoodsService {
     return await _api.fetchGoodsInfo(productId, userid: userid);
   }
 
-  Future<bool> favorite(int userid, int productId) {
-    return _api.favorite(userid, productId);
+  Future<bool> favorite(int userid, int productId) async {
+    return await _api.favorite(userid, productId);
   }
 
-  Future<bool> unfavorite(int userid, int productId) {
-    return _api.unFavorite(userid, productId);
+  Future<bool> unfavorite(int userid, int productId) async {
+    return await _api.unFavorite(userid, productId);
   }
 
-  Future<dynamic> fetchFavorite(int userid, int pageNo, int pageSize) async {
+  Future<BaseReply> fetchFavorite(int userid, int pageNo, int pageSize) async {
     final res = await _api.fetchFavoriteByUser(userid, pageNo, pageSize);
     return res;
   }
 
-  Future<ExtResult> fetchPublish(int userid, int pageNo, int pageSize) async {
+  Future<BaseReply> fetchPublish(int userid, int pageNo, int pageSize) async {
     final res = await _api.fetchPublishByUser(userid, pageNo, pageSize);
     return res;
   }

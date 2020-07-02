@@ -1,12 +1,11 @@
-import 'dart:convert';
 
 import 'package:fleamarket/src/models/base_model.dart';
 
 class ExtPage<T extends BaseModel> {
-  int pageNo;
-  int pageSize;
-  int totalCount;
-  int totalPage;
+  int pageNo = 1;
+  int pageSize = 10;
+  int totalCount = 0;
+  int totalPage = 0;
   List<T> data;
 
   ExtPage()
@@ -17,6 +16,7 @@ class ExtPage<T extends BaseModel> {
         data = [];
 
   ExtPage.fromJson(Map<String, dynamic> json, T type) {
+    //print("${this.pageSize}  $json");
     this.pageNo = json['pageNo'];
     this.pageSize = json['pageSize'];
     this.totalCount = json['totalCount'];

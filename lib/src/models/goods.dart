@@ -5,12 +5,15 @@ class Goods implements BaseModel {
   int id;
   int productId;
   String title;
-  String img;
+  //String img;
   List<String> imgs;
   int collections;
   String price;
   int saleMethod;
-  int collectionFlag;
+  int transMethod;
+  int stockCount;
+  bool isRetail;
+  int collectionFlag; //TODO:未实现
   int category;
   int status; // （临）定义状态 0 正常， 1 待审核， 2 审核拒绝， 3 下架
   int isNew;
@@ -31,11 +34,14 @@ class Goods implements BaseModel {
     this.id = json['id'];
     this.productId = json['productId'];
     this.title = json['title'];
-    this.img = json['img'];
+    //this.img = json['img'];
     this.imgs = (json['imgs'] as List<dynamic>)?.map<String>((f) => f as String)?.toList() ?? [];
     this.collections = json['collections'];
     this.price = json['price'];
     this.saleMethod = json['saleMethod'];
+    this.transMethod = json['transMethod'];
+    this.stockCount = json['stockCount'];
+    this.isRetail = json['isRetail'];
     this.collectionFlag = json['collectionFlag'];
     this.category = json['category'];
     this.status = json['status'];
@@ -60,11 +66,14 @@ class Goods implements BaseModel {
     data['id'] = this.id;
     data['productId'] = this.productId;
     data['title'] = this.title;
-    data['img'] = this.img;
+    //data['img'] = this.img;
     data['imgs'] = this.imgs;
     data['collections'] = this.collections;
     data['price'] = this.price;
     data['saleMethod'] = this.saleMethod;
+    data['transMethod'] = this.transMethod;
+    data['stockCount'] = this.stockCount;
+    data['isRetail'] = this.isRetail;
     data['collectionFlag'] = this.collectionFlag;
     data['category'] = this.category;
     data['status'] = this.status;
@@ -85,11 +94,6 @@ class Goods implements BaseModel {
 
   bool hasCollection(int userid) {
     return userid == this.faceUserId && this.collectionFlag == 1;
-  }
-
-  Goods merge(Goods goods) {
-    this.img = goods.imgs[0];
-    return this;
   }
 
   String get symbol => price == null ? null : price.split(' ')[1];
