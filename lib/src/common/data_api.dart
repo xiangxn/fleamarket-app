@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
+import 'package:fleamarket/src/models/district.dart';
 import 'package:grpc/grpc.dart';
 import '../grpc/bitsflea.pb.dart';
 import '../grpc/bitsflea.pbgrpc.dart';
@@ -335,7 +337,19 @@ class DataApi {
     return await _search(query);
   }
 
-  Future<dynamic> fetchDistricts() async {}
+  Future<District> fetchDistricts() async {
+    var res = await Dio().get('https://restapi.amap.com/v3/config/district', queryParameters: {
+      'keywords': '100000',
+      'subdistrict': '3',
+      'key': '92f35a6155436fa0179a80b27adec436'
+    });
+    if(res.statusCode == 200 && res.data['status'] == '1' && res.data['districts'][0] != null){
+      District district = District.fromJson(res.data['districts'][0]);
+      district.lastUpdate = DateTime.now();
+      return district;
+    }
+    return null;
+  }
 
   Future<dynamic> fetchBuyByUser(int userid, int pageNo, int pageSize) async {}
 

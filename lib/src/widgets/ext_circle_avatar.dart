@@ -20,10 +20,12 @@ class ExtCircleAvatar extends StatelessWidget {
       return FutureBuilder(
         future: data.thumbData,
         builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-          return CircleAvatar(
-            backgroundColor: Colors.white,
-            backgroundImage: Image.memory(snapshot.data, cacheWidth: intSize, cacheHeight: intSize).image,
-          );
+          if (snapshot.hasData)
+            return CircleAvatar(
+              backgroundColor: Colors.white,
+              backgroundImage: Image.memory(snapshot.data, cacheWidth: intSize, cacheHeight: intSize).image,
+            );
+          return CircularProgressIndicator();
         },
       );
     } else {

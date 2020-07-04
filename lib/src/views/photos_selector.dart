@@ -57,7 +57,7 @@ class PhotosSelector extends StatelessWidget {
             children: <Widget>[
               TabBar(
                 controller: model.tabController,
-                labelColor: Colors.green,
+                labelColor: Style.mainColor,
                 unselectedLabelColor: Colors.black,
                 tabs: model.tabs.map((t) => Tab(text: t)).toList(),
               ),
@@ -87,7 +87,10 @@ class PhotosSelector extends StatelessWidget {
                                               child: FutureBuilder(
                                             future: photo.thumbData,
                                             builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                                              return Image.memory(snapshot.data, fit: BoxFit.cover);
+                                              if (snapshot.hasData)
+                                                return Image.memory(snapshot.data, fit: BoxFit.cover);
+                                              else
+                                                return CircularProgressIndicator();
                                             },
                                           )),
                                           Positioned(
@@ -156,7 +159,10 @@ class PhotosSelector extends StatelessWidget {
                                                     child: FutureBuilder(
                                                       future: photo.thumbData,
                                                       builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                                                        return Image.memory(snapshot.data, fit: BoxFit.cover);
+                                                        if (snapshot.hasData)
+                                                          return Image.memory(snapshot.data, fit: BoxFit.cover);
+                                                        else
+                                                          return CircularProgressIndicator();
                                                       },
                                                     ))),
                                             Positioned(

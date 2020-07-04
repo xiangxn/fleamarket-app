@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:fleamarket/src/view_models/base_view_model.dart';
@@ -128,8 +126,8 @@ class PhotosSelectorViewModel extends BaseViewModel implements TickerProvider {
       Directory tempDir = await getTemporaryDirectory();
       String path = '${tempDir.path}/tmp.png';
       await _cameraController.takePicture(path);
-      Uint8List bytes = await File(path).readAsBytes();
-      _selectedPhotos.add(AssetEntity(id: 'local_${Random.secure().nextInt(9999)}'));
+      AssetEntity ae = await PhotoManager.editor.saveImageWithPath(path);
+      _selectedPhotos.add(ae);
       if (_maxCount == 1) {
         done();
       } else {
