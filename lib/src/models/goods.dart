@@ -43,7 +43,7 @@ class Goods implements BaseModel {
     this.stockCount = json['stockCount'];
     this.isRetail = json['isRetail'];
     this.collectionFlag = json['collectionFlag'];
-    this.category = json['category'];
+    this.category = json['category'] == null ? 0 : json['category']['cid'];
     this.status = json['status'];
     this.isNew = json['isNew'];
     this.isReturns = json['isReturns'];

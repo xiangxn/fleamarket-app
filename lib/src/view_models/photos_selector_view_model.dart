@@ -141,7 +141,7 @@ class PhotosSelectorViewModel extends BaseViewModel implements TickerProvider {
 
   done() {
     super.pop(_selectedPhotos);
-    print('完成');
+    print('完成照片选择...');
   }
 
   @override

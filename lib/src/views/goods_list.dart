@@ -79,7 +79,7 @@ class _GoodsList extends State<GoodsList> with AutomaticKeepAliveClientMixin{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Hero(
-                            tag: 'goodsImg${goods.imgs[0].hashCode}${goods.productId}',
+                            tag: 'goodsImg${goods.imgs[0].hashCode}${goods.productId}$i',
                             child: ExtNetworkImage(
                               '$URL_IPFS_GATEWAY${goods.imgs[0]}',
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),

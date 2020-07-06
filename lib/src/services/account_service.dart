@@ -65,10 +65,10 @@ class AccountService {
       final str = StringValue();
       result.data.unpackInto(str);
       dynamic data = jsonDecode(str.value)['users']['edges'];
-      if (data.length > 0) {
-        data = data[0]['node'];
+      if (data.length < 1) {
+        return false;
       }
-      //print("data============:$data");
+      data = data[0]['node'];
       if (keys[2].toEOSPublicKey().toString() == data['authKey'].toString()) {
         _user = _userFromMap(data);
         _lock = false;

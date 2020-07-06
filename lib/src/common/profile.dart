@@ -7,7 +7,7 @@ const String SEARCH_ROUTE = 'search';
 const String PUBLISH_ROUTE = 'publish';
 const String DETAIL_ROUTE = 'detail';
 const String LOGIN_ROUTE = 'login';
-const String USER_EDIT_ROUTE ='userEditRoute';
+const String USER_EDIT_ROUTE = 'userEditRoute';
 const String MINE_HOME_ROUTE = 'mineHome';
 const String MINE_FAVORITE_ROUTE = 'mineFavorite';
 const String MINE_FOCUS_ROUTE = 'mineFocus';
@@ -38,9 +38,10 @@ const String DISTRICT_LV = 'district';
 
 /// other
 const String CONTRACT_NAME = "bitsfleamain";
-//const String GRPC_HOST = 'api.bitsflea.com';
-const String GRPC_HOST = '127.0.0.1';
+const String GRPC_HOST = 'api.bitsflea.com';
+//const String GRPC_HOST = '127.0.0.1';
 const String URL_EOS_API = 'https://api-bostest.blockzone.net';
+//const String URL_EOS_API = 'http://127.0.0.1:8888';
 const String URL_IPFS_GATEWAY = "http://ipfs.bitsflea.com:8080/ipfs/";
 const String VCODE_TIMER = 'vcodeTimer';
 const String USER = 'user';
@@ -63,3 +64,5 @@ const int TIMER_RESET = 60;
 
 /// token更新间隔 单位小时
 const int TIMER_TOKEN = 6;
+
+const Map COIN_PRECISION = {"BOS": 4, "ETH": 8, "FMP": 4, "EOS": 4, "BTS": 5, "CNY": 4, "NULS": 8, "USDT": 8};

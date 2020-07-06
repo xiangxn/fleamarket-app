@@ -2,7 +2,6 @@ import 'package:fleamarket/src/common/utils.dart';
 import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
 import 'package:fleamarket/src/models/category.dart';
 import 'package:fleamarket/src/models/ext_page.dart';
-import 'package:fleamarket/src/models/ext_result.dart';
 import 'package:fleamarket/src/models/goods.dart';
 import 'package:fleamarket/src/services/goods_service.dart';
 import 'package:fleamarket/src/view_models/base_view_model.dart';
@@ -22,11 +21,7 @@ class ShopViewModel extends BaseViewModel implements TickerProvider {
   ShopViewModel(BuildContext context) : super(context) {
     _goodsService = Provider.of(context, listen: false);
     // _types = _goodsService.types;
-    _categories = List<Category>();
-    _categories.add(Category()
-      ..id = 0
-      ..view = "最新"
-      ..parent = 0);
+
     fetchCategorier();
     // fetchGoodsInfo();
     // fetchGoodsList(null);
@@ -37,7 +32,12 @@ class ShopViewModel extends BaseViewModel implements TickerProvider {
     var process = _goodsService.fetchCategories();
     BaseReply res = await super.processing(process, showLoading: false);
     if (res.code == 0) {
-      _goodsService.categories.map((f)=>_categories.add(f));
+      _categories = List<Category>();
+      _categories.add(Category()
+        ..id = 0
+        ..view = "最新"
+        ..parent = 0);
+      _goodsService.categories.forEach((f) => _categories.add(f));
       _list = List<ExtPage<Goods>>.generate(_categories.length, (i) => ExtPage<Goods>());
       _tabController = TabController(length: _categories.length, vsync: this);
       await Future.wait(_list.map((p) => fetchGoodsList(page: p, isRefresh: true, notify: false)));

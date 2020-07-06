@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:fleamarket/src/common/data_api.dart';
-import 'package:fleamarket/src/common/result_conversion.dart';
 import 'package:fleamarket/src/common/utils.dart';
 import 'package:fleamarket/src/grpc/bitsflea.pb.dart';
-import 'package:fleamarket/src/grpc/google/protobuf/wrappers.pb.dart';
 import 'package:fleamarket/src/models/category.dart';
-import 'package:fleamarket/src/models/ext_result.dart';
+import 'package:photo_manager/photo_manager.dart';
+import 'package:eosdart_ecc/eosdart_ecc.dart';
 
 class GoodsService {
   DataApi _api;
@@ -61,5 +58,28 @@ class GoodsService {
   Future<BaseReply> fetchPublish(int userid, int pageNo, int pageSize) async {
     final res = await _api.fetchPublishByUser(userid, pageNo, pageSize);
     return res;
+  }
+
+  Future<bool> publishProduct(EOSPrivateKey actKey, String eosid, int userId, Map product, List<AssetEntity> photos) async {
+    if (photos != null) {
+      var futures = List<Future<BaseReply>>();
+      for (int i = 0; i < photos.length; i++) {
+        var data = await photos[i].originBytes;
+        futures.add(_api.uploadFile(data));
+      }
+      try {
+        final resList = await Future.wait(futures);
+        print("uploadFiles: $resList");
+        if (resList.length > 0) {
+          resList.forEach((f) {
+            if (f.code == 0) (product['photos'] as List).add(f.msg);
+          });
+        }
+      } catch (e) {
+        return false;
+      }
+    }
+    print("product: $product");
+    return await _api.publishProduct(actKey, eosid, userId, product);
   }
 }

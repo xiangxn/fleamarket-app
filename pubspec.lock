@@ -109,10 +109,12 @@ packages:
   eosdart:
     dependency: "direct main"
     description:
-      name: eosdart
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.4.4"
+      path: "."
+      ref: dev
+      resolved-ref: f897a9bb497472be83afc9f04a7632b34dbd0f7c
+      url: "https://github.com/xiangxn/eosdart.git"
+    source: git
+    version: "0.4.5"
   eosdart_ecc:
     dependency: transitive
     description:

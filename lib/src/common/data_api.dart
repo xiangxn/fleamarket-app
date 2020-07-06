@@ -43,6 +43,8 @@ class DataApi {
 
   Future<String> getToken([bool force = false]) async {
     String token = Utils.getStore(TOKEN) ?? "0";
+    String tStr = Utils.getStore(TOKEN_TIMER);
+    _lastTokenTime = tStr == null ? DateTime.now() : DateTime.parse(tStr);
     final diff = DateTime.now().difference(_lastTokenTime);
     if (force == false && diff.inHours < 2 && token != "0") {
       print("token 0:" + token);
@@ -61,6 +63,7 @@ class DataApi {
       token = st.value;
       _lastTokenTime = DateTime.now();
       await Utils.setStore(TOKEN, token);
+      await Utils.setStore(TOKEN_TIMER, _lastTokenTime.toString());
     }
     //print(res);
     print("token 1:" + token);
@@ -338,12 +341,9 @@ class DataApi {
   }
 
   Future<District> fetchDistricts() async {
-    var res = await Dio().get('https://restapi.amap.com/v3/config/district', queryParameters: {
-      'keywords': '100000',
-      'subdistrict': '3',
-      'key': '92f35a6155436fa0179a80b27adec436'
-    });
-    if(res.statusCode == 200 && res.data['status'] == '1' && res.data['districts'][0] != null){
+    var res = await Dio().get('https://restapi.amap.com/v3/config/district',
+        queryParameters: {'keywords': '100000', 'subdistrict': '3', 'key': '92f35a6155436fa0179a80b27adec436'});
+    if (res.statusCode == 200 && res.data['status'] == '1' && res.data['districts'][0] != null) {
       District district = District.fromJson(res.data['districts'][0]);
       district.lastUpdate = DateTime.now();
       return district;
@@ -356,4 +356,50 @@ class DataApi {
   Future<dynamic> fetchSellByUser(int userid, int pageNo, int pageSize) async {}
 
   Future<dynamic> fetchOrder(int orderid) async {}
+
+  Future<bool> publishProduct(EOSPrivateKey actKey, String eosid, int userId, Map product, [Map productAuction]) async {
+    final token = await getToken();
+    TransactionRequest tr = TransactionRequest();
+    tr.sign = 1;
+    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = CONTRACT_NAME
+        ..permission = 'active',
+      Authorization()
+        ..actor = eosid
+        ..permission = 'active'
+    ];
+    Map data = {'uid': userId};
+    data['product'] = product;
+    data['pa'] = productAuction;
+    print("action-data:$data");
+    List<Action> actions = [
+      Action()
+        ..account = CONTRACT_NAME
+        ..name = 'publish'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+    //final serTrxArgs = await client.pushTransaction(transaction, broadcast: false);
+    final serTrxArgs = await client.createTransaction(transaction);
+    print("serTrxArgs:$serTrxArgs");
+    final trx = {
+      'signatures': serTrxArgs.signatures,
+      'compression': 0,
+      'packed_context_free_data': '',
+      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
+    };
+    tr.trx = jsonEncode(trx);
+    print("trx:$tr");
+    try {
+      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
+      print("result:$result");
+      return result.code == 0;
+    } on GrpcError catch (e) {
+      print(e.message);
+      return false;
+    }
+  }
 }
