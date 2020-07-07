@@ -1,7 +1,4 @@
-import 'dart:typed_data';
-
 import 'package:fleamarket/src/common/profile.dart';
-import 'package:fleamarket/src/common/utils.dart';
 import 'package:fleamarket/src/models/category.dart';
 import 'package:fleamarket/src/models/ext_result.dart';
 import 'package:fleamarket/src/models/goods.dart';
@@ -129,9 +126,10 @@ class PublishViewModel extends BaseViewModel {
       title: super.locale.translation('publish.type_selector'),
       categories: _categories,
     );
-    Category category = await super.dialog(screen);
-    if (category != null) {
-      _category = category;
+    Category ctype = await super.dialog(screen);
+    if (ctype != null) {
+      _category = ctype;
+      notifyListeners();
     }
   }
 
@@ -143,6 +141,7 @@ class PublishViewModel extends BaseViewModel {
     String adcode = await super.dialog(screen);
     if (adcode != null) {
       _location = _locationService.getAddress(adcode);
+      notifyListeners();
     }
   }
 
@@ -161,6 +160,7 @@ class PublishViewModel extends BaseViewModel {
     List<AssetEntity> photos = await super.dialog(screen);
     if (photos != null && photos.length != 0) {
       _photos = photos;
+      notifyListeners();
     }
   }
 

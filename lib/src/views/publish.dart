@@ -10,7 +10,6 @@ import 'package:fleamarket/src/widgets/line_button_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:photo_manager/photo_manager.dart';
-import '../common/utils.dart';
 import 'base_view.dart';
 
 class Publish extends StatelessWidget {

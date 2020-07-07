@@ -26,7 +26,7 @@ class NumberPad extends StatelessWidget{
                   autofocus: isFirst,
                   controller: input['controller'],
                   focusNode: input['focus'],
-                  //disableKeyboard: true,
+                  disableKeyboard: true,
                   enableInteractiveSelection: false,
                   decoration: InputDecoration(
                     hintText: input['hint'],
