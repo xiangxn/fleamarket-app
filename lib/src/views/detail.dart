@@ -19,8 +19,7 @@ class Detail extends StatelessWidget {
     print("inx:$inx");
     String img = model.goods.imgs[inx];
     Widget imgWidget = ExtNetworkImage('$URL_IPFS_GATEWAY$img', borderRadius: BorderRadius.circular(4));
-    Widget child = inx == 0 ? Hero(tag: 'goodsImg${goods.imgs[0].hashCode}${goods.productId}', child: imgWidget) : imgWidget;
-    (child is Hero) ? print((child as Hero).tag) : null;
+    Widget child = inx == 0 ? Hero(tag: 'goodsImg${goods.imgs[0].hashCode}${goods.productId}${goods.category}', child: imgWidget) : imgWidget;
     return Card(margin: EdgeInsets.only(left: 10, bottom: 10, right: 10), child: child);
   }
 

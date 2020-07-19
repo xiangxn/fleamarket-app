@@ -57,7 +57,7 @@ class Shop extends StatelessWidget{
                         return Selector<ShopViewModel, ExtPage>(
                           selector: (_, provider) => provider.getGoodsList(category),
                           builder: (_, page, __){
-                            return GoodsList(goodsPage: page, refresh: model.fetchGoodsList);
+                            return GoodsList(goodsPage: page, refresh: model.fetchGoodsList, category: category.id,);
                             // return WaterfallContainer(page: page, category: category, model: model);
                           },
                         );

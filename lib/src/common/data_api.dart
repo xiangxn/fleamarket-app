@@ -11,6 +11,7 @@ import 'profile.dart';
 import 'utils.dart';
 import '../grpc/google/protobuf/wrappers.pb.dart';
 import 'package:eosdart/eosdart.dart';
+import 'package:eosdart/src/serialize.dart' as ser;
 
 class DataApi {
   BitsFleaClient _client;

@@ -17,12 +17,14 @@ class GoodsList extends StatefulWidget{
     Key key,
     @required this.goodsPage,
     this.refresh,
-    this.controller
+    this.controller,
+    this.category,
   }) : super(key: key);
 
   final ExtPage<Goods> goodsPage;
   final Function({ExtPage<Goods> page, bool isRefresh}) refresh;
   final ScrollController controller;
+  final int category;
 
   @override
   State<StatefulWidget> createState() => _GoodsList();
@@ -79,7 +81,7 @@ class _GoodsList extends State<GoodsList> with AutomaticKeepAliveClientMixin{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Hero(
-                            tag: 'goodsImg${goods.imgs[0].hashCode}${goods.productId}$i',
+                            tag: 'goodsImg${goods.imgs[0].hashCode}${goods.productId}${widget.category}',
                             child: ExtNetworkImage(
                               '$URL_IPFS_GATEWAY${goods.imgs[0]}',
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
