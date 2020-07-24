@@ -1,4 +1,6 @@
+import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/routes/home.dart';
+import 'package:bitsflea/routes/product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,8 +20,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
-  FlutterI18nDelegate _flutterI18nDelegate =
+  final _flutterI18nDelegate =
       FlutterI18nDelegate(translationLoader: FileTranslationLoader(fallbackFile: "zh", basePath: "assets/locales", useCountryCode: false));
 
   // This widget is the root of your application.
@@ -35,12 +36,12 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, themeModel, localeModel, Widget child) {
           return MaterialApp(
             theme: ThemeData(
-                primarySwatch: themeModel.theme,
+                primarySwatch: themeModel.themeColor,
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 dividerColor: Colors.transparent,
-                scaffoldBackgroundColor: Colors.grey[100],
-                backgroundColor: Colors.grey[100]),
+                scaffoldBackgroundColor: Style.backgroundColor,
+                backgroundColor: Style.backgroundColor),
             onGenerateTitle: (context) {
               return FlutterI18n.translate(context, "title");
             },
@@ -78,9 +79,8 @@ class MyApp extends StatelessWidget {
             // 注册命名路由表
             routes: <String, WidgetBuilder>{
               ROUTE_HOME: (context) => HomeRoute(),
-              ROUTE_SEARCH:(context)=> SearchRoute(),
-              // "themes": (context) => ThemeChangeRoute(),
-              // "language": (context) => LanguageRoute(),
+              ROUTE_SEARCH: (context) => SearchRoute(),
+              ROUTE_DETAIL: (context) => ProductDetailRoute(),
             },
           );
         },

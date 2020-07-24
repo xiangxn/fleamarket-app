@@ -1,7 +1,9 @@
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/routes/product.dart';
 import 'package:bitsflea/states/base.dart';
+import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,12 +22,12 @@ class HomeRoute extends StatelessWidget {
           selector: (_, pv) => pv.pageIndex,
           builder: (_, pageIndex, __) {
             print('************************** home view model build **************************');
-            final theme = Theme.of(context);
+            final theme = Provider.of<ThemeModel>(context);
             return Scaffold(
               appBar: PreferredSize(
                   child: AppBar(
                     brightness: Brightness.light,
-                    backgroundColor: theme.backgroundColor,
+                    backgroundColor: Style.backgroundColor,
                     elevation: 0,
                   ),
                   preferredSize: Size.fromHeight(0)),
@@ -46,7 +48,7 @@ class HomeRoute extends StatelessWidget {
                     return Padding(
                       padding: inx == 0 ? EdgeInsets.only(right: 30) : EdgeInsets.only(left: 30),
                       child: IconButton(
-                        icon: Icon(icon, size: 24, color: pageIndex == inx ? theme.primaryColor : Colors.grey),
+                        icon: Icon(icon, size: 24, color: pageIndex == inx ? theme.themeColor : Colors.grey),
                         onPressed: () => provider.setPage(inx),
                       ),
                     );

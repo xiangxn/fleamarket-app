@@ -25,4 +25,5 @@ class Style {
           900: Color(0xFFdb031a),
         },
       );
+  static Color get backgroundColor => Colors.grey[100];
 }

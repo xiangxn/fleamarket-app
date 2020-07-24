@@ -286,17 +286,17 @@ class DataApi {
     return await _search(query);
   }
 
-  Future<BaseReply> searchProductByTitle(String title, int pageNo, int pageSize, {int userid=0}) async {
-    // TODO
-    String query = "{productByTitle(categoryId:1,pageNo:$pageNo,pageSize:$pageSize)";
-    if (userid > 0) query = "{productByCid(userid:$userid,categoryId:1,pageNo:$pageNo,pageSize:$pageSize)";
+  Future<BaseReply> searchProductByTitle(String title, int pageNo, int pageSize, {int userid = 0}) async {
+    String query = "{productByTitle(title:\"$title\",pageNo:$pageNo,pageSize:$pageSize)";
+    if (userid > 0) query = "{productByTitle(userid:$userid,title:\"$title\",pageNo:$pageNo,pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{head,nickname},photos}}}";
     return await _search(query);
   }
 
   Future<BaseReply> fetchProductInfo(int productId, {int userid = 0}) async {
     String query = "{products(productId:$productId){edges{node{";
-    query += "productId,title,status,isNew,isReturns,transMethod,postage,position,releaseTime,description,photos,collections,price,saleMethod,stockCount,isRetail,";
+    query +=
+        "productId,title,status,isNew,isReturns,transMethod,postage,position,releaseTime,description,photos,collections,price,saleMethod,stockCount,isRetail,";
     query += "category{cid,view},";
     query += "seller{userid,head,nickname,eosid}";
     query += "}}}}";
