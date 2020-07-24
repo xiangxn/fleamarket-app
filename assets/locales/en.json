@@ -1,0 +1,25 @@
+{
+    "title": "希奇",
+    "dialog": {
+        "title": "温馨提示",
+        "loading": "处理中...",
+        "ok": "确定",
+        "cancel": "取消"
+    },
+    "search": {
+        "hint": "输入商品标题搜索",
+        "cancel": "取消",
+        "history": "最近",
+        "no_data": "没有找到相关商品"
+    },
+    "category": {
+        "0": "NEW",
+        "1": "ELEC",
+        "2": "TOY",
+        "3": "COS",
+        "4": "HOME",
+        "5": "Garment",
+        "6": "Books",
+        "7": "Other"
+    }
+}

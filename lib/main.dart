@@ -1,98 +1,90 @@
-import 'dart:async';
-import 'package:amap_location/amap_location.dart';
-import 'package:eosdart_ecc/eosdart_ecc.dart';
-// import 'package:amap_location_fluttify/amap_location_fluttify.dart';
-import 'package:fleamarket/src/common/profile.dart';
-import 'package:fleamarket/src/common/provider_setup.dart';
-import 'package:fleamarket/src/common/router.dart';
-import 'package:fleamarket/src/common/style.dart';
-import 'package:fleamarket/src/common/utils.dart';
-import 'package:fleamarket/src/models/ext_locale.dart';
-import 'package:fleamarket/src/models/ext_system.dart';
+import 'package:bitsflea/routes/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
-void main(List<String> args) {
+import 'common/constant.dart';
+import 'common/global.dart';
+import 'routes/search.dart';
+import 'states/locale.dart';
+import 'states/theme.dart';
+import 'states/user.dart';
+
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  ExtLocale locale = ExtLocale();
-  ExtSystem system = ExtSystem();
-  runZoned(
-    () {
-      Future.wait(<Future>[
-        Utils.initSharedPreferences(),
-        locale.setLocale(),
-        system.init(),
-        // AmapCore.init("4c3c5b2c6a9a03a5d08e02225fdf3fd9"),
-        AMapLocationClient.setApiKey("4c3c5b2c6a9a03a5d08e02225fdf3fd9")
-      ]).then((_){
-        runApp(App(locale: locale, system: system,));
-        // 强制横屏
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown
-        ]);
-        // if (Platform.isAndroid) {
-          // 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
-          SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            systemNavigationBarColor: Color(0xFF000000),
-            systemNavigationBarDividerColor: null,
-            systemNavigationBarIconBrightness: Brightness.light,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.light,
-          );
-          SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-          // 设置statusBar 使用黑色主题（白底黑字）
-          // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-        // }
-
-
-        // test
-        EOSPrivateKey privateKey = EOSPrivateKey.fromRandom();
-      });
-    },
-    zoneSpecification: ZoneSpecification(print: (Zone self, ZoneDelegate parent, Zone zone, String line){
-      parent.print(zone, "输出: $line");
-    }),
-    onError: Utils.reports
-  );
+  Global.init().then((value) => runApp(MyApp()));
 }
 
-class App extends StatelessWidget{
+class MyApp extends StatelessWidget {
 
-  final ExtLocale locale;
-  final ExtSystem system;
-  App({
-    Key key,
-    @required this.locale,
-    @required this.system
-  }) : super(key: key);
+  FlutterI18nDelegate _flutterI18nDelegate =
+      FlutterI18nDelegate(translationLoader: FileTranslationLoader(fallbackFile: "zh", basePath: "assets/locales", useCountryCode: false));
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    print('************************************************ app build ************************************************');
     return MultiProvider(
-      providers: ProviderSetup.getProviders(locale, system),
-      child: Consumer<ExtLocale>(
-        builder: (_, locale, __){
-          print('************************************************ app consumer build ************************************************');
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<ThemeModel>.value(value: ThemeModel()),
+        ChangeNotifierProvider<UserModel>.value(value: UserModel()),
+        ChangeNotifierProvider<LocaleModel>.value(value: LocaleModel()),
+      ],
+      child: Consumer2<ThemeModel, LocaleModel>(
+        builder: (BuildContext context, themeModel, localeModel, Widget child) {
           return MaterialApp(
-            title: 'Flemarket-app',
-            color: Colors.green,
             theme: ThemeData(
-              primarySwatch: Colors.green,
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              dividerColor: Colors.transparent,
-              scaffoldBackgroundColor: Style.backgroundColor,
-              backgroundColor: Style.backgroundColor
-            ),
-            onGenerateRoute: Router.generatorRoute,
-            initialRoute: HOME_ROUTE,
+                primarySwatch: themeModel.theme,
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                dividerColor: Colors.transparent,
+                scaffoldBackgroundColor: Colors.grey[100],
+                backgroundColor: Colors.grey[100]),
+            onGenerateTitle: (context) {
+              return FlutterI18n.translate(context, "title");
+            },
+            // home: HomeRoute(),
+            // locale: localeModel.getLocale(),
+            //我们只支持美国英语和中文简体
+            supportedLocales: [
+              const Locale('zh', 'CN'), // 中文简体
+              const Locale('en', 'US'), // 美国英语
+              //其它Locales
+            ],
+            localizationsDelegates: [
+              // 本地化的代理类
+              _flutterI18nDelegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate
+            ],
+            localeResolutionCallback: (Locale _locale, Iterable<Locale> supportedLocales) {
+              if (localeModel.getLocale() != null) {
+                //如果已经选定语言，则不跟随系统
+                return localeModel.getLocale();
+              } else {
+                Locale locale;
+                //APP语言跟随系统语言，如果系统语言不是中文简体或美国英语，
+                //则默认使用中文简体
+                if (supportedLocales.contains(_locale)) {
+                  locale = _locale;
+                } else {
+                  locale = Locale('zh', 'CN');
+                }
+                return locale;
+              }
+            },
+            initialRoute: ROUTE_HOME,
+            // 注册命名路由表
+            routes: <String, WidgetBuilder>{
+              ROUTE_HOME: (context) => HomeRoute(),
+              ROUTE_SEARCH:(context)=> SearchRoute(),
+              // "themes": (context) => ThemeChangeRoute(),
+              // "language": (context) => LanguageRoute(),
+            },
           );
         },
-      )
+      ),
     );
   }
 }

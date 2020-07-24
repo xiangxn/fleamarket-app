@@ -1,15 +1,10 @@
 # This is a generated file; do not edit or check into version control.
-amap_location=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/amap_location-0.2.0/
-camera=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/camera-0.5.7+4/
-device_info=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/device_info-0.4.1+5/
-flutter_plugin_android_lifecycle=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/flutter_plugin_android_lifecycle-1.0.4/
-image_picker=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/image_picker-0.6.3+1/
-package_info=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/package_info-0.4.0+16/
-path_provider=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/path_provider-1.6.5/
-path_provider_macos=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/path_provider_macos-0.0.4/
-permission_handler=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/permission_handler-4.4.0+hotfix.2/
-shared_preferences=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/shared_preferences-0.5.6+2/
-shared_preferences_macos=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/shared_preferences_macos-0.0.1+3/
-shared_preferences_web=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/shared_preferences_web-0.1.2+2/
-simple_photos_manager=/Users/benj/flutter/flutter/.pub-cache/git/simple_photos_manager-68d6370c2a3b2204e3b2c0dd757c1a8c5438bbca/
-sqflite=/Users/benj/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/sqflite-1.2.0/
+path_provider=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/path_provider-1.6.11/
+path_provider_linux=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/path_provider_linux-0.0.1+2/
+path_provider_macos=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/path_provider_macos-0.0.4+3/
+photo_manager=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/photo_manager-0.5.6/
+shared_preferences=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/shared_preferences-0.5.8/
+shared_preferences_linux=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/shared_preferences_linux-0.0.2+1/
+shared_preferences_macos=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/shared_preferences_macos-0.0.1+10/
+shared_preferences_web=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/shared_preferences_web-0.1.2+7/
+sqflite=/Users/necklace/work/flutter/flutter/.pub-cache/hosted/pub.flutter-io.cn/sqflite-1.3.1/

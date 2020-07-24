@@ -1,94 +1,10 @@
 {
-    "app": {
-        "title": "希奇"
-    },
-    "permission": {
-        "location": "允许希奇访问您的位置",
-        "album_camera": "允许希奇访问您的相册和相机"
-    },
+    "title": "希奇",
     "dialog": {
         "title": "温馨提示",
         "loading": "处理中...",
         "ok": "确定",
         "cancel": "取消"
-    },
-    "login": {
-        "login_text": "登录",
-        "register_text": "注册",
-        "vcode": "验证码",
-        "vcode_counter": "已发送 @s",
-        "get_vcode": "获取验证码",
-        "phone": "手机号",
-        "phone_invalid": "无效的手机号",
-        "phone_empty": "手机号不能为空",
-        "password": "密码",
-        "password_invalid": "密码至少八个字符，至少包含一个字母和一个数字",
-        "password_empty": "密码不能为空",
-        "vcode_invalid": "请填写6位数字验证码",
-        "recommended": "邀请码（可不填）",
-        "recommended_invalid": "无效的邀请码"
-    },
-    "personal": {
-        "recommended": "邀请码:  ",
-        "favorite": "收藏",
-        "focus": "关注",
-        "fans": "粉丝",
-        "mine_publish": "我发布的",
-        "mine_buy": "我买到的",
-        "mine_sell": "我卖出的",
-        "mine_recommended": "我邀请的",
-        "mine_balances": "我的资产",
-        "mine_keys": "我的密钥",
-        "mine_address": "收货地址",
-        "mine_withdrawal": "提现地址",
-        "version": "当前版本",
-        "about": "关于我们",
-        "logout": "退出登录",
-        "user_normal": "普通用户",
-        "user_reviewer": "评审员",
-        "copy": "邀请码已复制到剪贴板",
-        "try_reviewer": "申请评审员",
-        "audit_goods": "审核商品"
-    },
-    "publish": {
-        "title": "发布商品",
-        "desc_hint": "品牌型号，新旧程度，入手渠道，转手原因...",
-        "title_hint": "商品标题",
-        "prices": "价格",
-        "type": "类型",
-        "address": "发货地址",
-        "publish_text": "发布",
-        "desc_empty": "清填写商品描述",
-        "prices_empty": "请填写价格",
-        "type_selector": "选择类型",
-        "address_selector": "发货地址",
-        "photos_selector": "选择图片",
-        "freight": "含运费 @s",
-        "none_freight": "包邮"
-    },
-    "number_pad": {
-        "pricing": "价格",
-        "pricing_hint": "0.0000",
-        "freight": "运费",
-        "freight_hint": "0.0000（运费0为包邮）",
-        "done": "确定"
-    },
-    "address_selector": {
-        "cur_address": "您的位置",
-        "change_address": "切换位置",
-        "no_permission": "没有权限获取您当前的位置信息"
-    },
-    "photos": {
-        "album": "相册",
-        "camera": "相机",
-        "max_photos": "最多使用@s张图片",
-        "done": "完成"
-    },
-    "user_edit": {
-        "title": "个人资料",
-        "head": "头像",
-        "nickname": "昵称",
-        "done": "完成"
     },
     "search": {
         "hint": "输入商品标题搜索",
@@ -96,138 +12,14 @@
         "history": "最近",
         "no_data": "没有找到相关商品"
     },
-    "detail": {
-        "location": "发布于 @s",
-        "price": "价格:  ",
-        "postage": "运费:  ",
-        "favorite": "收藏",
-        "focus": "关注",
-        "comments": "留言",
-        "buy": "购买"
-    },
-    "title": {
-        "about": "关于我们",
-        "goods_detail": "商品详情",
-        "my_keys": "我的密钥",
-        "mine_address": "收货地址",
-        "add_address": "新增收货地址",
-        "edit_address": "编辑收货地址",
-        "mine_balances": "我的资产",
-        "mine_vote": "选举评审员",
-        "mine_withdrawal": "提现地址",
-        "edit_withdrawal": "编辑提现地址",
-        "try_reviewer": "申请评审员",
-        "mine_favorite": "我收藏的",
-        "mine_focus": "我关注的",
-        "mine_fans": "我的粉丝",
-        "mine_invite": "我邀请的",
-        "mine_publish": "我发布的",
-        "mine_buy": "我买到的",
-        "mine_sell": "我卖出的",
-        "edit_goods": "编辑商品",
-        "pre_order": "购买商品",
-        "address_select": "选择收货地址",
-        "other_publish": "他发布的",
-        "other_focus": "他关注的",
-        "other_fans": "他的粉丝",
-        "order_detail": "订单详情"
-    },
-    "controller": {
-        "copy_pubkey": "@s 已复制到剪贴板",
-        "add": "新增",
-        "edit": "编辑",
-        "delete": "删除",
-        "set_default": "设为默认",
-        "complete": "完成",
-        "paste": "粘贴",
-        "try_reviewer": "确认申请",
-        "re_publish": "重新发布",
-        "del_publish": "下架商品",
-        "confirm_buy": "确认购买",
-        "ok": "确定",
-        "focus": "关注"
-    },
-    "combo_text": {
-        "consignee": "收货人:  @s",
-        "contact": "联系方式:  @s",
-        "shipping_address": "收货地址:  @s",
-        "user_score": "信用分:  @s",
-        "vote_count": "票数:  @s",
-        "favorite_count": "收藏数:  @s",
-        "price": "价格:  @s",
-        "postage": "运费:  @s",
-        "seller": "卖家:  @s",
-        "buyer": "买家:  @s",
-        "order_no": "订单号:  @s"
-    },
-    "text": {
-        "no_data_address": "没有收货地址",
-        "consignee": "收货人",
-        "contact": "联系方式",
-        "location": "省市区",
-        "sub_location": "详细地址",
-        "postcode": "邮编",
-        "agree_terms": "我已经阅读并同意以上条款",
-        "support": "支持",
-        "against": "反对",
-        "focus": "关注",
-        "unfocus": "已关注",
-        "price": "价格:  ",
-        "postage":"运费:  ",
-        "total_price": "总计:  "
-    },
-    "hint": {
-        "consignee": "请填写收货人",
-        "contact": "请填写联系方式",
-        "location": "请选择省市区",
-        "sub_location": "请填写详细地址",
-        "postcode": "请填写邮编，默认为000000",
-        "withdrawal": "请输入或粘贴提现地址",
-        "password": "请输入密码以支付"
-    },
-    "message": {
-        "consignee_empty": "收货人不能为空",
-        "delete_address": "是否删除该地址",
-        "contact_empty": "请填写联系方式",
-        "phone_invalid": "无效的手机号",
-        "position_empty": "收货地址不能为空",
-        "agree_terms": "请阅读并勾选同意条款",
-        "goods_title_empty": "请填写商品标题",
-        "goods_desc_empty": "请填写商品描述",
-        "goods_title_limit": "商品标题超过最大长度",
-        "goods_desc_limit": "商品描述查过最大长度",
-        "goods_photos_empty": "至少选择一张商品图片",
-        "goods_price_empty": "请填写商品价格",
-        "goods_location_empty": "请选择商品发货地",
-        "goods_re_publish": "重新发布商品将导致商品再次进入审核流程",
-        "goods_del_publish": "确认下架该商品",
-        "address_no_data": "没有收货地址，请点击添加",
-        "order_no_address": "请选择或添加一个收货地址",
-        "password_empty": "请输入密码",
-        "password_error": "密码错误"
-    },
-    "combo_message": {
-        "goods_title_limit": "商品标题超过最大长度",
-        "goods_desc_limit": "商品描述查过最大长度"
-    },
-    "order_type": {
-        "0": "待付款",
-        "1": "待发货",
-        "2": "待收货",
-        "3": "交易完成",
-        "4": "？？？"
-    },
-    "goods_type": {
-        "0": "正常",
-        "1": "待审核",
-        "2": "审核拒绝",
-        "3": "下架"
-    },
-    "error": {
-        "network": "网络错误"
-    },
-    "test": {
-        "test1": "你好 @s @s",
-        "test2": "再见👋"
+    "category": {
+        "0": "最新",
+        "1": "数码",
+        "2": "玩具",
+        "3": "美妆",
+        "4": "居家",
+        "5": "服装",
+        "6": "图书",
+        "7": "其他"
     }
 }
