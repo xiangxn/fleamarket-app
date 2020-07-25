@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
+import 'package:flutter/material.dart';
 
 class Profile {
   User user;
@@ -10,7 +11,9 @@ class Profile {
   int lastLogin;
   String locale;
 
-  Profile();
+  Profile(){
+    theme = Colors.red[500].value;
+  }
 
   Profile.fromJson(Map<String, dynamic> json) {
     this.token = json['token'];

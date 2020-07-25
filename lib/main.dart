@@ -36,12 +36,12 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, themeModel, localeModel, Widget child) {
           return MaterialApp(
             theme: ThemeData(
-                primarySwatch: themeModel.themeColor,
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                dividerColor: Colors.transparent,
-                scaffoldBackgroundColor: Style.backgroundColor,
-                backgroundColor: Style.backgroundColor),
+                primarySwatch: themeModel.theme.primarySwatch,
+                splashColor: themeModel.theme.splashColor,
+                highlightColor: themeModel.theme.highlightColor,
+                dividerColor: themeModel.theme.dividerColor,
+                scaffoldBackgroundColor: themeModel.theme.scaffoldBackgroundColor,
+                backgroundColor: themeModel.theme.backgroundColor),
             onGenerateTitle: (context) {
               return FlutterI18n.translate(context, "title");
             },

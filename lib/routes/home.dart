@@ -22,12 +22,12 @@ class HomeRoute extends StatelessWidget {
           selector: (_, pv) => pv.pageIndex,
           builder: (_, pageIndex, __) {
             print('************************** home view model build **************************');
-            final theme = Provider.of<ThemeModel>(context);
+            final theme = Provider.of<ThemeModel>(context).theme;
             return Scaffold(
               appBar: PreferredSize(
                   child: AppBar(
                     brightness: Brightness.light,
-                    backgroundColor: Style.backgroundColor,
+                    backgroundColor: theme.backgroundColor,
                     elevation: 0,
                   ),
                   preferredSize: Size.fromHeight(0)),
@@ -48,7 +48,7 @@ class HomeRoute extends StatelessWidget {
                     return Padding(
                       padding: inx == 0 ? EdgeInsets.only(right: 30) : EdgeInsets.only(left: 30),
                       child: IconButton(
-                        icon: Icon(icon, size: 24, color: pageIndex == inx ? theme.themeColor : Colors.grey),
+                        icon: Icon(icon, size: 24, color: pageIndex == inx ? theme.primarySwatch : Colors.grey),
                         onPressed: () => provider.setPage(inx),
                       ),
                     );

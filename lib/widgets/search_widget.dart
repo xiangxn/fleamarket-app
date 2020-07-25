@@ -1,7 +1,9 @@
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/states/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class SearchWidget extends StatefulWidget {
   SearchWidget({Key key, this.isBtn, this.onSubmit, this.onFocus, this.controller}) : super(key: key);
@@ -74,7 +76,7 @@ class _SearchWidget extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Provider.of<ThemeModel>(context).theme;
     return Hero(
         tag: 'searchBar',
         child: Material(

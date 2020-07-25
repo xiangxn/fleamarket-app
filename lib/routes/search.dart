@@ -8,10 +8,12 @@ import 'package:bitsflea/models/data_page.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/routes/product_list.dart';
 import 'package:bitsflea/states/base.dart';
+import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/widgets/search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class SearchRoute extends StatelessWidget {
   Widget _buildChild(SearchProvider provider, Widget loading, BuildContext context) {
@@ -71,7 +73,7 @@ class SearchRoute extends StatelessWidget {
         listen: true,
         provider: SearchProvider(context),
         builder: (_, provider, loading) {
-          final theme = Theme.of(context);
+          final theme = Provider.of<ThemeModel>(context).theme;
           return Scaffold(
               appBar: AppBar(
                 centerTitle: true,
@@ -85,8 +87,8 @@ class SearchRoute extends StatelessWidget {
                 backgroundColor: theme.backgroundColor,
                 elevation: 0,
                 brightness: Brightness.light,
-                textTheme: Style.headerTextTheme,
-                iconTheme: Style.headerIconTheme,
+                textTheme: theme.headerTextTheme,
+                iconTheme: theme.headerIconTheme,
                 automaticallyImplyLeading: false,
                 actions: <Widget>[
                   SizedBox(
