@@ -63,7 +63,7 @@ class SearchRoute extends StatelessWidget {
         child: Text(FlutterI18n.translate(context, 'search.no_data')),
       );
     } else {
-      return ProductList(goodsPage: provider.productPage, refresh: provider.fetchProductList);
+      return ProductList(productPage: provider.productPage, refresh: provider.fetchProductList);
     }
   }
 

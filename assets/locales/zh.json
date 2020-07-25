@@ -21,5 +21,15 @@
         "5": "服装",
         "6": "图书",
         "7": "其他"
+    },
+    "product_detail": {
+        "title": "商品详情",
+        "location":"发布于: {location} [{time}]",
+        "price": "价格:  ",
+        "postage": "运费:  ",
+        "favorite": "收藏",
+        "follow": "关注",
+        "comments": "留言",
+        "buy": "购买"
     }
 }

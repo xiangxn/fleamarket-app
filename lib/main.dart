@@ -1,6 +1,7 @@
 import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/routes/home.dart';
 import 'package:bitsflea/routes/product_detail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -27,13 +28,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: <SingleChildWidget>[
-        ChangeNotifierProvider<ThemeModel>.value(value: ThemeModel()),
-        ChangeNotifierProvider<UserModel>.value(value: UserModel()),
-        ChangeNotifierProvider<LocaleModel>.value(value: LocaleModel()),
-      ],
-      child: Consumer2<ThemeModel, LocaleModel>(
-        builder: (BuildContext context, themeModel, localeModel, Widget child) {
+        providers: <SingleChildWidget>[
+          ChangeNotifierProvider<ThemeModel>.value(value: ThemeModel()),
+          ChangeNotifierProvider<UserModel>.value(value: UserModel()),
+          ChangeNotifierProvider<LocaleModel>.value(value: LocaleModel()),
+        ],
+        child: Consumer2<ThemeModel, LocaleModel>(builder: (BuildContext context, themeModel, localeModel, Widget child) {
           return MaterialApp(
             theme: ThemeData(
                 primarySwatch: themeModel.theme.primarySwatch,
@@ -80,11 +80,26 @@ class MyApp extends StatelessWidget {
             routes: <String, WidgetBuilder>{
               ROUTE_HOME: (context) => HomeRoute(),
               ROUTE_SEARCH: (context) => SearchRoute(),
-              ROUTE_DETAIL: (context) => ProductDetailRoute(),
+            },
+            onGenerateRoute: (RouteSettings settings) {
+              return CupertinoPageRoute(
+                settings: settings,
+                builder: (context) {
+                  switch (settings.name) {
+                    case ROUTE_DETAIL:
+                      return ProductDetailRoute(product: settings.arguments);
+                    default:
+                      return Scaffold(
+                        appBar: AppBar(),
+                        body: Center(
+                          child: Text('unknown route ${settings.name}'),
+                        ),
+                      );
+                  }
+                },
+              );
             },
           );
-        },
-      ),
-    );
+        }));
   }
 }

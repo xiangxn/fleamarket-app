@@ -51,8 +51,8 @@ class ProductRoute extends StatelessWidget {
                     selector: (_, provider) => provider.getProductList(category),
                     builder: (_, page, __) {
                       return ProductList(
-                        goodsPage: page,
-                        refresh: provider.fetchGoodsList,
+                        productPage: page,
+                        refresh: provider.fetchProductList,
                         category: category.cid,
                       );
                     },
@@ -110,7 +110,7 @@ class ProductProvider extends BaseProvider implements TickerProvider {
 
       _list = List<DataPage<Product>>.generate(_categories.length, (i) => DataPage<Product>());
       _tabController = new TabController(length: _categories.length, vsync: this);
-      await Future.wait(_list.map((p) => fetchGoodsList(page: p, isRefresh: true, notify: false)));
+      await Future.wait(_list.map((p) => fetchProductList(page: p, isRefresh: true, notify: false)));
       return true;
     }
     return false;
@@ -121,7 +121,7 @@ class ProductProvider extends BaseProvider implements TickerProvider {
     return _list[idx];
   }
 
-  fetchGoodsList({DataPage<Product> page, bool isRefresh = false, bool notify = true}) async {
+  fetchProductList({DataPage<Product> page, bool isRefresh = false, bool notify = true}) async {
     var userModel = Provider.of<UserModel>(context, listen: false);
     int inx = _list.indexOf(page);
     Category category = _categories[inx];

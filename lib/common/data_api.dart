@@ -282,18 +282,18 @@ class DataApi {
   Future<BaseReply> fetchProductList(int categoryId, int pageNo, int pageSize, {int userid = 0}) async {
     String query = "{productByCid(categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
     if (userid > 0) query = "{productByCid(userid:$userid,categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
-    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{head,nickname},photos}}}";
+    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{userid,head,nickname},photos}}}";
     return await _search(query);
   }
 
   Future<BaseReply> searchProductByTitle(String title, int pageNo, int pageSize, {int userid = 0}) async {
     String query = "{productByTitle(title:\"$title\",pageNo:$pageNo,pageSize:$pageSize)";
     if (userid > 0) query = "{productByTitle(userid:$userid,title:\"$title\",pageNo:$pageNo,pageSize:$pageSize)";
-    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{head,nickname},photos}}}";
+    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{userid,head,nickname},photos}}}";
     return await _search(query);
   }
 
-  Future<BaseReply> fetchProductInfo(int productId, {int userid = 0}) async {
+  Future<BaseReply> fetchProductInfo(int productId) async {
     String query = "{products(productId:$productId){edges{node{";
     query +=
         "productId,title,status,isNew,isReturns,transMethod,postage,position,releaseTime,description,photos,collections,price,saleMethod,stockCount,isRetail,";

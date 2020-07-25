@@ -13,7 +13,9 @@ const ROUTE_LOGIN = "login";
 const ROUTE_PUBLISH = "publish";
 const ROUTE_SEARCH = "search";
 const ROUTE_DETAIL = 'detail';
+const ROUTE_CREATE_ORDER = "createOrder";
 
 //Store
 const STORE_SEARCH_HISTORY = "searchHistory";
+const STORE_FAVORITES = "favorites";
 

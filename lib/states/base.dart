@@ -1,6 +1,10 @@
+import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/ext_dialog.dart';
+import 'package:bitsflea/grpc/bitsflea.pb.dart';
+import 'package:bitsflea/states/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BaseProvider extends ChangeNotifier {
   final BuildContext context;
@@ -50,5 +54,25 @@ class BaseProvider extends ChangeNotifier {
 
   setBusy() {
     _busy = !_busy;
+  }
+
+  processing(Future<BaseReply> process, {bool loading = true, bool toast = true, String msg}) async {
+    if (loading) showLoading(msg);
+    var res = await process;
+    if (loading) closeLoading();
+    if (res.code == 0) {
+    } else {
+      if (toast) showToast(msg);
+    }
+    return res;
+  }
+
+  bool checkLogin() {
+    final user = Provider.of<UserModel>(context, listen: false).user;
+    if (user == null) {
+      pushNamed(ROUTE_LOGIN);
+      return false;
+    }
+    return true;
   }
 }

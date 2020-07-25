@@ -1,4 +1,5 @@
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/data_api.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/models/data_page.dart';
 import 'package:bitsflea/routes/base.dart';
@@ -15,13 +16,13 @@ import 'package:provider/provider.dart';
 class ProductList extends StatefulWidget {
   ProductList({
     Key key,
-    @required this.goodsPage,
+    @required this.productPage,
     this.refresh,
     this.controller,
     this.category,
   }) : super(key: key);
 
-  final DataPage<Product> goodsPage;
+  final DataPage<Product> productPage;
   final Function({DataPage<Product> page, bool isRefresh}) refresh;
   final ScrollController controller;
   final int category;
@@ -33,20 +34,19 @@ class ProductList extends StatefulWidget {
 class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin {
   Future<void> onRefresh() async {
     if (widget.refresh != null) {
-      return widget.refresh(page: widget.goodsPage, isRefresh: true);
+      return widget.refresh(page: widget.productPage, isRefresh: true);
     }
   }
 
   Future<void> onLoad() async {
     if (widget.refresh != null) {
-      return widget.refresh(page: widget.goodsPage, isRefresh: false);
+      return widget.refresh(page: widget.productPage, isRefresh: false);
     }
   }
 
-  Icon _buildFavoriteIcon(Product goods) {
-    // bool isFavorite = goods.hasCollection(user?.userid ?? 0);  //TODO
-    var userModel = Provider.of<UserModel>(context, listen: false);
-    bool isFavorite = false;
+  Icon _buildFavoriteIcon(Product product) {
+    var um = Provider.of<UserModel>(context, listen: false);
+    bool isFavorite = um.hasFavorites(product.productId);
     return Icon(
       isFavorite ? Icons.favorite : Icons.favorite_border,
       size: 14,
@@ -57,40 +57,41 @@ class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    DataPage goodsPage = widget.goodsPage;
+    DataPage productPage = widget.productPage;
     return BaseRoute<ProductListProvider>(
         provider: ProductListProvider(context),
-        builder: (_, model, __) {
+        builder: (_, provider, __) {
           return CustomRefreshIndicator(
             onRefresh: onRefresh,
-            onLoad: goodsPage.hasMore() ? onLoad : null,
+            onLoad: productPage.hasMore() ? onLoad : null,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 6),
               child: StaggeredGridView.countBuilder(
                 controller: widget.controller,
                 // physics: ClampingScrollPhysics(),
-                itemCount: goodsPage.data.length,
+                itemCount: productPage.data.length,
                 staggeredTileBuilder: (inx) => StaggeredTile.fit(2),
                 crossAxisCount: 4,
                 mainAxisSpacing: 6, // 垂直间距
                 crossAxisSpacing: 6, // 水平间距
                 itemBuilder: (context, i) {
                   return Selector<ProductListProvider, Product>(
-                    selector: (_, __) => goodsPage.data[i],
-                    builder: (_, goods, __) {
+                    selector: (_, __) => productPage.data[i],
+                    builder: (_, product, __) {
                       return Card(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                           Hero(
-                            tag: 'goodsImg${goods.photos[0].hashCode}${goods.productId}${widget.category}',
+                            tag: 'productImg${product.photos[0].hashCode}${product.productId}${widget.category}',
                             child: ExtNetworkImage(
-                              '$URL_IPFS_GATEWAY${goods.photos[0]}',
+                              '$URL_IPFS_GATEWAY${product.photos[0]}',
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
-                              onTap: () => model.toDetail(goodsPage.data, i),
+                              onTap: () => provider.toDetail(productPage.data, i),
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                            child: Text(goods.title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 2),
+                            child:
+                                Text(product.title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 2),
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -98,8 +99,8 @@ class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(goods.price.split(' ')[1], style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold)),
-                                Text(goods.price.split(' ')[0],
+                                Text(product.price.split(' ')[1], style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold)),
+                                Text(product.price.split(' ')[0],
                                     style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1),
@@ -109,11 +110,11 @@ class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin
                           Padding(
                             padding: EdgeInsets.all(8),
                             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-                              ExtCircleAvatar(goods.seller.head, 20, strokeWidth: 0),
+                              ExtCircleAvatar(product.seller.head, 20, strokeWidth: 0),
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 6, right: 2),
-                                  child: Text(goods.seller.nickname,
+                                  child: Text(product.seller.nickname,
                                       textAlign: TextAlign.left,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -123,12 +124,12 @@ class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin
                               InkWell(
                                 child: Row(
                                   children: <Widget>[
-                                    Text(goods.collections.toString(), style: TextStyle(fontSize: 12)),
+                                    Text(product.collections.toString(), style: TextStyle(fontSize: 12)),
                                     SizedBox(width: 4),
-                                    _buildFavoriteIcon(goods)
+                                    _buildFavoriteIcon(product)
                                   ],
                                 ),
-                                onTap: () => model.favorite(goodsPage.data, i),
+                                onTap: () => provider.favorite(productPage.data, i),
                               )
                             ]),
                           ),
@@ -148,23 +149,46 @@ class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin
 }
 
 class ProductListProvider extends BaseProvider {
-  ProductListProvider(BuildContext context) : super(context);
+  DataApi _api;
+  ProductListProvider(BuildContext context) : super(context) {
+    _api = DataApi();
+  }
 
   toDetail(List<Product> data, int i) async {
-    var product = await super.pushNamed(ROUTE_DETAIL, arguments: data[i]);
+    var product = await pushNamed(ROUTE_DETAIL, arguments: data[i]);
     if (product != null && product is Product) {
       data[i] = product;
       notifyListeners();
     }
-    print('router return goods $product');
+    // print('router return product: $product');
   }
 
   favorite(List<Product> data, int i) async {
-    var userModel = Provider.of<UserModel>(context);
-    if (userModel.user == null) {
-      pushNamed(ROUTE_LOGIN);
-    }else {
-      // TODO
+    if (checkLogin() && !busy) {
+      final um = Provider.of<UserModel>(context, listen: false);
+      setBusy();
+      var process;
+      bool isf = false;
+      if (um.hasFavorites(data[i].productId)) {
+        process = _api.unFavorite(um.user.userid, data[i].productId);
+      } else {
+        process = _api.favorite(um.user.userid, data[i].productId);
+        isf = true;
+      }
+      // showLoading();
+      final res = await process;
+      // closeLoading();
+      if (res.code == 0) {
+        if (isf) {
+          um.addFavorite(data[i].productId);
+          data[i].collections += 1;
+        } else {
+          um.removeFavorite(data[i].productId);
+          data[i].collections -= 1;
+        }
+        notifyListeners();
+      }
+      setBusy();
     }
   }
 }

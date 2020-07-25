@@ -41,4 +41,14 @@ class Style {
   ));
 
   IconThemeData headerIconTheme = IconThemeData(color: Colors.grey[600]);
+
+  Color headerBackgroundColor = Colors.white;
+
+  BoxDecoration shadowBottom = BoxDecoration(color: Colors.white, boxShadow: [
+        BoxShadow(
+          color: Colors.grey[300],
+          offset: Offset(0.0, 2.0),
+          blurRadius: 10.0,
+        )
+      ]);
 }

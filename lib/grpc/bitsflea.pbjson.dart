@@ -65,7 +65,7 @@ const User$json = const {
       '10': 'referralTotal'
     },
     const {'1': 'point', '3': 14, '4': 1, '5': 9, '10': 'point'},
-    const {'1': 'isReviewer', '3': 15, '4': 1, '5': 5, '10': 'isReviewer'},
+    const {'1': 'isReviewer', '3': 15, '4': 1, '5': 8, '10': 'isReviewer'},
     const {'1': 'followTotal', '3': 16, '4': 1, '5': 5, '10': 'followTotal'},
     const {
       '1': 'favoriteTotal',

@@ -194,8 +194,7 @@ class User extends $pb.GeneratedMessage {
     ..a<$core.int>(13, 'referralTotal', $pb.PbFieldType.O3,
         protoName: 'referralTotal')
     ..aOS(14, 'point')
-    ..a<$core.int>(15, 'isReviewer', $pb.PbFieldType.O3,
-        protoName: 'isReviewer')
+    ..aOB(15, 'isReviewer', protoName: 'isReviewer')
     ..a<$core.int>(16, 'followTotal', $pb.PbFieldType.O3,
         protoName: 'followTotal')
     ..a<$core.int>(17, 'favoriteTotal', $pb.PbFieldType.O3,
@@ -394,10 +393,10 @@ class User extends $pb.GeneratedMessage {
   void clearPoint() => clearField(14);
 
   @$pb.TagNumber(15)
-  $core.int get isReviewer => $_getIZ(14);
+  $core.bool get isReviewer => $_getBF(14);
   @$pb.TagNumber(15)
-  set isReviewer($core.int v) {
-    $_setSignedInt32(14, v);
+  set isReviewer($core.bool v) {
+    $_setBool(14, v);
   }
 
   @$pb.TagNumber(15)

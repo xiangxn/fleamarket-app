@@ -78,8 +78,6 @@ class HomeProvider extends BaseProvider {
 
   HomeProvider(BuildContext context) : super(context) {
     _productProvider = new ProductProvider(context);
-
-    
   }
 
   setPage(int inx) async {
