@@ -14,12 +14,22 @@
     },
     "category": {
         "0": "NEW",
-        "1": "ELEC",
-        "2": "TOY",
-        "3": "COS",
-        "4": "HOME",
-        "5": "Garment",
-        "6": "Books",
-        "7": "Other"
+        "1": "数码",
+        "2": "玩具",
+        "3": "美妆",
+        "4": "居家",
+        "5": "服装",
+        "6": "图书",
+        "7": "其他"
+    },
+    "product_detail": {
+        "title": "商品详情",
+        "location":"发布于: {location} [{time}]",
+        "price": "价格:  ",
+        "postage": "运费:  ",
+        "favorite": "收藏",
+        "follow": "关注",
+        "comments": "留言",
+        "buy": "购买"
     }
 }
