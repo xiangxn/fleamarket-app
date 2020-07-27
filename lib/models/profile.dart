@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:flutter/material.dart';
+import 'package:eosdart_ecc/eosdart_ecc.dart';
 
 class Profile {
   User user;
@@ -10,9 +11,11 @@ class Profile {
   int theme;
   int lastLogin;
   String locale;
+  List<EOSPrivateKey> keys;
 
-  Profile(){
+  Profile() {
     theme = Colors.red[500].value;
+    keys = new List<EOSPrivateKey>();
   }
 
   Profile.fromJson(Map<String, dynamic> json) {
@@ -21,17 +24,20 @@ class Profile {
     this.lastLogin = json['lastLogin'];
     this.locale = json['locale'];
     this.tokenTime = json['tokenTime'];
-    this.user = User.fromJson(jsonEncode(json['user']));
+    this.user = User()..mergeFromProto3Json(json['user']);
+    keys = new List<EOSPrivateKey>();
+    keys.addAll((json['keys'] as List<String>).map((e) => EOSPrivateKey.fromString(e)));
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user'] = this.user.toProto3Json();
+    data['user'] = this.user?.toProto3Json();
     data['token'] = this.token;
     data['theme'] = this.theme;
     data['lastLogin'] = this.lastLogin;
     data['locale'] = this.locale;
     data['tokenTime'] = this.tokenTime;
+    data['keys'] = this.keys.map((e) => e.toString()).toList();
     return data;
   }
 

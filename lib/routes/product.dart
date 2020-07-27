@@ -5,23 +5,22 @@ import 'package:bitsflea/models/data_page.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/routes/product_list.dart';
 import 'package:bitsflea/states/base.dart';
-import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
 
-class ProductRoute extends StatelessWidget {
+class ProductPage extends StatelessWidget {
   final ProductProvider provider;
 
-  ProductRoute({Key key, @required this.provider}) : super(key: key);
+  ProductPage({Key key, @required this.provider}) : super(key: key);
 
   Widget _createTabBar() {
     return FutureBuilder<bool>(
+      initialData: false,
       future: provider.getCategories(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.data) {
           return Column(children: <Widget>[
             TabBar(
               controller: provider.tabController,
@@ -95,7 +94,7 @@ class ProductProvider extends BaseProvider implements TickerProvider {
     _categories = List<Category>();
     _categories.add(Category()
       ..cid = 0
-      ..view = FlutterI18n.translate(context, "category.0")
+      ..view = translate("category.0")
       //..view = "最新"
       ..parent = 0);
     BaseReply result = await dataApi.fetchCategories();
@@ -104,7 +103,7 @@ class ProductProvider extends BaseProvider implements TickerProvider {
       data.forEach((e) {
         var c = Category();
         c.mergeFromProto3Json(e['node']);
-        c.view = FlutterI18n.translate(context, "category.${c.cid}");
+        c.view = translate("category.${c.cid}");
         _categories.add(c);
       });
 
@@ -122,7 +121,6 @@ class ProductProvider extends BaseProvider implements TickerProvider {
   }
 
   fetchProductList({DataPage<Product> page, bool isRefresh = false, bool notify = true}) async {
-    var userModel = Provider.of<UserModel>(context, listen: false);
     int inx = _list.indexOf(page);
     Category category = _categories[inx];
     if (isRefresh) {
@@ -131,7 +129,7 @@ class ProductProvider extends BaseProvider implements TickerProvider {
       page.incres();
     }
     // showLoading();
-    final res = await dataApi.fetchProductList(category.cid, page.pageNo, page.pageSize, userid: userModel.user == null ? 0 : userModel.user.userid);
+    final res = await dataApi.fetchProductList(category.cid, page.pageNo, page.pageSize);
     // print("res:$res");
     // closeLoading();
     if (res.code == 0) {

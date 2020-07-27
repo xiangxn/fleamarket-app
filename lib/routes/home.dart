@@ -2,6 +2,7 @@ import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/routes/product.dart';
+import 'package:bitsflea/routes/user_profile.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
@@ -34,7 +35,8 @@ class HomeRoute extends StatelessWidget {
               body: IndexedStack(
                 index: pageIndex,
                 children: <Widget>[
-                  ProductRoute(provider: provider.productProvider),
+                  ProductPage(provider: provider.productProvider),
+                  UserProfilePage(homeProvider: provider,)
                   //   Personal(model: model.personalViewModel)
                 ],
               ),

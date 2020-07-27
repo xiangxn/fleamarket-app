@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bitsflea/common/data_api.dart';
 import 'package:bitsflea/common/style.dart';
+import 'package:bitsflea/models/app_info.dart';
 import 'package:bitsflea/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,10 @@ class Global {
   // 是否为release版
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
 
+  // App信息
+  static AppInfo get appInfo => _appInfo;
+  static AppInfo _appInfo;
+
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -28,11 +33,17 @@ class Global {
         print(e);
       }
     }
+    // 包信息
+    _appInfo = new AppInfo();
+    await _appInfo.init();
+
     DataApi.init();
   }
 
   // 持久化Profile信息
   static saveProfile() => _prefs.setString("profile", jsonEncode(profile.toJson()));
+
+  static removeProfile() => _prefs.remove("profile");
 
   static SharedPreferences get prefs => _prefs;
 }

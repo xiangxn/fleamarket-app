@@ -31,7 +31,7 @@ class ProductList extends StatefulWidget {
   State<StatefulWidget> createState() => _ProductList();
 }
 
-class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin {
+class _ProductList extends State<ProductList> {
   Future<void> onRefresh() async {
     if (widget.refresh != null) {
       return widget.refresh(page: widget.productPage, isRefresh: true);
@@ -56,8 +56,8 @@ class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    DataPage productPage = widget.productPage;
+    print("product_list build ********");
+    DataPage<Product> productPage = widget.productPage;
     return BaseRoute<ProductListProvider>(
         provider: ProductListProvider(context),
         builder: (_, provider, __) {
@@ -80,13 +80,10 @@ class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin
                     builder: (_, product, __) {
                       return Card(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                          Hero(
-                            tag: 'productImg${product.photos[0].hashCode}${product.productId}${widget.category}',
-                            child: ExtNetworkImage(
-                              '$URL_IPFS_GATEWAY${product.photos[0]}',
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
-                              onTap: () => provider.toDetail(productPage.data, i),
-                            ),
+                          ExtNetworkImage(
+                            '$URL_IPFS_GATEWAY${product.photos[0]}',
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+                            onTap: () => provider.toDetail(productPage.data, i),
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -143,9 +140,6 @@ class _ProductList extends State<ProductList> with AutomaticKeepAliveClientMixin
           );
         });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class ProductListProvider extends BaseProvider {
@@ -154,12 +148,14 @@ class ProductListProvider extends BaseProvider {
     _api = DataApi();
   }
 
-  toDetail(List<Product> data, int i) async {
-    var product = await pushNamed(ROUTE_DETAIL, arguments: data[i]);
-    if (product != null && product is Product) {
-      data[i] = product;
-      notifyListeners();
-    }
+  toDetail(List<Product> data, int i) {
+    pushNamed(ROUTE_DETAIL, arguments: data[i]);
+    // var product = await pushNamed(ROUTE_DETAIL, arguments: data[i]);
+    // if (product != null && product is Product) {
+    //   print("data[i].collections:${data[i].collections}");
+    //   data[i] = product;
+    //   notifyListeners();
+    // }
     // print('router return product: $product');
   }
 

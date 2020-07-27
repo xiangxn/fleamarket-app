@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:bitsflea/states/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:provider/provider.dart';
 
 /// example:
 ///
@@ -117,10 +119,11 @@ class ExtDialog {
   }
 
   static void toast(BuildContext context, String msg) {
+    final style = Provider.of<ThemeModel>(context, listen: false).theme;
     _baseDialog(
         context: context,
         autoDismissible: true,
-        bgColor: Colors.black87,
+        bgColor: style.primarySwatch,
         content: Text(msg, textAlign: TextAlign.center, style: TextStyle(fontSize: 15, color: Colors.white)));
   }
 
@@ -145,6 +148,7 @@ class ExtDialog {
   }
 
   static void close(BuildContext context, [dynamic param]) {
+    isShow = false;
     Navigator.of(context).pop(param);
   }
 }

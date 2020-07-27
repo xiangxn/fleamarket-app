@@ -1,5 +1,6 @@
 import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/routes/home.dart';
+import 'package:bitsflea/routes/login.dart';
 import 'package:bitsflea/routes/product_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
             routes: <String, WidgetBuilder>{
               ROUTE_HOME: (context) => HomeRoute(),
               ROUTE_SEARCH: (context) => SearchRoute(),
+              ROUTE_LOGIN: (context) => LoginRoute(),
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(

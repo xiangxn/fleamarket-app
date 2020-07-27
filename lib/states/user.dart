@@ -1,7 +1,7 @@
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
-import 'package:bitsflea/grpc/google/protobuf/wrappers.pb.dart';
+import 'package:bitsflea/models/profile.dart';
 
 import 'profile.dart';
 
@@ -25,6 +25,11 @@ class UserModel extends ProfileChangeNotifier {
 
   void setToken(String token, String time) {
     profile.setToken(token, time);
+    notifyListeners();
+  }
+
+  void logout(){
+    Global.profile = new Profile();
     notifyListeners();
   }
 

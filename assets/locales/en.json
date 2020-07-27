@@ -24,12 +24,30 @@
     },
     "product_detail": {
         "title": "商品详情",
-        "location":"发布于: {location} [{time}]",
+        "location": "发布于: {location} [{time}]",
         "price": "价格:  ",
         "postage": "运费:  ",
         "favorite": "收藏",
         "follow": "关注",
         "comments": "留言",
         "buy": "购买"
+    },
+    "login": {
+        "login_text": "登录",
+        "register_text": "注册",
+        "vcode": "验证码",
+        "vcode_counter": "已发送 {vcode}",
+        "get_vcode": "获取验证码",
+        "phone": "手机号",
+        "phone_invalid": "无效的手机号",
+        "phone_empty": "手机号不能为空",
+        "password": "密码",
+        "password_invalid": "密码至少八个字符，至少包含一个字母和一个数字",
+        "password_empty": "密码不能为空",
+        "vcode_invalid": "请填写6位数字验证码",
+        "recommended": "邀请码（可不填）",
+        "recommended_invalid": "无效的邀请码",
+        "failure": "登录失败",
+        "invalid_ref": "无效的引荐人"
     }
 }
