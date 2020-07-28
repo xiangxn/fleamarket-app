@@ -71,6 +71,39 @@
         "copy": "邀请码已复制到剪贴板",
         "try_reviewer": "申请评审员",
         "audit_goods": "审核商品",
-        "mine_vote":"选举评审员"
+        "mine_vote": "选举评审员"
+    },
+    "photos": {
+        "album": "相册",
+        "camera": "相机",
+        "max_photos": "最多使用{max}张图片",
+        "done": "完成"
+    },
+    "user_edit": {
+        "title": "个人资料",
+        "head": "头像",
+        "nickname": "昵称",
+        "done": "完成",
+        "save_failure": "保存失败"
+    },
+    "permission": {
+        "location": "允许希奇访问您的位置",
+        "album_camera": "允许希奇访问您的相册和相机"
+    },
+    "publish": {
+        "title": "发布商品",
+        "desc_hint": "品牌型号，新旧程度，入手渠道，转手原因...",
+        "title_hint": "商品标题",
+        "prices": "价格",
+        "type": "类型",
+        "address": "发货地址",
+        "publish_text": "发布",
+        "desc_empty": "清填写商品描述",
+        "prices_empty": "请填写价格",
+        "type_selector": "选择类型",
+        "address_selector": "发货地址",
+        "photos_selector": "选择图片",
+        "freight": "含运费 @s",
+        "none_freight": "包邮"
     }
 }

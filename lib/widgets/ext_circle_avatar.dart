@@ -47,7 +47,7 @@ class ExtCircleAvatar extends StatelessWidget {
     if (this.url == null || this.url.isEmpty)
       return DEFAULT_HEAD;
     else
-      return this.url.startsWith("http://") ? this.url : URL_IPFS_GATEWAY + this.url;
+      return this.url.startsWith("http://") || this.url.startsWith("https://") ? this.url : URL_IPFS_GATEWAY + this.url;
   }
 
   @override

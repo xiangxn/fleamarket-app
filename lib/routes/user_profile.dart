@@ -1,4 +1,3 @@
-
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/common/global.dart';
@@ -80,14 +79,14 @@ class UserProfilePage extends StatelessWidget {
                                       child: Row(
                                         children: <Widget>[
                                           Icon(
-                                            user?.isReviewer??false ? FontAwesomeIcons.userTie : FontAwesomeIcons.solidUser,
+                                            user?.isReviewer ?? false ? FontAwesomeIcons.userTie : FontAwesomeIcons.solidUser,
                                             color: Colors.grey[700],
                                             size: 16,
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(left: 10),
                                             child: Text(
-                                                user?.isReviewer??false
+                                                user?.isReviewer ?? false
                                                     ? provider.translate('user_profile.user_reviewer')
                                                     : provider.translate('user_profile.user_normal'),
                                                 style: TextStyle(color: Colors.grey[900])),
@@ -186,14 +185,14 @@ class UserProfilePage extends StatelessWidget {
                             prefixIcon: Icons.account_balance,
                             onTap: () => provider.pushNamed(ROUTE_MINE_VOTE),
                           ),
-                          user?.isReviewer??false
+                          user?.isReviewer ?? false
                               ? LineButtonItem(
                                   text: provider.translate('user_profile.audit_goods'),
                                   prefixIcon: Icons.assignment,
                                   onTap: () => provider.pushNamed(ROUTE_AUDIT_GOODS),
                                 )
                               : LineButtonItem(
-                                text: provider.translate('user_profile.try_reviewer'),
+                                  text: provider.translate('user_profile.try_reviewer'),
                                   prefixIcon: Icons.assignment_ind,
                                   onTap: () => provider.pushNamed(ROUTE_TRY_REVIEWER),
                                 )
@@ -245,11 +244,12 @@ class UserProfileProvider extends BaseProvider {
       final process = api.getUserByUserid(um.user.userid);
       final res = await processing(process, loading: false);
       if (res.code == 0) {
-        final data = convertEdgeList(res.data, "users");
-        if (data.length < 1) {
+        User user = convertEdge<User>(res.data, "users", User());
+        if (user == null) {
           return false;
         }
-        um.user = User()..mergeFromProto3Json(data[0]);
+        user.head = URL_IPFS_GATEWAY + user.head;
+        um.user = user;
         return true;
       }
     }

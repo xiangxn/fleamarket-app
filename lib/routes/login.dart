@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:bitsflea/common/constant.dart';
-import 'package:bitsflea/common/data_api.dart';
 import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
@@ -10,6 +8,7 @@ import 'package:bitsflea/grpc/google/protobuf/wrappers.pb.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
+import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:bitsflea/widgets/text_form_input.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +197,6 @@ class LoginProvider extends BaseProvider implements TickerProvider {
   GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
   GlobalKey<FormFieldState> _phoneKey = GlobalKey<FormFieldState>();
-  DataApi _api;
 
   TabController get tabController => _tabController;
   List<String> get tabs => _tabs;
@@ -218,7 +216,6 @@ class LoginProvider extends BaseProvider implements TickerProvider {
       translate('login.login_text'),
       translate('login.register_text'),
     ];
-    _api = DataApi();
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabController.addListener(viewChangeListener);
     checkVcodeTimer();
@@ -240,21 +237,20 @@ class LoginProvider extends BaseProvider implements TickerProvider {
   }
 
   Future<bool> _login(String phone, String password) async {
+    final um = Provider.of<UserModel>(context, listen: false);
     final keys = generateKeys(phone, password);
-    _api.setKey(keys[2]);
-    _api.setPhone(phone);
-    final result = await _api.getUserByPhone(phone);
+    api.setKey(keys[2]);
+    api.setPhone(phone);
+    final result = await api.getUserByPhone(phone);
     if (result.code == 0) {
-      final str = StringValue();
-      result.data.unpackInto(str);
-      dynamic data = jsonDecode(str.value)['users']['edges'];
-      if (data.length < 1) {
+      User user = convertEdge<User>(result.data, "users", User());
+      if (user == null) {
         return false;
       }
-      data = data[0]['node'];
-      if (keys[2].toEOSPublicKey().toString() == data['authKey'].toString()) {
-        Global.profile.user = User()..mergeFromProto3Json(data);
-        Global.profile.keys = keys;
+      if (keys[2].toEOSPublicKey().toString() == user.authKey) {
+        um.keys = keys;
+        user.head = URL_IPFS_GATEWAY + user.head;
+        um.user = user;
         return true;
       }
     }
@@ -277,16 +273,17 @@ class LoginProvider extends BaseProvider implements TickerProvider {
   }
 
   Future<BaseReply> _register(String phone, String password, String smsCode, String referral) async {
+    final um = Provider.of<UserModel>(context, listen: false);
     List<EOSPrivateKey> keys = generateKeys(phone, password);
-    final res = await _api.register(phone, keys[0].toEOSPublicKey().toString(), keys[1].toEOSPublicKey().toString(),
+    final res = await api.register(phone, keys[0].toEOSPublicKey().toString(), keys[1].toEOSPublicKey().toString(),
         smsCode: smsCode, referral: referral, authKey: keys[2].toEOSPublicKey().toString());
     if (res.code == 0) {
-      Global.profile.keys = keys;
-      _api.setKey(keys[2]);
-      _api.setPhone(phone);
+      um.keys = keys;
+      api.setKey(keys[2]);
+      api.setPhone(phone);
       var user = User();
       res.data.unpackInto(user);
-      Global.profile.user = user;
+      um.user = user;
     }
     return res;
   }
@@ -296,7 +293,7 @@ class LoginProvider extends BaseProvider implements TickerProvider {
       //暂不用验证码
       return true;
     } else {
-      final res = await _api.getUserByEosid(_recommended);
+      final res = await api.getUserByEosid(_recommended);
       if (res.code == 0) {
         final data = convertEdgeList(res.data, "users");
         return data.length > 0;
@@ -326,7 +323,7 @@ class LoginProvider extends BaseProvider implements TickerProvider {
     if (_phoneKey.currentState.validate() && !super.busy) {
       _phoneKey.currentState.save();
       setBusy();
-      final res = await _api.sendSmsCode(_phone);
+      final res = await api.sendSmsCode(_phone);
       if (res) {
         Global.prefs.setString(STORE_VCODE_TIMER, DateTime.now().toString());
         checkVcodeTimer();

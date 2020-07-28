@@ -26,7 +26,7 @@ class Profile {
     this.tokenTime = json['tokenTime'];
     this.user = User()..mergeFromProto3Json(json['user']);
     keys = new List<EOSPrivateKey>();
-    keys.addAll((json['keys'] as List<String>).map((e) => EOSPrivateKey.fromString(e)));
+    keys.addAll((json['keys'] as List<dynamic>).map((e) => EOSPrivateKey.fromString(e.toString())).toList());
   }
 
   Map<String, dynamic> toJson() {

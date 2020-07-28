@@ -12,6 +12,7 @@ import 'package:provider/single_child_widget.dart';
 import 'common/constant.dart';
 import 'common/global.dart';
 import 'routes/search.dart';
+import 'routes/user_edit.dart';
 import 'states/locale.dart';
 import 'states/theme.dart';
 import 'states/user.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
               ROUTE_HOME: (context) => HomeRoute(),
               ROUTE_SEARCH: (context) => SearchRoute(),
               ROUTE_LOGIN: (context) => LoginRoute(),
+              ROUTE_USER_EDIT: (context) => UserEditRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(

@@ -2,7 +2,7 @@ import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/models/profile.dart';
-
+import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'profile.dart';
 
 class UserModel extends ProfileChangeNotifier {
@@ -10,6 +10,7 @@ class UserModel extends ProfileChangeNotifier {
   List<int> _favorites;
   List<int> _follows;
   User get user => profile.user;
+  List<EOSPrivateKey> get keys => profile.keys;
 
   // APP是否登录(如果有用户信息，则证明登录过)
   bool get isLogin => user != null;
@@ -23,12 +24,16 @@ class UserModel extends ProfileChangeNotifier {
     }
   }
 
+  set keys(List<EOSPrivateKey> keys){
+    profile.keys = keys;
+  }
+
   void setToken(String token, String time) {
     profile.setToken(token, time);
     notifyListeners();
   }
 
-  void logout(){
+  void logout() {
     Global.profile = new Profile();
     notifyListeners();
   }

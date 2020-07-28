@@ -13,6 +13,31 @@ List<dynamic> convertEdgeList(Any data, String key) {
   return (json[key]['edges'] as List<dynamic>);
 }
 
+List<T> convertEdgeList2<T extends GeneratedMessage>(Any data, String key, T type) {
+  var val = StringValue();
+  data.unpackInto(val);
+  final json = jsonDecode(val.value);
+  List<T> list = [];
+  (json[key]['edges'] as List<dynamic>).forEach((e) {
+    var obj = type.createEmptyInstance();
+    obj.mergeFromProto3Json(e['node']);
+    list.add(obj);
+  });
+  return list;
+}
+
+T convertEdge<T extends GeneratedMessage>(Any data, String key, T typeObj) {
+  var val = StringValue();
+  data.unpackInto(val);
+  final json = jsonDecode(val.value);
+  final list = (json[key]['edges'] as List<dynamic>);
+  if (list.length > 0) {
+    typeObj.mergeFromProto3Json(list[0]['node']);
+    return typeObj;
+  }
+  return null;
+}
+
 DataPage<T> convertPageList<T extends GeneratedMessage>(Any data, T type, String key) {
   var val = StringValue();
   data.unpackInto(val);
