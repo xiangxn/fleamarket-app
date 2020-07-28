@@ -6,14 +6,7 @@ import 'package:bitsflea/models/data_page.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 
-List<dynamic> convertEdgeList(Any data, String key) {
-  var val = StringValue();
-  data.unpackInto(val);
-  final json = jsonDecode(val.value);
-  return (json[key]['edges'] as List<dynamic>);
-}
-
-List<T> convertEdgeList2<T extends GeneratedMessage>(Any data, String key, T type) {
+List<T> convertEdgeList<T extends GeneratedMessage>(Any data, String key, T type) {
   var val = StringValue();
   data.unpackInto(val);
   final json = jsonDecode(val.value);
@@ -38,7 +31,7 @@ T convertEdge<T extends GeneratedMessage>(Any data, String key, T typeObj) {
   return null;
 }
 
-DataPage<T> convertPageList<T extends GeneratedMessage>(Any data, T type, String key) {
+DataPage<T> convertPageList<T extends GeneratedMessage>(Any data, String key, T type) {
   var val = StringValue();
   data.unpackInto(val);
   final json = jsonDecode(val.value);

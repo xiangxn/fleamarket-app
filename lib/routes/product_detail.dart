@@ -305,10 +305,9 @@ class ProductDetailProvider extends BaseProvider {
     var process = _api.fetchProductInfo(_product.productId);
     final res = await processing(process, loading: false);
     if (res.code == 0) {
-      var list = convertEdgeList(res.data, "products");
-      if (list.length > 0) {
-        _product.photos.clear();
-        _product.mergeFromProto3Json(list[0]['node']);
+      var product = convertEdge<Product>(res.data, "products", Product());
+      if (product != null) {
+        _product = product;
       }
       // notifyListeners();
       return true;

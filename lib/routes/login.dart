@@ -295,8 +295,8 @@ class LoginProvider extends BaseProvider implements TickerProvider {
     } else {
       final res = await api.getUserByEosid(_recommended);
       if (res.code == 0) {
-        final data = convertEdgeList(res.data, "users");
-        return data.length > 0;
+        final user = convertEdge<User>(res.data, "users", User());
+        return user != null;
       } else {
         return false;
       }

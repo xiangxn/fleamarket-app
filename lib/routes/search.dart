@@ -193,7 +193,7 @@ class SearchProvider extends BaseProvider {
     }
     final res = await _api.searchProductByTitle(_controller.text, _productPage.pageNo, _productPage.pageSize);
     if (res.code == 0) {
-      var page = convertPageList<Product>(res.data, Product(), "productByTitle");
+      var page = convertPageList<Product>(res.data, "productByTitle", Product());
       _productPage.update(page.data);
       if (notify) {
         notifyListeners();

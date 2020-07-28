@@ -99,12 +99,10 @@ class ProductProvider extends BaseProvider implements TickerProvider {
       ..parent = 0);
     BaseReply result = await dataApi.fetchCategories();
     if (result.code == 0) {
-      final data = convertEdgeList(result.data, "categories");
+      final data = convertEdgeList<Category>(result.data, "categories", Category());
       data.forEach((e) {
-        var c = Category();
-        c.mergeFromProto3Json(e['node']);
-        c.view = translate("category.${c.cid}");
-        _categories.add(c);
+        e.view = translate("category.${e.cid}");
+        _categories.add(e);
       });
 
       _list = List<DataPage<Product>>.generate(_categories.length, (i) => DataPage<Product>());
@@ -133,7 +131,7 @@ class ProductProvider extends BaseProvider implements TickerProvider {
     // print("res:$res");
     // closeLoading();
     if (res.code == 0) {
-      var data = convertPageList<Product>(res.data, Product(), "productByCid");
+      var data = convertPageList<Product>(res.data, "productByCid", Product());
       data.update(page.data);
       _list[inx] = data;
       if (notify) {
