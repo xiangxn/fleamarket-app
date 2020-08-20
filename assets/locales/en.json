@@ -49,5 +49,110 @@
         "recommended_invalid": "无效的邀请码",
         "failure": "登录失败",
         "invalid_ref": "无效的引荐人"
+    },
+    "user_profile": {
+        "recommended": "邀请码:  ",
+        "favorite": "收藏",
+        "follow": "关注",
+        "fans": "粉丝",
+        "mine_publish": "我发布的",
+        "mine_buy": "我买到的",
+        "mine_sell": "我卖出的",
+        "mine_recommended": "我邀请的",
+        "mine_balances": "我的资产",
+        "mine_keys": "我的密钥",
+        "mine_address": "收货地址",
+        "mine_withdrawal": "提现地址",
+        "version": "当前版本",
+        "about": "关于我们",
+        "logout": "退出登录",
+        "user_normal": "普通用户",
+        "user_reviewer": "评审员",
+        "copy": "邀请码已复制到剪贴板",
+        "try_reviewer": "申请评审员",
+        "audit_goods": "审核商品",
+        "mine_vote": "选举评审员"
+    },
+    "photos": {
+        "album": "相册",
+        "camera": "相机",
+        "max_photos": "最多使用{max}张图片",
+        "done": "完成"
+    },
+    "user_edit": {
+        "title": "个人资料",
+        "head": "头像",
+        "nickname": "昵称",
+        "done": "完成",
+        "save_failure": "保存失败"
+    },
+    "permission": {
+        "location": "允许希奇访问您的位置",
+        "album_camera": "允许希奇访问您的相册和相机"
+    },
+    "publish": {
+        "title": "发布商品",
+        "desc_hint": "品牌型号，新旧程度，入手渠道，转手原因...",
+        "title_hint": "商品标题",
+        "prices": "价格",
+        "type": "类型",
+        "address": "发货地址",
+        "publish_text": "发布",
+        "desc_empty": "清填写商品描述",
+        "prices_empty": "请填写价格",
+        "type_selector": "选择类型",
+        "address_selector": "发货地址",
+        "photos_selector": "选择图片",
+        "freight": "含运费 {amount}",
+        "none_freight": "包邮",
+        "failure":"发布失败"
+    },
+    "number_pad": {
+        "pricing": "价格",
+        "pricing_hint": "0.0000",
+        "freight": "运费",
+        "freight_hint": "0.0000（运费0为包邮）",
+        "done": "确定"
+    },
+    "address_selector": {
+        "cur_address": "您的位置",
+        "change_address": "切换位置",
+        "no_permission": "没有权限获取您当前的位置信息"
+    },
+    "message": {
+        "consignee_empty": "收货人不能为空",
+        "delete_address": "是否删除该地址",
+        "contact_empty": "请填写联系方式",
+        "phone_invalid": "无效的手机号",
+        "position_empty": "收货地址不能为空",
+        "agree_terms": "请阅读并勾选同意条款",
+        "goods_title_empty": "请填写商品标题",
+        "goods_desc_empty": "请填写商品描述",
+        "goods_title_limit": "商品标题超过最大长度",
+        "goods_desc_limit": "商品描述查过最大长度",
+        "goods_photos_empty": "至少选择一张商品图片",
+        "goods_price_empty": "请填写商品价格",
+        "goods_location_empty": "请选择商品发货地",
+        "goods_re_publish": "重新发布商品将导致商品再次进入审核流程",
+        "goods_del_publish": "确认下架该商品",
+        "address_no_data": "没有收货地址，请点击添加",
+        "order_no_address": "请选择或添加一个收货地址",
+        "password_empty": "请输入密码",
+        "password_error": "密码错误"
+    },
+    "controller": {
+        "copy_pubkey": "@s 已复制到剪贴板",
+        "add": "新增",
+        "edit": "编辑",
+        "delete": "删除",
+        "set_default": "设为默认",
+        "complete": "完成",
+        "paste": "粘贴",
+        "try_reviewer": "确认申请",
+        "re_publish": "重新发布",
+        "del_publish": "下架商品",
+        "confirm_buy": "确认购买",
+        "ok": "确定",
+        "focus": "关注"
     }
 }

@@ -1,3 +1,4 @@
+import 'package:bitsflea/common/funs.dart';
 import 'package:flutter/material.dart';
 
 class PriceText extends StatelessWidget{
@@ -23,7 +24,7 @@ class PriceText extends StatelessWidget{
         text: label ?? '',
         children: [
           TextSpan(
-            text: price,
+            text: formatPrice2(price),
             style: TextStyle(
               color: priceColor ?? Colors.orange[700],
               fontWeight: priceBold ?? false ? FontWeight.bold : FontWeight.normal

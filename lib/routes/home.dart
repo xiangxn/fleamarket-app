@@ -1,5 +1,4 @@
 import 'package:bitsflea/common/constant.dart';
-import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/routes/product.dart';
 import 'package:bitsflea/routes/user_profile.dart';
@@ -37,7 +36,6 @@ class HomeRoute extends StatelessWidget {
                 children: <Widget>[
                   ProductPage(provider: provider.productProvider),
                   UserProfilePage(homeProvider: provider,)
-                  //   Personal(model: model.personalViewModel)
                 ],
               ),
               bottomNavigationBar: BottomAppBar(
@@ -59,7 +57,7 @@ class HomeRoute extends StatelessWidget {
               ),
               floatingActionButton: FloatingActionButton(
                 child: Icon(Icons.add, size: 32),
-                onPressed: () => null,
+                onPressed: provider.toPublish,
               ),
               floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
             );
@@ -99,8 +97,9 @@ class HomeProvider extends BaseProvider {
   }
 
   toPublish() async {
-    var user = Provider.of<UserModel>(context, listen: false);
-    if (user != null) {
+    print("to publish...");
+    var um = Provider.of<UserModel>(context, listen: false);
+    if (um.user != null) {
       await pushNamed(ROUTE_PUBLISH);
     } else {
       await pushNamed(ROUTE_LOGIN);

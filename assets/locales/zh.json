@@ -103,7 +103,56 @@
         "type_selector": "选择类型",
         "address_selector": "发货地址",
         "photos_selector": "选择图片",
-        "freight": "含运费 @s",
-        "none_freight": "包邮"
+        "freight": "含运费 {amount}",
+        "none_freight": "包邮",
+        "failure":"发布失败"
+    },
+    "number_pad": {
+        "pricing": "价格",
+        "pricing_hint": "0.0000",
+        "freight": "运费",
+        "freight_hint": "0.0000（运费0为包邮）",
+        "done": "确定"
+    },
+    "address_selector": {
+        "cur_address": "您的位置",
+        "change_address": "切换位置",
+        "no_permission": "没有权限获取您当前的位置信息"
+    },
+    "message": {
+        "consignee_empty": "收货人不能为空",
+        "delete_address": "是否删除该地址",
+        "contact_empty": "请填写联系方式",
+        "phone_invalid": "无效的手机号",
+        "position_empty": "收货地址不能为空",
+        "agree_terms": "请阅读并勾选同意条款",
+        "goods_title_empty": "请填写商品标题",
+        "goods_desc_empty": "请填写商品描述",
+        "goods_title_limit": "商品标题超过最大长度",
+        "goods_desc_limit": "商品描述查过最大长度",
+        "goods_photos_empty": "至少选择一张商品图片",
+        "goods_price_empty": "请填写商品价格",
+        "goods_location_empty": "请选择商品发货地",
+        "goods_re_publish": "重新发布商品将导致商品再次进入审核流程",
+        "goods_del_publish": "确认下架该商品",
+        "address_no_data": "没有收货地址，请点击添加",
+        "order_no_address": "请选择或添加一个收货地址",
+        "password_empty": "请输入密码",
+        "password_error": "密码错误"
+    },
+    "controller": {
+        "copy_pubkey": "@s 已复制到剪贴板",
+        "add": "新增",
+        "edit": "编辑",
+        "delete": "删除",
+        "set_default": "设为默认",
+        "complete": "完成",
+        "paste": "粘贴",
+        "try_reviewer": "确认申请",
+        "re_publish": "重新发布",
+        "del_publish": "下架商品",
+        "confirm_buy": "确认购买",
+        "ok": "确定",
+        "focus": "关注"
     }
 }

@@ -129,8 +129,8 @@ class UserProfilePage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         margin: EdgeInsets.only(bottom: 10, top: 20),
                         child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
-                          _buildChunk(provider.translate('user_profile.favorite'), user?.followTotal ?? 0, () => provider.pushNamed(ROUTE_MINE_FAVORITE)),
-                          _buildChunk(provider.translate('user_profile.follow'), user?.favoriteTotal ?? 0, () => provider.pushNamed(ROUTE_MINE_FOCUS)),
+                          _buildChunk(provider.translate('user_profile.favorite'), user?.favoriteTotal ?? 0, () => provider.pushNamed(ROUTE_MINE_FAVORITE)),
+                          _buildChunk(provider.translate('user_profile.follow'), user?.followTotal ?? 0, () => provider.pushNamed(ROUTE_MINE_FOCUS)),
                           _buildChunk(provider.translate('user_profile.fans'), user?.fansTotal ?? 0, () => provider.pushNamed(ROUTE_MINE_FANS)),
                         ]),
                       ),
@@ -259,7 +259,7 @@ class UserProfileProvider extends BaseProvider {
   logout() async {
     final um = Provider.of<UserModel>(context, listen: false);
     um.logout();
-    api.delKey();
+    api.cleanInfo();
     _homeProvider.setPage(0);
     _controller.animateTo(0, duration: Duration(milliseconds: 10), curve: Curves.easeIn);
   }

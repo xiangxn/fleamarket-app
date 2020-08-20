@@ -24,14 +24,14 @@ class Profile {
     this.lastLogin = json['lastLogin'];
     this.locale = json['locale'];
     this.tokenTime = json['tokenTime'];
-    this.user = User()..mergeFromProto3Json(json['user']);
+    if (json['user'] != null) this.user = User()..mergeFromProto3Json(json['user']);
     keys = new List<EOSPrivateKey>();
     keys.addAll((json['keys'] as List<dynamic>).map((e) => EOSPrivateKey.fromString(e.toString())).toList());
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user'] = this.user?.toProto3Json();
+    data['user'] = this.user == null ? null : this.user.toProto3Json();
     data['token'] = this.token;
     data['theme'] = this.theme;
     data['lastLogin'] = this.lastLogin;

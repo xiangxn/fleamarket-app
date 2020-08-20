@@ -22,6 +22,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>希奇请求访问日历</string>
 	<key>NSCameraUsageDescription</key>
 	<string>希奇请求使用摄像头</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -30,8 +32,10 @@
 	<string>希奇请求访问您的位置便于推荐附近的商品</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>希奇请求访问相册以便于取用图片</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>希奇请求访问日历</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

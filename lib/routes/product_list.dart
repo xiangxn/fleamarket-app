@@ -1,5 +1,6 @@
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/data_api.dart';
+import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/models/data_page.dart';
 import 'package:bitsflea/routes/base.dart';
@@ -23,7 +24,7 @@ class ProductList extends StatefulWidget {
   }) : super(key: key);
 
   final DataPage<Product> productPage;
-  final Function({DataPage<Product> page, bool isRefresh}) refresh;
+  final Function({int categoryid, DataPage<Product> page, bool isRefresh}) refresh;
   final ScrollController controller;
   final int category;
 
@@ -33,14 +34,15 @@ class ProductList extends StatefulWidget {
 
 class _ProductList extends State<ProductList> {
   Future<void> onRefresh() async {
+    print("onRefresh......");
     if (widget.refresh != null) {
-      return widget.refresh(page: widget.productPage, isRefresh: true);
+      return widget.refresh(categoryid: widget.category, page: widget.productPage, isRefresh: true);
     }
   }
 
   Future<void> onLoad() async {
     if (widget.refresh != null) {
-      return widget.refresh(page: widget.productPage, isRefresh: false);
+      return widget.refresh(categoryid: widget.category, page: widget.productPage, isRefresh: false);
     }
   }
 
@@ -56,34 +58,35 @@ class _ProductList extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
-    print("product_list build ********");
-    DataPage<Product> productPage = widget.productPage;
+    print("product_list build ******** ");
     return BaseRoute<ProductListProvider>(
-        provider: ProductListProvider(context),
+        listen: true,
+        provider: ProductListProvider(context, widget.productPage),
         builder: (_, provider, __) {
           return CustomRefreshIndicator(
-            onRefresh: onRefresh,
-            onLoad: productPage.hasMore() ? onLoad : null,
+            onRefresh: () => provider.fetchProductList(categoryid: widget.category, isRefresh: true),
+            onLoad: () => provider.onLoad(widget.category),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 6),
               child: StaggeredGridView.countBuilder(
                 controller: widget.controller,
                 // physics: ClampingScrollPhysics(),
-                itemCount: productPage.data.length,
+                itemCount: provider.productPage.data.length,
                 staggeredTileBuilder: (inx) => StaggeredTile.fit(2),
                 crossAxisCount: 4,
                 mainAxisSpacing: 6, // 垂直间距
                 crossAxisSpacing: 6, // 水平间距
                 itemBuilder: (context, i) {
                   return Selector<ProductListProvider, Product>(
-                    selector: (_, __) => productPage.data[i],
+                    selector: (_, __) => provider.productPage.data[i],
                     builder: (_, product, __) {
+                      // print("item builder $i");
                       return Card(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                           ExtNetworkImage(
                             '$URL_IPFS_GATEWAY${product.photos[0]}',
                             borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
-                            onTap: () => provider.toDetail(productPage.data, i),
+                            onTap: () => provider.toDetail(i),
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -97,7 +100,7 @@ class _ProductList extends State<ProductList> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(product.price.split(' ')[1], style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold)),
-                                Text(product.price.split(' ')[0],
+                                Text(formatPrice(product.price.split(' ')[0]),
                                     style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1),
@@ -126,7 +129,8 @@ class _ProductList extends State<ProductList> {
                                     _buildFavoriteIcon(product)
                                   ],
                                 ),
-                                onTap: () => provider.favorite(productPage.data, i),
+                                //onTap: () => provider.favorite(productPage.data, i),
+                                onTap: () => provider.favorite(i),
                               )
                             ]),
                           ),
@@ -143,13 +147,16 @@ class _ProductList extends State<ProductList> {
 }
 
 class ProductListProvider extends BaseProvider {
-  DataApi _api;
-  ProductListProvider(BuildContext context) : super(context) {
-    _api = DataApi();
+  DataPage<Product> _productPage;
+
+  ProductListProvider(BuildContext context, DataPage<Product> productPage) : super(context) {
+    _productPage = productPage;
   }
 
-  toDetail(List<Product> data, int i) {
-    pushNamed(ROUTE_DETAIL, arguments: data[i]);
+  DataPage<Product> get productPage => _productPage;
+
+  toDetail(int index) {
+    pushNamed(ROUTE_DETAIL, arguments: _productPage.data[index]);
     // var product = await pushNamed(ROUTE_DETAIL, arguments: data[i]);
     // if (product != null && product is Product) {
     //   print("data[i].collections:${data[i].collections}");
@@ -159,32 +166,64 @@ class ProductListProvider extends BaseProvider {
     // print('router return product: $product');
   }
 
-  favorite(List<Product> data, int i) async {
+  favorite(int index) async {
+    Product data = _productPage.data[index].clone();
     if (checkLogin() && !busy) {
       final um = Provider.of<UserModel>(context, listen: false);
       setBusy();
       var process;
       bool isf = false;
-      if (um.hasFavorites(data[i].productId)) {
-        process = _api.unFavorite(um.user.userid, data[i].productId);
+      if (um.hasFavorites(data.productId)) {
+        process = api.unFavorite(um.user.userid, data.productId);
       } else {
-        process = _api.favorite(um.user.userid, data[i].productId);
+        process = api.favorite(um.user.userid, data.productId);
         isf = true;
       }
       // showLoading();
       final res = await process;
       // closeLoading();
-      if (res.code == 0) {
+      if (res) {
         if (isf) {
-          um.addFavorite(data[i].productId);
-          data[i].collections += 1;
+          um.addFavorite(data.productId);
+          data.collections += 1;
         } else {
-          um.removeFavorite(data[i].productId);
-          data[i].collections -= 1;
+          um.removeFavorite(data.productId);
+          data.collections -= 1;
         }
+        _productPage.data[index] = data;
         notifyListeners();
       }
       setBusy();
+    }
+  }
+
+  fetchProductList({int categoryid, bool isRefresh = false, bool notify = true}) async {
+    int pageNo = _productPage.pageNo;
+    if (isRefresh) {
+      pageNo = 1;
+      _productPage.clean();
+    } else {
+      pageNo += 1;
+      _productPage.incres();
+    }
+    // showLoading();
+    final res = await api.fetchProductList(categoryid, pageNo, _productPage.pageSize);
+    // print("res:$res");
+    // closeLoading();
+    if (res.code == 0) {
+      var data = convertPageList<Product>(res.data, "productByCid", Product());
+      
+      data.update(_productPage.data);
+      _productPage = data;
+      if (notify) {
+        notifyListeners();
+      }
+    }
+  }
+
+  onLoad(int categoryid) async {
+    if (productPage.hasMore()) {
+      await fetchProductList(categoryid: categoryid);
     }
   }
 }

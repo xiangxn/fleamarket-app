@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
@@ -248,9 +249,37 @@ class LoginProvider extends BaseProvider implements TickerProvider {
         return false;
       }
       if (keys[2].toEOSPublicKey().toString() == user.authKey) {
-        um.keys = keys;
         user.head = URL_IPFS_GATEWAY + user.head;
+        um.keys = keys;
         um.user = user;
+        //获取收藏数据
+        var res = await api.getFavoriteIdsByUser(user.userid, 1, 10000);
+        var fas = List<int>();
+        if (res.code == 0) {
+          var val = StringValue();
+          res.data.unpackInto(val);
+          final json = jsonDecode(val.value);
+          if (json['favoriteByUser']['list'] != null) {
+            json['favoriteByUser']['list'].forEach((e) {
+              fas.add(e['product']['productId']);
+            });
+          }
+        }
+        um.setFavorites(fas);
+        //获取关注数据
+        res = await api.getFollowByFollower(user.userid, 1, 10000);
+        var fos = List<int>();
+        if (res.code == 0) {
+          var val = StringValue();
+          res.data.unpackInto(val);
+          final json = jsonDecode(val.value);
+          if (json['followByFollower']['list'] != null) {
+            json['followByFollower']['list'].forEach((e) {
+              fos.add(e['user']['userid']);
+            });
+          }
+        }
+        um.setFollows(fos);
         return true;
       }
     }

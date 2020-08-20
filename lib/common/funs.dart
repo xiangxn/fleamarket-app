@@ -45,3 +45,16 @@ List<EOSPrivateKey> generateKeys(String phone, String password) {
   EOSPrivateKey authKey = EOSPrivateKey.fromSeed('$phone $password auth');
   return [ownerKey, activeKey, authKey];
 }
+
+formatPrice(String price) {
+  double p = double.tryParse(price);
+  if (p % p.floor() == 0) return p.floor().toString();
+  return p.toString();
+}
+
+formatPrice2(String price) {
+  List<String> ps = price.split(" ");
+  double p = double.tryParse(ps[0]);
+  if (p % p.floor() == 0) return "${p.floor().toString()} ${ps[1]}";
+  return "${p.toString()} ${ps[1]}";
+}

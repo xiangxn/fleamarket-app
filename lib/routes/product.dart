@@ -20,7 +20,7 @@ class ProductPage extends StatelessWidget {
       initialData: false,
       future: provider.getCategories(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.data) {
+        if (snapshot.connectionState == ConnectionState.done) {
           return Column(children: <Widget>[
             TabBar(
               controller: provider.tabController,
@@ -47,8 +47,10 @@ class ProductPage extends StatelessWidget {
                 controller: provider.tabController,
                 children: provider.categories.map((category) {
                   return Selector<ProductProvider, DataPage>(
+                    shouldRebuild: (pre, next) => false,
                     selector: (_, provider) => provider.getProductList(category),
                     builder: (_, page, __) {
+                      print("tabbarview build......");
                       return ProductList(
                         productPage: page,
                         refresh: provider.fetchProductList,
@@ -68,6 +70,7 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("product build ********");
     return BaseRoute<ProductProvider>(
       listen: false,
       provider: this.provider,
@@ -80,7 +83,7 @@ class ProductPage extends StatelessWidget {
 
 class ProductProvider extends BaseProvider implements TickerProvider {
   List<Category> _categories;
-  List<DataPage<Product>> _list = [];
+  Map<int, DataPage<Product>> _map = new Map<int, DataPage<Product>>();
   TabController _tabController;
 
   List<Category> get categories => _categories;
@@ -104,36 +107,33 @@ class ProductProvider extends BaseProvider implements TickerProvider {
         e.view = translate("category.${e.cid}");
         _categories.add(e);
       });
-
-      _list = List<DataPage<Product>>.generate(_categories.length, (i) => DataPage<Product>());
       _tabController = new TabController(length: _categories.length, vsync: this);
-      await Future.wait(_list.map((p) => fetchProductList(page: p, isRefresh: true, notify: false)));
+      await Future.wait(_categories.map((e) => fetchProductList(categoryid: e.cid, page: DataPage<Product>(), isRefresh: true, notify: false)));
       return true;
     }
     return false;
   }
 
   getProductList(Category category) {
-    int idx = _categories.indexOf(category);
-    return _list[idx];
+    final page = _map[category.cid];
+    // print("page: ${category.cid} $page");
+    return page;
   }
 
-  fetchProductList({DataPage<Product> page, bool isRefresh = false, bool notify = true}) async {
-    int inx = _list.indexOf(page);
-    Category category = _categories[inx];
+  fetchProductList({int categoryid, DataPage<Product> page, bool isRefresh = false, bool notify = true}) async {
     if (isRefresh) {
       page.clean();
     } else {
       page.incres();
     }
     // showLoading();
-    final res = await dataApi.fetchProductList(category.cid, page.pageNo, page.pageSize);
+    final res = await dataApi.fetchProductList(categoryid, page.pageNo, page.pageSize);
     // print("res:$res");
     // closeLoading();
     if (res.code == 0) {
       var data = convertPageList<Product>(res.data, "productByCid", Product());
       data.update(page.data);
-      _list[inx] = data;
+      _map[categoryid] = data;
       if (notify) {
         notifyListeners();
       }

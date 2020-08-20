@@ -1,4 +1,3 @@
-import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/routes/home.dart';
 import 'package:bitsflea/routes/login.dart';
 import 'package:bitsflea/routes/product_detail.dart';
@@ -9,8 +8,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import 'common/chinese_cupertino.dart';
 import 'common/constant.dart';
 import 'common/global.dart';
+import 'routes/publish.dart';
 import 'routes/search.dart';
 import 'routes/user_edit.dart';
 import 'states/locale.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
             localizationsDelegates: [
               // 本地化的代理类
               _flutterI18nDelegate,
+              ChineseCupertinoLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate
             ],
@@ -92,6 +94,8 @@ class MyApp extends StatelessWidget {
                   switch (settings.name) {
                     case ROUTE_DETAIL:
                       return ProductDetailRoute(product: settings.arguments);
+                    case ROUTE_PUBLISH:
+                      return PublishRoute(product: settings.arguments);
                     default:
                       return Scaffold(
                         appBar: AppBar(),

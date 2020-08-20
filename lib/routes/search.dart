@@ -185,7 +185,7 @@ class SearchProvider extends BaseProvider {
     }
   }
 
-  fetchProductList({DataPage<Product> page, bool isRefresh = true, bool notify = true}) async {
+  fetchProductList({int categoryid, DataPage<Product> page, bool isRefresh = true, bool notify = true}) async {
     if (isRefresh) {
       _productPage.clean();
     } else {

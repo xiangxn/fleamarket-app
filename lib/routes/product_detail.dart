@@ -78,7 +78,7 @@ class ProductDetailRoute extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(
                   centerTitle: true,
-                  title: Text(FlutterI18n.translate(context, "product_detail.title")),
+                  title: Text(provider.translate("product_detail.title")),
                   backgroundColor: style.headerBackgroundColor,
                   brightness: Brightness.light,
                   textTheme: style.headerTextTheme,
@@ -109,7 +109,7 @@ class ProductDetailRoute extends StatelessWidget {
                                           children: <Widget>[
                                             Text(provider.product.seller.nickname, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                                             Text(
-                                                FlutterI18n.translate(context, 'product_detail.location', translationParams: {
+                                                provider.translate('product_detail.location', translationParams: {
                                                   "location": provider.product.position ?? '',
                                                   "time": provider.product.releaseTime.split("T")[0]
                                                 }),
@@ -125,9 +125,8 @@ class ProductDetailRoute extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      PriceText(label: FlutterI18n.translate(context, 'product_detail.price'), price: provider.product.price, priceBold: true),
-                                      PriceText(
-                                          label: FlutterI18n.translate(context, 'product_detail.postage'), price: provider.product.postage, priceBold: true),
+                                      PriceText(label: provider.translate('product_detail.price'), price: provider.product.price, priceBold: true),
+                                      PriceText(label: provider.translate('product_detail.postage'), price: provider.product.postage, priceBold: true),
                                       Padding(
                                         padding: EdgeInsets.only(top: 8),
                                         child: Text(provider.product.title,
@@ -199,12 +198,12 @@ class ProductDetailRoute extends StatelessWidget {
                           padding: EdgeInsets.all(10),
                           child: Row(
                             children: <Widget>[
-                              _buildBottomButton(FlutterI18n.translate(context, 'product_detail.favorite'), 1, provider.hasFavorite(), provider.favorite),
-                              _buildBottomButton(FlutterI18n.translate(context, 'product_detail.follow'), 2, provider.hasFollow(), provider.follow),
+                              _buildBottomButton(provider.translate('product_detail.favorite'), 1, provider.hasFavorite(), provider.favorite),
+                              _buildBottomButton(provider.translate('product_detail.follow'), 2, provider.hasFollow(), provider.follow),
                               // _buildBottomButton('留言', 0, false, (){}),
                               Spacer(),
                               CustomButton(
-                                text: FlutterI18n.translate(context, 'product_detail.buy'),
+                                text: provider.translate('product_detail.buy'),
                                 height: 40,
                                 onTap: provider.createOrder,
                               )
@@ -218,7 +217,7 @@ class ProductDetailRoute extends StatelessWidget {
               return Scaffold(
                   appBar: AppBar(
                     centerTitle: true,
-                    title: Text(FlutterI18n.translate(context, "product_detail.title")),
+                    title: Text(provider.translate("product_detail.title")),
                     backgroundColor: style.headerBackgroundColor,
                     brightness: Brightness.light,
                     textTheme: style.headerTextTheme,
@@ -235,9 +234,7 @@ class ProductDetailRoute extends StatelessWidget {
 
 class ProductDetailProvider extends BaseProvider {
   Product _product;
-  DataApi _api;
   ProductDetailProvider(BuildContext context, Product product) : super(context) {
-    _api = DataApi();
     _product = product;
   }
 
@@ -261,15 +258,15 @@ class ProductDetailProvider extends BaseProvider {
       var process;
       bool isf = false;
       if (hasFavorite(um)) {
-        process = _api.unFavorite(um.user.userid, _product.productId);
+        process = api.unFavorite(um.user.userid, _product.productId);
       } else {
-        process = _api.favorite(um.user.userid, _product.productId);
+        process = api.favorite(um.user.userid, _product.productId);
         isf = true;
       }
       showLoading();
       final res = await process;
       closeLoading();
-      if (res.code == 0) {
+      if (res) {
         if (isf) {
           um.addFavorite(_product.productId);
           _product.collections += 1;
@@ -289,12 +286,13 @@ class ProductDetailProvider extends BaseProvider {
       setBusy();
       var process;
       if (hasFollow()) {
-        process = _api.unFollow(user.userid, _product.seller.userid);
+        process = api.unFollow(_product.seller.userid, user.userid);
       } else {
-        process = _api.follow(user.userid, _product.seller.userid);
+        process = api.follow(_product.seller.userid, user.userid);
       }
-      final res = await processing(process, loading: false, toast: false);
-      if (res.code == 0) {
+      final res = await process;
+      print("res:$res");
+      if (res) {
         notifyListeners();
       }
       setBusy();
@@ -302,7 +300,7 @@ class ProductDetailProvider extends BaseProvider {
   }
 
   Future<bool> fetchProductInfo() async {
-    var process = _api.fetchProductInfo(_product.productId);
+    var process = api.fetchProductInfo(_product.productId);
     final res = await processing(process, loading: false);
     if (res.code == 0) {
       var product = convertEdge<Product>(res.data, "products", Product());

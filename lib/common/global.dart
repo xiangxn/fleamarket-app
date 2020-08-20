@@ -1,11 +1,13 @@
 import 'dart:convert';
 
-import 'package:bitsflea/common/data_api.dart';
-import 'package:bitsflea/common/style.dart';
+import 'package:amap_location/amap_location.dart';
 import 'package:bitsflea/models/app_info.dart';
 import 'package:bitsflea/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'data_api.dart';
+import 'style.dart';
+import 'constant.dart';
 
 final _themes = <int, Style>{Colors.red[500].value: new Style(), Colors.green[500].value: new Style()..primarySwatch = Colors.green};
 
@@ -24,11 +26,13 @@ class Global {
 
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
+    await AMapLocationClient.setApiKey(KEY_AMAP);
     _prefs = await SharedPreferences.getInstance();
     var _profile = _prefs.getString("profile");
     if (_profile != null) {
       try {
         profile = Profile.fromJson(jsonDecode(_profile));
+        print("global init: $profile");
       } catch (e) {
         print(e);
       }

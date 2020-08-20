@@ -10,4 +10,8 @@ class ProfileChangeNotifier extends ChangeNotifier {
     Global.saveProfile(); //保存Profile变更
     super.notifyListeners(); //通知依赖的Widget更新
   }
+
+  void removeProfile() {
+    Global.removeProfile();
+  }
 }

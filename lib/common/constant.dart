@@ -8,6 +8,7 @@ const URL_IPFS_GATEWAY = "https://source.bitsflea.com:10001/ipfs/";
 const DEFAULT_HEAD = 'https://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';
 /// 短信重发延时
 const int TIMER_RESET = 60;
+const KEY_AMAP = "92e8c56420d01d5e106deaad56e0505f";
 
 //ROUTE
 const ROUTE_HOME = "/";
@@ -41,5 +42,13 @@ const ROUTE_ABOUT = 'about';
 //Store
 const STORE_SEARCH_HISTORY = "searchHistory";
 const STORE_FAVORITES = "favorites";
+const STORE_FOLLOWS = "follows";
 const STORE_VCODE_TIMER = 'vcodeTimer';
+
+//其他
+const Map COIN_PRECISION = {"BOS": 4, "ETH": 8, "FMP": 4, "EOS": 4, "BTS": 5, "CNY": 4, "NULS": 8, "USDT": 8};
+const CITY_LV = 'city';
+const CACHE_DISTRICT = 'cacheDisrict';
+const COUNTRY_LV = 'country';
+const DISTRICT_LV = 'district';
 

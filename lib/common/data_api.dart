@@ -17,7 +17,7 @@ class DataApi {
   static BitsFleaClient _client;
   EOSPrivateKey _authKey; // = EOSPrivateKey.fromString('5JTjhoW4cbBDcHkfDVE6C3DwHqgU4yccqTAxrV7xc7JMDwa1xja');
   DateTime _lastTokenTime = DateTime.now();
-  String _phone = "0";
+  String _phone;
 
   static void init() {
     final _channel = ClientChannel(
@@ -40,8 +40,21 @@ class DataApi {
     _phone = phone;
   }
 
+  void cleanInfo() {
+    _authKey = null;
+    _phone = null;
+  }
+
+  EOSPrivateKey get authKey {
+    return _authKey ?? Global.profile.keys[2];
+  }
+
+  String get phone {
+    return _phone ?? Global.profile.user.phone;
+  }
+
   Future<String> getToken([bool force = false]) async {
-    String token = Global.profile.token;
+    String token = Global.profile.token ?? "0";
     String tStr = Global.profile.tokenTime;
     _lastTokenTime = tStr == null ? DateTime.now() : DateTime.parse(tStr);
     final diff = DateTime.now().difference(_lastTokenTime);
@@ -50,12 +63,13 @@ class DataApi {
       return token;
     }
     final request = RefreshTokenRequest();
-    request.phone = _phone;
+    request.phone = phone;
     request.token = token;
     request.time = ((new DateTime.now().millisecondsSinceEpoch) / 1000).floor();
-    request.sign = _authKey.signString(request.phone + request.token + request.time.toString()).toString();
+    request.sign = authKey.signString(request.phone + request.token + request.time.toString()).toString();
     final res = await _client.refreshToken(request);
-    //print("token_result:$res");
+    // print("token_request:$request");
+    // print("token_result:$res");
     if (res.code == 0) {
       var st = StringValue();
       res.data.unpackInto(st);
@@ -135,11 +149,14 @@ class DataApi {
   }
 
   Future<bool> follow(int user, int follower) async {
+    print("user: $user; follower: $follower");
+    if (user == follower) return false;
     final token = await getToken();
     var request = FollowRequest();
     request.user = user;
     request.follower = follower;
     final res = await _client.follow(request, options: CallOptions(metadata: {'token': token}));
+    print("res: $res");
     if (res.code == 0) return true;
     return false;
   }
@@ -154,18 +171,6 @@ class DataApi {
     return false;
   }
 
-  Future<BaseReply> getFollowByFollower(int userid, int pageNo, int pageSize) async {
-    var query = "{followByFollower(userid:" +
-        userid.toString() +
-        ", pageNo:" +
-        pageNo.toString() +
-        ", pageSize:" +
-        pageSize.toString() +
-        ")" +
-        " {user{userid,eosid,status,nickname,head}}}";
-    return await _search(query);
-  }
-
   Future<BaseReply> getFollowByUser(int userid, int pageNo, int pageSize) async {
     var query = "{followByUser(userid:" +
         userid.toString() +
@@ -174,7 +179,19 @@ class DataApi {
         ", pageSize:" +
         pageSize.toString() +
         ")" +
-        " {follower{userid,eosid,status,nickname,head}}}";
+        " {pageNo,pageSize,totalCount,list{follower{userid,eosid,status,nickname,head}}}}";
+    return await _search(query);
+  }
+
+  Future<BaseReply> getFollowByFollower(int userid, int pageNo, int pageSize) async {
+    var query = "{followByFollower(userid:" +
+        userid.toString() +
+        ", pageNo:" +
+        pageNo.toString() +
+        ", pageSize:" +
+        pageSize.toString() +
+        ")" +
+        " {pageNo,pageSize,totalCount,list{user{userid,eosid,status,nickname,head}}}}";
     return await _search(query);
   }
 
@@ -312,7 +329,7 @@ class DataApi {
       final result = await _client.favorite(request, options: CallOptions(metadata: {'token': token}));
       return result.code == 0;
     } on GrpcError catch (e) {
-      print(e.message);
+      print("favorite error: ${e.message}");
       return false;
     }
   }
@@ -334,8 +351,17 @@ class DataApi {
   Future<BaseReply> fetchFavoriteByUser(int userid, int pageNo, int pageSize) async {
     String query = "{favoriteByUser(userid:$userid, pageNo:$pageNo, pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "productId,title,price,collections,seller{head,nickname},photos";
+    query += "product{productId,title,price,collections,seller{head,nickname},photos}";
     query += "}}}";
+    return await _search(query);
+  }
+
+  Future<BaseReply> getFavoriteIdsByUser(int userid, int pageNo, int pageSize) async {
+    String query = "{favoriteByUser(userid:$userid, pageNo:$pageNo, pageSize:$pageSize)";
+    query += "{pageNo,pageSize,totalCount,list{";
+    query += "product{productId}";
+    query += "}}}";
+    // print("query: $query");
     return await _search(query);
   }
 
