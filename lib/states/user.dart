@@ -16,7 +16,8 @@ class UserModel extends ProfileChangeNotifier {
   bool get isLogin => user != null;
 
   UserModel() {
-    if(user!=null){
+    if (user != null) {
+      // print("read store.... $user");
       _readFollows();
       _readFavorites();
     }
