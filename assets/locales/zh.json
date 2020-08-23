@@ -73,6 +73,9 @@
         "audit_goods": "审核商品",
         "mine_vote": "选举评审员"
     },
+    "user_favorite": {
+        "title": "我收藏的"
+    },
     "photos": {
         "album": "相册",
         "camera": "相机",
@@ -105,7 +108,7 @@
         "photos_selector": "选择图片",
         "freight": "含运费 {amount}",
         "none_freight": "包邮",
-        "failure":"发布失败"
+        "failure": "发布失败"
     },
     "number_pad": {
         "pricing": "价格",
@@ -154,5 +157,25 @@
         "confirm_buy": "确认购买",
         "ok": "确定",
         "focus": "关注"
+    },
+    "combo_text": {
+        "consignee": "收货人:  @s",
+        "contact": "联系方式:  @s",
+        "shipping_address": "收货地址:  @s",
+        "user_credit": "信用分:  {amount}",
+        "vote_count": "票数:  @s",
+        "favorite_count": "收藏数:  @s",
+        "price": "价格:  @s",
+        "postage": "运费:  @s",
+        "seller": "卖家:  @s",
+        "buyer": "买家:  @s",
+        "order_no": "订单号:  @s"
+    },
+    "user_card": {
+        "follow": "关注",
+        "followed": "取消关注"
+    },
+    "user_follow": {
+        "title": "我关注的"
     }
 }

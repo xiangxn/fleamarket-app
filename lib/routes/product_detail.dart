@@ -1,5 +1,4 @@
 import 'package:bitsflea/common/constant.dart';
-import 'package:bitsflea/common/data_api.dart';
 import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
@@ -10,7 +9,6 @@ import 'package:bitsflea/widgets/ext_circle_avatar.dart';
 import 'package:bitsflea/widgets/ext_network_image.dart';
 import 'package:bitsflea/widgets/price_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
 
 import '../states/base.dart';
@@ -28,7 +26,8 @@ class ProductDetailRoute extends StatelessWidget {
     return Card(margin: EdgeInsets.only(left: 10, bottom: 10, right: 10), child: imgWidget);
   }
 
-  Widget _buildBottomButton(String text, int type, bool active, Function onTap) {
+  Widget _buildBottomButton(String text, int type, bool active, Function onTap, BuildContext ctx) {
+    final style = Provider.of<ThemeModel>(ctx, listen: false).theme;
     IconData icon;
     switch (type) {
       case 1:
@@ -48,12 +47,12 @@ class ProductDetailRoute extends StatelessWidget {
           children: <Widget>[
             Icon(
               icon,
-              color: active ? Colors.green : Colors.grey[600],
+              color: active ? style.primarySwatch : Colors.grey[600],
             ),
             Text(
               text,
               style: TextStyle(
-                color: active ? Colors.green : Colors.grey[600],
+                color: active ? style.primarySwatch : Colors.grey[600],
               ),
             )
           ],
@@ -194,22 +193,27 @@ class ProductDetailRoute extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          decoration: style.shadowBottom,
-                          padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: <Widget>[
-                              _buildBottomButton(provider.translate('product_detail.favorite'), 1, provider.hasFavorite(), provider.favorite),
-                              _buildBottomButton(provider.translate('product_detail.follow'), 2, provider.hasFollow(), provider.follow),
-                              // _buildBottomButton('留言', 0, false, (){}),
-                              Spacer(),
-                              CustomButton(
-                                text: provider.translate('product_detail.buy'),
-                                height: 40,
-                                onTap: provider.createOrder,
-                              )
-                            ],
-                          ),
-                        )
+                            decoration: style.shadowBottom,
+                            padding: EdgeInsets.all(10),
+                            child: Selector<ProductDetailProvider, User>(
+                                selector: (ctx, provider) => Provider.of<UserModel>(ctx).user,
+                                shouldRebuild: (pre, next) => true,
+                                builder: (ctx, user, widget) {
+                                  print("shadow bottom build***************");
+                                  return Row(
+                                    children: <Widget>[
+                                      _buildBottomButton(provider.translate('product_detail.favorite'), 1, provider.hasFavorite(), provider.favorite, context),
+                                      _buildBottomButton(provider.translate('product_detail.follow'), 2, provider.hasFollow(), provider.follow, context),
+                                      // _buildBottomButton('留言', 0, false, (){}),
+                                      Spacer(),
+                                      CustomButton(
+                                        text: provider.translate('product_detail.buy'),
+                                        height: 40,
+                                        onTap: provider.createOrder,
+                                      )
+                                    ],
+                                  );
+                                }))
                       ],
                     )),
               );
@@ -274,28 +278,36 @@ class ProductDetailProvider extends BaseProvider {
           um.removeFavorite(_product.productId);
           _product.collections -= 1;
         }
-        notifyListeners();
       }
       setBusy();
+      // notifyListeners();
     }
   }
 
   follow() async {
     if (checkLogin() && !busy) {
-      final user = Provider.of<UserModel>(context, listen: false).user;
+      final um = Provider.of<UserModel>(context, listen: false);
       setBusy();
       var process;
+      bool isFollow = false;
       if (hasFollow()) {
-        process = api.unFollow(_product.seller.userid, user.userid);
+        process = api.unFollow(_product.seller.userid, um.user.userid);
       } else {
-        process = api.follow(_product.seller.userid, user.userid);
+        process = api.follow(_product.seller.userid, um.user.userid);
+        isFollow = true;
       }
+      showLoading();
       final res = await process;
-      print("res:$res");
+      closeLoading();
       if (res) {
-        notifyListeners();
+        if (isFollow) {
+          um.addFollow(_product.seller.userid);
+        } else {
+          um.removeFollow(_product.seller.userid);
+        }
       }
       setBusy();
+      // notifyListeners();
     }
   }
 

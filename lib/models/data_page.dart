@@ -10,11 +10,11 @@ class DataPage<T extends GeneratedMessage> {
   DataPage()
       : pageNo = 1,
         pageSize = 5,
-        totalCount = 100,
-        totalPage = 100,
+        totalCount = 0,
+        totalPage = 0,
         data = [];
 
-  DataPage.fromJson(Map<String, dynamic> json, T type) {
+  DataPage.fromJson(Map<String, dynamic> json, T type, {String key2}) {
     this.pageNo = json['pageNo'];
     this.pageSize = json['pageSize'];
     this.totalCount = json['totalCount'];
@@ -23,7 +23,10 @@ class DataPage<T extends GeneratedMessage> {
     if (json['list'] != null) {
       json['list'].forEach((e) {
         var t = type.createEmptyInstance();
-        t.mergeFromProto3Json(e);
+        if (key2 != null)
+          t.mergeFromProto3Json(e[key2]);
+        else
+          t.mergeFromProto3Json(e);
         this.data.add(t);
       });
     }

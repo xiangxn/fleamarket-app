@@ -1,6 +1,6 @@
 import 'package:bitsflea/common/constant.dart';
-import 'package:bitsflea/common/data_api.dart';
 import 'package:bitsflea/common/funs.dart';
+import 'package:bitsflea/common/type.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/models/data_page.dart';
 import 'package:bitsflea/routes/base.dart';
@@ -14,38 +14,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
+
+
 class ProductList extends StatefulWidget {
   ProductList({
     Key key,
     @required this.productPage,
-    this.refresh,
+    this.onGetData,
     this.controller,
     this.category,
   }) : super(key: key);
 
   final DataPage<Product> productPage;
-  final Function({int categoryid, DataPage<Product> page, bool isRefresh}) refresh;
   final ScrollController controller;
   final int category;
+  final GetDataCallback onGetData;
 
   @override
   State<StatefulWidget> createState() => _ProductList();
 }
 
 class _ProductList extends State<ProductList> {
-  Future<void> onRefresh() async {
-    print("onRefresh......");
-    if (widget.refresh != null) {
-      return widget.refresh(categoryid: widget.category, page: widget.productPage, isRefresh: true);
-    }
-  }
-
-  Future<void> onLoad() async {
-    if (widget.refresh != null) {
-      return widget.refresh(categoryid: widget.category, page: widget.productPage, isRefresh: false);
-    }
-  }
-
   Icon _buildFavoriteIcon(Product product) {
     var um = Provider.of<UserModel>(context, listen: false);
     bool isFavorite = um.hasFavorites(product.productId);
@@ -59,12 +48,14 @@ class _ProductList extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     print("product_list build ******** ");
+    // print("widget.productPage: ${widget.productPage}");
     return BaseRoute<ProductListProvider>(
         listen: true,
-        provider: ProductListProvider(context, widget.productPage),
+        provider: ProductListProvider(context, widget.productPage, onGetData: widget.onGetData),
         builder: (_, provider, __) {
+          // print("length: ${provider.productPage.data.length}");
           return CustomRefreshIndicator(
-            onRefresh: () => provider.fetchProductList(categoryid: widget.category, isRefresh: true),
+            onRefresh: () => provider.onRefresh(categoryid: widget.category, isRefresh: true),
             onLoad: () => provider.onLoad(widget.category),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 6),
@@ -77,6 +68,7 @@ class _ProductList extends State<ProductList> {
                 mainAxisSpacing: 6, // 垂直间距
                 crossAxisSpacing: 6, // 水平间距
                 itemBuilder: (context, i) {
+                  // print("provider.productPage: ${provider.productPage}");
                   return Selector<ProductListProvider, Product>(
                     selector: (_, __) => provider.productPage.data[i],
                     builder: (_, product, __) {
@@ -148,12 +140,21 @@ class _ProductList extends State<ProductList> {
 
 class ProductListProvider extends BaseProvider {
   DataPage<Product> _productPage;
+  GetDataCallback _onGetData;
 
-  ProductListProvider(BuildContext context, DataPage<Product> productPage) : super(context) {
-    _productPage = productPage;
+  ProductListProvider(BuildContext context, DataPage<Product> productPage, {GetDataCallback onGetData}) : super(context) {
+    _productPage = productPage ?? DataPage<Product>();
+    _onGetData = onGetData ?? this._fetchProductList;
   }
 
   DataPage<Product> get productPage => _productPage;
+  GetDataCallback get onGetData => _onGetData;
+
+  @override
+  void dispose() {
+    _onGetData = null;
+    super.dispose();
+  }
 
   toDetail(int index) {
     pushNamed(ROUTE_DETAIL, arguments: _productPage.data[index]);
@@ -197,33 +198,35 @@ class ProductListProvider extends BaseProvider {
     }
   }
 
-  fetchProductList({int categoryid, bool isRefresh = false, bool notify = true}) async {
-    int pageNo = _productPage.pageNo;
-    if (isRefresh) {
-      pageNo = 1;
-      _productPage.clean();
-    } else {
-      pageNo += 1;
-      _productPage.incres();
-    }
-    // showLoading();
-    final res = await api.fetchProductList(categoryid, pageNo, _productPage.pageSize);
-    // print("res:$res");
-    // closeLoading();
+  Future<DataPage<Product>> _fetchProductList({int categoryid, DataPage<Product> page}) async {
+    final res = await api.fetchProductList(categoryid, page.pageNo, page.pageSize);
     if (res.code == 0) {
       var data = convertPageList<Product>(res.data, "productByCid", Product());
-      
-      data.update(_productPage.data);
-      _productPage = data;
-      if (notify) {
-        notifyListeners();
-      }
+      data.update(page.data);
+      return data;
+    }
+    return page;
+  }
+
+  onRefresh({int categoryid = 0, bool isRefresh = false, bool notify = true}) async {
+    if (isRefresh) {
+      _productPage.pageNo = 1;
+      _productPage.clean();
+    } else {
+      _productPage.pageNo += 1;
+      _productPage.incres();
+    }
+    setBusy();
+    _productPage = await this.onGetData(categoryid: categoryid, page: _productPage);
+    setBusy();
+    if (notify) {
+      notifyListeners();
     }
   }
 
   onLoad(int categoryid) async {
     if (productPage.hasMore()) {
-      await fetchProductList(categoryid: categoryid);
+      await this.onRefresh(categoryid: categoryid);
     }
   }
 }

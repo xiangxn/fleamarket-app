@@ -42,7 +42,6 @@ class PhotosSelectPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseRoute<PhotosSelectPageProvider>(
-      listen: true,
       provider: PhotosSelectPageProvider(context, this.maxCount, this.selectedPhotos),
       builder: (_, provider, child) {
         print('photos selector build .......');
@@ -66,124 +65,135 @@ class PhotosSelectPage extends StatelessWidget {
                 tabs: provider.tabs.map((t) => Tab(text: t)).toList(),
               ),
               Expanded(
-                child: provider.busy
-                    ? child
-                    : Stack(
-                        children: <Widget>[
-                          AnimatedPositioned(
-                              left: 0,
-                              top: 0,
-                              right: 0,
-                              bottom: provider.offset,
-                              duration: Duration(milliseconds: 150),
-                              child: TabBarView(controller: provider.tabController, children: [
-                                GridView.builder(
-                                    physics: ClampingScrollPhysics(),
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 1, crossAxisSpacing: 1, crossAxisCount: 4),
-                                    itemCount: provider.photos.length,
-                                    itemBuilder: (_, i) {
-                                      AssetEntity photo = provider.photos[i];
-                                      bool hasSelected = provider.hasSelected(photo);
-                                      return GestureDetector(
-                                        onTap: () => provider.selectPhoto(photo),
-                                        child: Stack(children: [
-                                          Positioned.fill(
-                                              child: FutureBuilder(
-                                            future: photo.thumbData,
-                                            builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                                              if (snapshot.hasData)
-                                                return Image.memory(snapshot.data, fit: BoxFit.cover);
-                                              else
-                                                return CircularProgressIndicator();
-                                            },
-                                          )),
-                                          Positioned(
-                                              top: 6,
-                                              right: 6,
-                                              child: Icon(
-                                                hasSelected ? Icons.check_circle : Icons.check_circle_outline,
-                                                color: hasSelected ? Colors.green : Colors.grey[500],
-                                              ))
-                                        ]),
-                                      );
-                                    }),
-                                Stack(
-                                  children: <Widget>[
-                                    _buildCamera(provider),
-                                    Positioned(
-                                      bottom: 0,
-                                      left: 0,
-                                      right: 0,
-                                      height: 90,
-                                      child: Center(
-                                          child: DecoratedBox(
-                                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-                                              child: IconButton(
-                                                icon: Icon(Icons.camera_alt, color: Colors.white),
-                                                onPressed: provider.takePhoto,
-                                              ))),
-                                    ),
-                                    Positioned(
-                                      top: 10,
-                                      right: 10,
-                                      child: IconButton(
-                                        icon: Icon(Icons.loop, color: Colors.green),
-                                        onPressed: provider.switchCamera,
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ])),
-                          AnimatedPositioned(
+                child: Stack(
+                  children: <Widget>[
+                    AnimatedPositioned(
+                        left: 0,
+                        top: 0,
+                        right: 0,
+                        bottom: provider.offset,
+                        duration: Duration(milliseconds: 150),
+                        child: TabBarView(controller: provider.tabController, children: [
+                          FutureBuilder(
+                              future: provider.initPhotos(),
+                              builder: (ctx, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done) {
+                                  return GridView.builder(
+                                      physics: ClampingScrollPhysics(),
+                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 1, crossAxisSpacing: 1, crossAxisCount: 4),
+                                      itemCount: provider.photos.length,
+                                      itemBuilder: (_, i) {
+                                        AssetEntity photo = provider.photos[i];
+                                        return GestureDetector(
+                                          onTap: () => provider.selectPhoto(photo),
+                                          child: Stack(children: [
+                                            Positioned.fill(
+                                                child: FutureBuilder(
+                                              future: photo.thumbData,
+                                              builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+                                                if (snapshot.hasData)
+                                                  return Image.memory(snapshot.data, fit: BoxFit.cover);
+                                                else
+                                                  return CircularProgressIndicator();
+                                              },
+                                            )),
+                                            Positioned(
+                                                top: 6,
+                                                right: 6,
+                                                child: Selector<PhotosSelectPageProvider, bool>(
+                                                    selector: (ctx, provider) => provider.hasSelected(photo),
+                                                    builder: (ctx, hasSelected, widget) {
+                                                      return Icon(
+                                                        hasSelected ? Icons.check_circle : Icons.check_circle_outline,
+                                                        color: hasSelected ? style.primarySwatch : Colors.grey[500],
+                                                      );
+                                                    }))
+                                          ]),
+                                        );
+                                      });
+                                }
+                                return child;
+                              }),
+                          Stack(
+                            children: <Widget>[
+                              _buildCamera(provider),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                height: 90,
+                                child: Center(
+                                    child: DecoratedBox(
+                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                                        child: IconButton(
+                                          icon: Icon(Icons.camera_alt, color: Colors.white),
+                                          onPressed: provider.takePhoto,
+                                        ))),
+                              ),
+                              Positioned(
+                                top: 10,
+                                right: 10,
+                                child: IconButton(
+                                  icon: Icon(Icons.loop, color: Colors.green),
+                                  onPressed: provider.switchCamera,
+                                ),
+                              )
+                            ],
+                          )
+                        ])),
+                    Selector<PhotosSelectPageProvider, List<AssetEntity>>(
+                        selector: (ctx, provider) => provider.selectedPhotos,
+                        builder: (ctx, list, _) {
+                          return AnimatedPositioned(
                             left: 0,
                             right: 0,
                             bottom: 0,
                             height: provider.offset,
                             duration: Duration(milliseconds: 150),
                             child: Container(
-                              decoration: style.shadowBottom,
-                              child: ListView.builder(
-                                  physics: ClampingScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  padding: EdgeInsets.all(5),
-                                  itemExtent: 75,
-                                  itemCount: provider.selectedPhotos.length,
-                                  itemBuilder: (_, i) {
-                                    AssetEntity photo = provider.selectedPhotos[i];
-                                    return GestureDetector(
-                                        onTap: () => provider.selectPhoto(photo),
-                                        child: Container(
-                                          width: 70,
-                                          height: 70,
-                                          margin: EdgeInsets.only(left: i == 0 ? 0 : 5),
-                                          child: Stack(children: [
-                                            Positioned.fill(
-                                                child: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(3),
-                                                    child: FutureBuilder(
-                                                      future: photo.thumbData,
-                                                      builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                                                        if (snapshot.hasData)
-                                                          return Image.memory(snapshot.data, fit: BoxFit.cover);
-                                                        else
-                                                          return CircularProgressIndicator();
-                                                      },
-                                                    ))),
-                                            Positioned(
-                                                top: 3,
-                                                right: 3,
-                                                child: Icon(
-                                                  Icons.remove_circle,
-                                                  color: Colors.red,
-                                                  size: 18,
-                                                ))
-                                          ]),
-                                        ));
-                                  }),
-                            ),
-                          )
-                        ],
-                      ),
+                                decoration: style.shadowBottom,
+                                child: ListView.builder(
+                                    physics: ClampingScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    padding: EdgeInsets.all(5),
+                                    itemExtent: 75,
+                                    itemCount: list.length,
+                                    itemBuilder: (_, i) {
+                                      AssetEntity photo = list[i];
+                                      return GestureDetector(
+                                          onTap: () => provider.selectPhoto(photo),
+                                          child: Container(
+                                            width: 70,
+                                            height: 70,
+                                            margin: EdgeInsets.only(left: i == 0 ? 0 : 5),
+                                            child: Stack(children: [
+                                              Positioned.fill(
+                                                  child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(3),
+                                                      child: FutureBuilder(
+                                                        future: photo.thumbData,
+                                                        builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+                                                          if (snapshot.hasData)
+                                                            return Image.memory(snapshot.data, fit: BoxFit.cover);
+                                                          else
+                                                            return CircularProgressIndicator();
+                                                        },
+                                                      ))),
+                                              Positioned(
+                                                  top: 3,
+                                                  right: 3,
+                                                  child: Icon(
+                                                    Icons.remove_circle,
+                                                    color: Colors.red,
+                                                    size: 18,
+                                                  ))
+                                            ]),
+                                          ));
+                                    })),
+                          );
+                        }),
+                  ],
+                ),
               )
             ],
           ),
@@ -239,7 +249,7 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
     await Future.delayed(Duration(milliseconds: 500));
     bool flag = await checkPermission();
     if (flag) {
-      await initPhotos();
+      //await initPhotos();
       await initcamera();
     }
     setBusy();
@@ -268,7 +278,7 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
       photos.addAll(aes);
     }
     _photos = photos;
-    notifyListeners();
+    // notifyListeners();
   }
 
   initcamera() async {
@@ -290,16 +300,18 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
 
   selectPhoto(AssetEntity photo) {
     bool flag = true;
+    var list = [..._selectedPhotos];
     if (hasSelected(photo)) {
-      _selectedPhotos.removeWhere((p) => p.id == photo.id);
+      list.removeWhere((p) => p.id == photo.id);
     } else {
-      if (_selectedPhotos.length >= _maxCount) {
+      if (list.length >= _maxCount) {
         flag = false;
         showToast(translate('photos.max_photos', translationParams: {"max": _maxCount.toString()}));
       } else {
-        _selectedPhotos.add(photo);
+        list.add(photo);
       }
     }
+    _selectedPhotos = list;
     if (_maxCount == 1) {
       done();
     } else if (flag) {
@@ -323,7 +335,9 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
       String path = '${tempDir.path}/tmp.png';
       await _cameraController.takePicture(path);
       AssetEntity ae = await PhotoManager.editor.saveImageWithPath(path);
-      _selectedPhotos.add(ae);
+      var list = [..._selectedPhotos];
+      list.add(ae);
+      _selectedPhotos = list;
       if (_maxCount == 1) {
         done();
       } else {

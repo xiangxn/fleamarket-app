@@ -149,14 +149,14 @@ class DataApi {
   }
 
   Future<bool> follow(int user, int follower) async {
-    print("user: $user; follower: $follower");
+    // print("user: $user; follower: $follower");
     if (user == follower) return false;
     final token = await getToken();
     var request = FollowRequest();
     request.user = user;
     request.follower = follower;
     final res = await _client.follow(request, options: CallOptions(metadata: {'token': token}));
-    print("res: $res");
+    // print("res: $res");
     if (res.code == 0) return true;
     return false;
   }
@@ -179,7 +179,7 @@ class DataApi {
         ", pageSize:" +
         pageSize.toString() +
         ")" +
-        " {pageNo,pageSize,totalCount,list{follower{userid,eosid,status,nickname,head}}}}";
+        " {pageNo,pageSize,totalCount,list{follower{userid,eosid,status,nickname,head,fansTotal,creditValue,isReviewer}}}}";
     return await _search(query);
   }
 
@@ -191,7 +191,7 @@ class DataApi {
         ", pageSize:" +
         pageSize.toString() +
         ")" +
-        " {pageNo,pageSize,totalCount,list{user{userid,eosid,status,nickname,head}}}}";
+        " {pageNo,pageSize,totalCount,list{user{userid,eosid,status,nickname,head,fansTotal,creditValue,isReviewer}}}}";
     return await _search(query);
   }
 

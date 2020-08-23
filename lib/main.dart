@@ -14,6 +14,8 @@ import 'common/global.dart';
 import 'routes/publish.dart';
 import 'routes/search.dart';
 import 'routes/user_edit.dart';
+import 'routes/user_favorite.dart';
+import 'routes/user_follow.dart';
 import 'states/locale.dart';
 import 'states/theme.dart';
 import 'states/user.dart';
@@ -85,7 +87,9 @@ class MyApp extends StatelessWidget {
               ROUTE_HOME: (context) => HomeRoute(),
               ROUTE_SEARCH: (context) => SearchRoute(),
               ROUTE_LOGIN: (context) => LoginRoute(),
-              ROUTE_USER_EDIT: (context) => UserEditRoute()
+              ROUTE_USER_EDIT: (context) => UserEditRoute(),
+              ROUTE_USER_FAVORITE: (context) => UserFavoriteRoute(),
+              ROUTE_USER_FOLLOW: (context) => UserFollowRoute(),
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(

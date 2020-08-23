@@ -44,7 +44,7 @@ class UserProfilePage extends StatelessWidget {
         return Selector<UserProfileProvider, User>(
           selector: (_, provider) => provider.currentUser,
           builder: (_, user, __) {
-            // print("user:$user");
+            print("user profile build*************");
             final style = Provider.of<ThemeModel>(context).theme;
             return CustomRefreshIndicator(
                 onRefresh: provider.refreshUser,
@@ -129,9 +129,9 @@ class UserProfilePage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         margin: EdgeInsets.only(bottom: 10, top: 20),
                         child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
-                          _buildChunk(provider.translate('user_profile.favorite'), user?.favoriteTotal ?? 0, () => provider.pushNamed(ROUTE_MINE_FAVORITE)),
-                          _buildChunk(provider.translate('user_profile.follow'), user?.followTotal ?? 0, () => provider.pushNamed(ROUTE_MINE_FOCUS)),
-                          _buildChunk(provider.translate('user_profile.fans'), user?.fansTotal ?? 0, () => provider.pushNamed(ROUTE_MINE_FANS)),
+                          _buildChunk(provider.translate('user_profile.favorite'), user?.favoriteTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FAVORITE)),
+                          _buildChunk(provider.translate('user_profile.follow'), user?.followTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FOLLOW)),
+                          _buildChunk(provider.translate('user_profile.fans'), user?.fansTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FANS)),
                         ]),
                       ),
                       LineButtonGroup(children: [
@@ -139,42 +139,42 @@ class UserProfilePage extends StatelessWidget {
                             text: provider.translate('user_profile.mine_publish'),
                             subText: (user?.postsTotal ?? 0).toString(),
                             prefixIcon: Icons.shop,
-                            onTap: () => provider.pushNamed(ROUTE_MINE_PUBLISH)),
+                            onTap: () => provider.pushNamed(ROUTE_USER_PUBLISH)),
                         LineButtonItem(
                           text: provider.translate('user_profile.mine_buy'),
                           subText: (user?.buyTotal ?? 0).toString(),
                           prefixIcon: Icons.archive,
-                          onTap: () => provider.pushNamed(ROUTE_MINE_BUY),
+                          onTap: () => provider.pushNamed(ROUTE_USER_BUY),
                         ),
                         LineButtonItem(
                           text: provider.translate('user_profile.mine_sell'),
                           subText: (user?.sellTotal ?? 0).toString(),
                           prefixIcon: Icons.unarchive,
-                          onTap: () => provider.pushNamed(ROUTE_MINE_SELL),
+                          onTap: () => provider.pushNamed(ROUTE_USER_SELL),
                         ),
                         LineButtonItem(
                           text: provider.translate('user_profile.mine_recommended'),
                           subText: (user?.referralTotal ?? 0).toString(),
                           prefixIcon: Icons.account_box,
-                          onTap: () => provider.pushNamed(ROUTE_MINE_INVITE),
+                          onTap: () => provider.pushNamed(ROUTE_USER_INVITE),
                         ),
                       ]),
                       LineButtonGroup(margin: EdgeInsets.only(top: 10), children: [
                         LineButtonItem(
                             text: provider.translate('user_profile.mine_balances'),
                             prefixIcon: Icons.monetization_on,
-                            onTap: () => provider.pushNamed(ROUTE_MINE_BALANCES)),
+                            onTap: () => provider.pushNamed(ROUTE_USER_BALANCES)),
                         LineButtonItem(
-                            text: provider.translate('user_profile.mine_keys'), prefixIcon: Icons.vpn_key, onTap: () => provider.pushNamed(ROUTE_MINE_KEYS)),
+                            text: provider.translate('user_profile.mine_keys'), prefixIcon: Icons.vpn_key, onTap: () => provider.pushNamed(ROUTE_USER_KEYS)),
                         LineButtonItem(
                           text: provider.translate('user_profile.mine_address'),
                           prefixIcon: Icons.location_on,
-                          onTap: () => provider.pushNamed(ROUTE_MINE_ADDRESS),
+                          onTap: () => provider.pushNamed(ROUTE_USER_ADDRESS),
                         ),
                         LineButtonItem(
                           text: provider.translate('user_profile.mine_withdrawal'),
                           prefixIcon: Icons.call_to_action,
-                          onTap: () => provider.pushNamed(ROUTE_MINE_WITHDRAWAL),
+                          onTap: () => provider.pushNamed(ROUTE_USER_WITHDRAWAL),
                         ),
                       ]),
                       LineButtonGroup(
@@ -183,7 +183,7 @@ class UserProfilePage extends StatelessWidget {
                           LineButtonItem(
                             text: provider.translate('user_profile.mine_vote'),
                             prefixIcon: Icons.account_balance,
-                            onTap: () => provider.pushNamed(ROUTE_MINE_VOTE),
+                            onTap: () => provider.pushNamed(ROUTE_USER_VOTE),
                           ),
                           user?.isReviewer ?? false
                               ? LineButtonItem(
@@ -235,25 +235,22 @@ class UserProfileProvider extends BaseProvider {
     _homeProvider = homeProvider;
   }
 
-  User get currentUser => Provider.of<UserModel>(context, listen: false).user;
+  User get currentUser => Provider.of<UserModel>(context).user;
+
   ScrollController get controller => _controller;
 
-  Future<bool> refreshUser() async {
+  Future<void> refreshUser() async {
     final um = Provider.of<UserModel>(context, listen: false);
     if (um.user != null) {
-      final process = api.getUserByUserid(um.user.userid);
-      final res = await processing(process, loading: false);
+      final res = await api.getUserByUserid(um.user.userid);
       if (res.code == 0) {
         User user = convertEdge<User>(res.data, "users", User());
-        if (user == null) {
-          return false;
-        }
+        if (user == null) return;
         user.head = URL_IPFS_GATEWAY + user.head;
         um.user = user;
-        return true;
+        notifyListeners();
       }
     }
-    return false;
   }
 
   logout() async {

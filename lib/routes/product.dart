@@ -53,7 +53,7 @@ class ProductPage extends StatelessWidget {
                       print("tabbarview build......");
                       return ProductList(
                         productPage: page,
-                        refresh: provider.fetchProductList,
+                        onGetData: provider.fetchProductList,
                         category: category.cid,
                       );
                     },
@@ -108,7 +108,7 @@ class ProductProvider extends BaseProvider implements TickerProvider {
         _categories.add(e);
       });
       _tabController = new TabController(length: _categories.length, vsync: this);
-      await Future.wait(_categories.map((e) => fetchProductList(categoryid: e.cid, page: DataPage<Product>(), isRefresh: true, notify: false)));
+      await Future.wait(_categories.map((e) => fetchProductList(categoryid: e.cid, page: DataPage<Product>())));
       return true;
     }
     return false;
@@ -120,24 +120,16 @@ class ProductProvider extends BaseProvider implements TickerProvider {
     return page;
   }
 
-  fetchProductList({int categoryid, DataPage<Product> page, bool isRefresh = false, bool notify = true}) async {
-    if (isRefresh) {
-      page.clean();
-    } else {
-      page.incres();
-    }
-    // showLoading();
+  Future<DataPage<Product>> fetchProductList({int categoryid, DataPage<Product> page}) async {
     final res = await dataApi.fetchProductList(categoryid, page.pageNo, page.pageSize);
     // print("res:$res");
-    // closeLoading();
     if (res.code == 0) {
       var data = convertPageList<Product>(res.data, "productByCid", Product());
       data.update(page.data);
       _map[categoryid] = data;
-      if (notify) {
-        notifyListeners();
-      }
+      return data;
     }
+    return page;
   }
 
   @override

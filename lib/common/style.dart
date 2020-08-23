@@ -51,4 +51,5 @@ class Style {
           blurRadius: 10.0,
         )
       ]);
+  TextStyle get smallFont => TextStyle(fontSize: 12, color: Colors.grey[700]);
 }

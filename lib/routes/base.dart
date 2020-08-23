@@ -10,7 +10,7 @@ class BaseRoute<T extends ChangeNotifier> extends StatelessWidget {
 
   final bool listen;
 
-  BaseRoute({Key key, this.builder, this.provider, this.child, this.listen}) : super(key: key);
+  BaseRoute({Key key, this.builder, this.provider, this.child, this.listen = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

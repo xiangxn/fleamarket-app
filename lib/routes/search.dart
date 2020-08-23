@@ -2,7 +2,6 @@ import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/data_api.dart';
 import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/common/global.dart';
-import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/models/data_page.dart';
 import 'package:bitsflea/routes/base.dart';
@@ -58,12 +57,8 @@ class SearchRoute extends StatelessWidget {
   Widget _productList(SearchProvider provider, Widget loading, BuildContext context) {
     if (provider.busy) {
       return loading;
-    } else if (provider.productPage.data.isEmpty) {
-      return Center(
-        child: Text(FlutterI18n.translate(context, 'search.no_data')),
-      );
     } else {
-      return ProductList(productPage: provider.productPage, refresh: provider.fetchProductList);
+      return ProductList(productPage: provider.pageData, onGetData: provider.fetchProductList);
     }
   }
 
@@ -116,24 +111,22 @@ class SearchRoute extends StatelessWidget {
 
 class SearchProvider extends BaseProvider {
   List<String> _history;
-  DataPage<Product> _productPage;
   bool _hasFocus = false;
   bool _firstShow = true;
   TextEditingController _controller;
-  DataApi _api = DataApi();
+  DataPage<Product> _page;
 
   SearchProvider(BuildContext context) : super(context) {
     _history = Global.prefs.getStringList(STORE_SEARCH_HISTORY) ?? [];
-    _productPage = DataPage<Product>();
     _controller = TextEditingController();
   }
 
-  DataPage<Product> get productPage => _productPage;
   List<String> get history => _history;
   bool get hasFocus => _hasFocus;
   bool get firstShow => _firstShow;
   String get search => _controller.text;
   TextEditingController get controller => _controller;
+  DataPage<Product> get pageData => _page;
 
   switchFirst() {
     if (_firstShow) {
@@ -152,6 +145,7 @@ class SearchProvider extends BaseProvider {
   }
 
   onSearchSubmit(String val) async {
+    print("onSearchSubmit.................");
     switchFirst();
     unfocus();
     _controller.text = val ?? '';
@@ -161,8 +155,8 @@ class SearchProvider extends BaseProvider {
         Global.prefs.setStringList(STORE_SEARCH_HISTORY, _history);
       }
       setBusy();
-      notifyListeners();
-      await fetchProductList(notify: false);
+      // notifyListeners();
+      _page = await fetchProductList(page: DataPage<Product>());
       setBusy();
     }
     notifyListeners();
@@ -185,19 +179,13 @@ class SearchProvider extends BaseProvider {
     }
   }
 
-  fetchProductList({int categoryid, DataPage<Product> page, bool isRefresh = true, bool notify = true}) async {
-    if (isRefresh) {
-      _productPage.clean();
-    } else {
-      _productPage.incres();
-    }
-    final res = await _api.searchProductByTitle(_controller.text, _productPage.pageNo, _productPage.pageSize);
+  Future<DataPage<Product>> fetchProductList({int categoryid, DataPage<Product> page}) async {
+    final res = await api.searchProductByTitle(_controller.text, page.pageNo, page.pageSize);
     if (res.code == 0) {
-      var page = convertPageList<Product>(res.data, "productByTitle", Product());
-      _productPage.update(page.data);
-      if (notify) {
-        notifyListeners();
-      }
+      var data = convertPageList<Product>(res.data, "productByTitle", Product());
+      data.update(page.data);
+      return data;
     }
+    return page;
   }
 }

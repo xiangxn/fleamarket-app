@@ -25,11 +25,9 @@ class UserModel extends ProfileChangeNotifier {
 
   //用户信息发生变化，更新用户信息并通知依赖它的子孙Widgets更新
   set user(User user) {
-    if (user?.userid != profile.user?.userid) {
-      profile.lastLogin = profile.user?.userid;
-      profile.user = user;
-      notifyListeners();
-    }
+    if (profile.user != null) profile.lastLogin = profile.user.userid;
+    profile.user = user;
+    notifyListeners();
   }
 
   set keys(List<EOSPrivateKey> keys) {
@@ -77,13 +75,17 @@ class UserModel extends ProfileChangeNotifier {
   void addFavorite(int productId) {
     if (_favorites.contains(productId)) return;
     _favorites.add(productId);
+    user.favoriteTotal += 1;
     _saveFavorites();
+    notifyListeners();
   }
 
   void removeFavorite(int productId) {
     if (_favorites.contains(productId) == false) return;
     _favorites.remove(productId);
+    user.favoriteTotal -= 1;
     _saveFavorites();
+    notifyListeners();
   }
 
   bool hasFollow(int userid) {
@@ -94,13 +96,17 @@ class UserModel extends ProfileChangeNotifier {
   void addFollow(int userId) {
     if (_follows.contains(userId)) return;
     _follows.add(userId);
+    user.followTotal += 1;
     _saveFollows();
+    notifyListeners();
   }
 
   void removeFollow(int userId) {
     if (_follows.contains(userId) == false) return;
     _follows.remove(userId);
+    user.followTotal -= 1;
     _saveFollows();
+    notifyListeners();
   }
 
   void _saveFollows() {
