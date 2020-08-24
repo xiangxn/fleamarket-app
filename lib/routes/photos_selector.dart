@@ -20,23 +20,27 @@ class PhotosSelectPage extends StatelessWidget {
   PhotosSelectPage({Key key, this.title, this.maxCount, this.selectedPhotos}) : super(key: key);
 
   _buildCamera(PhotosSelectPageProvider provider) {
-    if (provider.cameraInit) {
-      return ClipRect(
-        child: Container(
-          child: Transform.scale(
-            scale: 1 / provider.cameraController.value.aspectRatio,
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: provider.cameraController.value.aspectRatio,
-                child: CameraPreview(provider.cameraController),
+    return FutureBuilder(
+        future: provider.initcamera(),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done && provider.cameraInit) {
+            return ClipRect(
+              child: Container(
+                child: Transform.scale(
+                  scale: 1 / provider.cameraController.value.aspectRatio,
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: provider.cameraController.value.aspectRatio,
+                      child: CameraPreview(provider.cameraController),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-      );
-    } else {
-      return Container(color: Colors.black);
-    }
+            );
+          } else {
+            return Container(color: Colors.black);
+          }
+        });
   }
 
   @override
@@ -124,7 +128,7 @@ class PhotosSelectPage extends StatelessWidget {
                                 height: 90,
                                 child: Center(
                                     child: DecoratedBox(
-                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                                        decoration: BoxDecoration(shape: BoxShape.circle, color: style.primarySwatch),
                                         child: IconButton(
                                           icon: Icon(Icons.camera_alt, color: Colors.white),
                                           onPressed: provider.takePhoto,
@@ -134,7 +138,7 @@ class PhotosSelectPage extends StatelessWidget {
                                 top: 10,
                                 right: 10,
                                 child: IconButton(
-                                  icon: Icon(Icons.loop, color: Colors.green),
+                                  icon: Icon(Icons.loop, color: style.primarySwatch),
                                   onPressed: provider.switchCamera,
                                 ),
                               )
@@ -249,8 +253,8 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
     await Future.delayed(Duration(milliseconds: 500));
     bool flag = await checkPermission();
     if (flag) {
-      //await initPhotos();
-      await initcamera();
+      // await initPhotos();
+      // await initcamera();
     }
     setBusy();
   }
@@ -286,7 +290,7 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
     if (_cameras.length > 0) {
       _cameraController = CameraController(_cameras[_cameraId], ResolutionPreset.high);
       await _cameraController.initialize();
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
