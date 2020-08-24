@@ -191,8 +191,6 @@ class PublishProvider extends BaseProvider {
 
   PublishProvider(BuildContext context, Product product) : super(context) {
     _product = product ?? Product();
-    _locationData = LocationData(api);
-    _location = _locationData.getAddress();
     _init();
   }
 
@@ -281,6 +279,8 @@ class PublishProvider extends BaseProvider {
     _location = _product.position ?? _location;
     _category = _product.category ?? _categories[_categories.length - 1];
 
+    await Future.delayed(Duration(milliseconds: 500));
+    _locationData = LocationData(api);
     setBusy();
     notifyListeners();
   }
@@ -325,12 +325,11 @@ class PublishProvider extends BaseProvider {
     checkHasFocus();
     Widget screen = AddressSelector(
       title: translate('publish.address_selector'),
+      locationData: _locationData,
     );
-    String adcode = await this.showDialog(screen);
-    if (adcode != null) {
-      _location = _locationData.getAddress(adcode);
-      notifyListeners();
-    }
+    String local = await this.showDialog(screen);
+    _location = local;
+    notifyListeners();
   }
 
   selectPhotos() async {

@@ -31,7 +31,12 @@ class PhotosSelectPage extends StatelessWidget {
                   child: Center(
                     child: AspectRatio(
                       aspectRatio: provider.cameraController.value.aspectRatio,
-                      child: CameraPreview(provider.cameraController),
+                      child: Selector<PhotosSelectPageProvider, int>(
+                        selector: (ctx, provider) => provider.cameraId,
+                        builder: (ctx, cid, _) {
+                          return CameraPreview(provider.cameraController);
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -121,19 +126,23 @@ class PhotosSelectPage extends StatelessWidget {
                           Stack(
                             children: <Widget>[
                               _buildCamera(provider),
-                              Positioned(
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                height: 90,
-                                child: Center(
-                                    child: DecoratedBox(
-                                        decoration: BoxDecoration(shape: BoxShape.circle, color: style.primarySwatch),
-                                        child: IconButton(
-                                          icon: Icon(Icons.camera_alt, color: Colors.white),
-                                          onPressed: provider.takePhoto,
-                                        ))),
-                              ),
+                              Selector<PhotosSelectPageProvider, List<AssetEntity>>(
+                                selector: (ctx, provider) => provider.selectedPhotos,
+                                builder: (ctx, list, _) {
+                                return Positioned(
+                                  bottom: provider.offset,
+                                  left: 0,
+                                  right: 0,
+                                  height: 90,
+                                  child: Center(
+                                      child: DecoratedBox(
+                                          decoration: BoxDecoration(shape: BoxShape.circle, color: style.primarySwatch),
+                                          child: IconButton(
+                                            icon: Icon(Icons.camera_alt, color: Colors.white),
+                                            onPressed: provider.takePhoto,
+                                          ))),
+                                );
+                              }),
                               Positioned(
                                 top: 10,
                                 right: 10,
@@ -225,6 +234,7 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
   List<AssetEntity> get photos => _photos;
   List<AssetEntity> get selectedPhotos => _selectedPhotos;
   double get offset => _offset;
+  int get cameraId => _cameraId;
 
   PhotosSelectPageProvider(BuildContext context, int maxCount, List<AssetEntity> selectedPhotos) : super(context) {
     _tabs = [translate('photos.album'), translate('photos.camera')];

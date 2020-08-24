@@ -13,13 +13,15 @@ import 'line_button_group.dart';
 
 class AddressSelector extends StatelessWidget {
   final String title;
+  final LocationData locationData;
 
-  AddressSelector({Key key, this.title}) : super(key: key);
+  AddressSelector({Key key, this.title, this.locationData}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BaseRoute<AddressSelectorProvider>(
       listen: true,
-      provider: AddressSelectorProvider(context),
+      provider: AddressSelectorProvider(context, locationData),
       builder: (_, provider, __) {
         final style = Provider.of<ThemeModel>(context).theme;
         return Scaffold(
@@ -43,9 +45,9 @@ class AddressSelector extends StatelessWidget {
               Container(
                 color: Colors.white,
                 child: LineButtonItem(
-                  text: provider.location,
-                  onTap: provider.selectCurrent,
-                ),
+                          text: provider.location,
+                          onTap: provider.selectCurrent,
+                        ),
               ),
               Container(
                 alignment: Alignment.centerLeft,
@@ -81,13 +83,16 @@ class AddressSelectorProvider extends BaseProvider implements WidgetsBindingObse
   ScrollController get controller => _controller;
 
   bool _disposed = false;
-  AddressSelectorProvider(BuildContext context) : super(context) {
+
+  AddressSelectorProvider(BuildContext context, LocationData locationData) : super(context) {
     WidgetsBinding.instance.addObserver(this);
-    _locationData = LocationData(api);
+    _locationData = locationData;
     initCurLocation();
   }
 
   initCurLocation() {
+    // await _locationData.updateLocation();
+    // await _locationData.fetchDistricts();
     _location = _locationData.getAddress() ?? translate('address_selector.no_permission');
     _district = _locationData.district;
   }
@@ -97,25 +102,25 @@ class AddressSelectorProvider extends BaseProvider implements WidgetsBindingObse
   }
 
   selectCurrent() async {
-    if (!super.busy) {
+    if (!busy) {
       String adcode = _locationData.locationAdcode;
       if (adcode == null) {
         Map<PermissionGroup, PermissionStatus> status = await PermissionHandler().requestPermissions([PermissionGroup.locationWhenInUse]);
         if (status[PermissionGroup.locationWhenInUse] != PermissionStatus.granted) {
-          bool res = await super.confirm(translate('permission.location'));
+          bool res = await confirm(translate('permission.location'));
           if (res) {
             bool canOpen = await PermissionHandler().openAppSettings();
           }
         }
       } else {
-        pop(adcode);
+        pop(_locationData.getAddress(adcode));
       }
     }
   }
 
   selectAddress(District district) {
     if (district.level == DISTRICT_LV) {
-      pop(district.adcode);
+      pop(_locationData.getAddress(district.adcode));
     } else {
       _districtLevel.add(district);
       _district = district;
