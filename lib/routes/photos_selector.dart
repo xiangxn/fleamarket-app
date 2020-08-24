@@ -25,23 +25,19 @@ class PhotosSelectPage extends StatelessWidget {
         builder: (ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.done && provider.cameraInit) {
             return ClipRect(
-              child: Container(
-                child: Transform.scale(
-                  scale: 1 / provider.cameraController.value.aspectRatio,
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: provider.cameraController.value.aspectRatio,
-                      child: Selector<PhotosSelectPageProvider, int>(
-                        selector: (ctx, provider) => provider.cameraId,
-                        builder: (ctx, cid, _) {
-                          return CameraPreview(provider.cameraController);
-                        },
-                      ),
+                child: Selector<PhotosSelectPageProvider, int>(
+              selector: (ctx, provider) => provider.cameraId,
+              builder: (ctx, cid, _) {
+                return Container(
+                  child: Transform.scale(
+                    scale: 1 / provider.cameraController.value.aspectRatio,
+                    child: Center(
+                      child: AspectRatio(aspectRatio: provider.cameraController.value.aspectRatio, child: CameraPreview(provider.cameraController)),
                     ),
                   ),
-                ),
-              ),
-            );
+                );
+              },
+            ));
           } else {
             return Container(color: Colors.black);
           }
@@ -127,22 +123,22 @@ class PhotosSelectPage extends StatelessWidget {
                             children: <Widget>[
                               _buildCamera(provider),
                               Selector<PhotosSelectPageProvider, List<AssetEntity>>(
-                                selector: (ctx, provider) => provider.selectedPhotos,
-                                builder: (ctx, list, _) {
-                                return Positioned(
-                                  bottom: provider.offset,
-                                  left: 0,
-                                  right: 0,
-                                  height: 90,
-                                  child: Center(
-                                      child: DecoratedBox(
-                                          decoration: BoxDecoration(shape: BoxShape.circle, color: style.primarySwatch),
-                                          child: IconButton(
-                                            icon: Icon(Icons.camera_alt, color: Colors.white),
-                                            onPressed: provider.takePhoto,
-                                          ))),
-                                );
-                              }),
+                                  selector: (ctx, provider) => provider.selectedPhotos,
+                                  builder: (ctx, list, _) {
+                                    return Positioned(
+                                      bottom: provider.offset,
+                                      left: 0,
+                                      right: 0,
+                                      height: 90,
+                                      child: Center(
+                                          child: DecoratedBox(
+                                              decoration: BoxDecoration(shape: BoxShape.circle, color: style.primarySwatch),
+                                              child: IconButton(
+                                                icon: Icon(Icons.camera_alt, color: Colors.white),
+                                                onPressed: provider.takePhoto,
+                                              ))),
+                                    );
+                                  }),
                               Positioned(
                                 top: 10,
                                 right: 10,
