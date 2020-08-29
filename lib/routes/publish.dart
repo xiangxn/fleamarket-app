@@ -36,7 +36,7 @@ class PublishRoute extends StatelessWidget {
             key: provider.scaffoldKey,
             appBar: AppBar(
               centerTitle: true,
-              title: Text(provider.isUpdate ? provider.translate('title.edit_goods') : provider.translate('publish.title')),
+              title: Text(provider.isUpdate ? provider.translate('publish.edit_goods') : provider.translate('publish.title')),
               backgroundColor: style.headerBackgroundColor,
               brightness: Brightness.light,
               textTheme: style.headerTextTheme,
@@ -236,7 +236,7 @@ class PublishProvider extends BaseProvider {
     assert(price != null);
     assert(price.length > 1);
     final ps = price.split(" ");
-    assert(ps.length != 2);
+    assert(ps.length == 2);
     return ps;
   }
 

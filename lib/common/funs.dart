@@ -49,16 +49,19 @@ List<EOSPrivateKey> generateKeys(String phone, String password) {
 }
 
 formatPrice(String price) {
-  double p = double.tryParse(price);
+  double p = double.tryParse(price) ?? 0;
   if (p % p.floor() == 0) return p.floor().toString();
   return p.toString();
 }
 
 formatPrice2(String price) {
   List<String> ps = price.split(" ");
-  double p = double.tryParse(ps[0]);
-  if (p % p.floor() == 0) return "${p.floor().toString()} ${ps[1]}";
-  return "${p.toString()} ${ps[1]}";
+  if (ps.length == 2) {
+    double p = double.tryParse(ps[0]) ?? 0;
+    if (p % p.floor() == 0) return "${p.floor().toString()} ${ps[1]}";
+    return "${p.toString()} ${ps[1]}";
+  }
+  return "";
 }
 
 Key randomKey() {

@@ -95,6 +95,7 @@
     },
     "publish": {
         "title": "发布商品",
+        "edit_goods":"编辑商品",
         "desc_hint": "品牌型号，新旧程度，入手渠道，转手原因...",
         "title_hint": "商品标题",
         "prices": "价格",
@@ -164,9 +165,9 @@
         "shipping_address": "收货地址:  @s",
         "user_credit": "信用分:  {amount}",
         "vote_count": "票数:  @s",
-        "favorite_count": "收藏数:  @s",
-        "price": "价格:  @s",
-        "postage": "运费:  @s",
+        "favorite_count": "收藏数:  {count}",
+        "price": "价格:  {price}",
+        "postage": "运费:  {price}",
         "seller": "卖家:  @s",
         "buyer": "买家:  @s",
         "order_no": "订单号:  @s"
@@ -186,5 +187,14 @@
         "other_follow": "他关注的",
         "other_fans": "他的粉丝",
         "order_detail": "订单详情"
+    },
+    "user_publish": {
+        "title": "我发布的"
+    },
+    "product_type": {
+        "0": "正常",
+        "1": "待审核",
+        "2": "审核拒绝",
+        "3": "下架"
     }
 }

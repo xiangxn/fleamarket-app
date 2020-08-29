@@ -37,7 +37,7 @@ class UserFollowProvider extends BaseProvider {
   UserFollowProvider(BuildContext context) : super(context);
 
   Future<DataPage<User>> fetchFollow({int pageNo, int pageSize, String key = "followByFollower", String key2 = "user"}) async {
-    final user = Provider.of<UserModel>(context).user;
+    final user = Provider.of<UserModel>(context,listen: false).user;
     final res = await api.getFollowByFollower(user.userid, pageNo, pageSize);
     if (res.code == 0) {
       var data = convertPageList(res.data, key, User(), key2: key2);
@@ -49,9 +49,16 @@ class UserFollowProvider extends BaseProvider {
 
   Future<void> updateUser({User obj}) async {
     final um = Provider.of<UserModel>(context, listen: false);
-    final res = await api.unFollow(obj.userid, um.user.userid);
-    if (res) {
-      um.removeFollow(obj.userid);
+    if (um.hasFollow(obj.userid)) {
+      final res = await api.unFollow(obj.userid, um.user.userid);
+      if (res) {
+        um.removeFollow(obj.userid);
+      }
+    } else {
+      final res = await api.follow(obj.userid, um.user.userid);
+      if (res) {
+        um.addFollow(obj.userid);
+      }
     }
   }
 }

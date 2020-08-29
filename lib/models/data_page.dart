@@ -9,7 +9,7 @@ class DataPage<T extends GeneratedMessage> {
 
   DataPage()
       : pageNo = 1,
-        pageSize = 5,
+        pageSize = 10,
         totalCount = 0,
         totalPage = 0,
         data = [];

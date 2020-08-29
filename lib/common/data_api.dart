@@ -374,7 +374,7 @@ class DataApi {
   Future<BaseReply> fetchPublishByUser(int userid, int pageNo, int pageSize) async {
     String query = "{productByPublisher(userid:$userid, pageNo:$pageNo, pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "productId,title,price,collections,seller{head,nickname},photos";
+    query += "productId,title,price,postage,collections,seller{head,nickname},photos,status";
     query += "}}}";
     return await _search(query);
   }

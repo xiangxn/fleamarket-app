@@ -29,10 +29,10 @@ class UserCardGroup extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return CustomRefreshIndicator(
                     onRefresh: () => provider.fetch(isRefresh: true),
-                    onLoad: provider.fetch,
+                    onLoad: () => provider.fetch(load: true),
                     child: ListView.builder(
                         controller: controller,
-                        physics: ClampingScrollPhysics(),
+                        // physics: ClampingScrollPhysics(),
                         itemCount: provider.page.data.length,
                         itemBuilder: (_, i) => Selector<UserCardGroupProvider, User>(
                               selector: (_, provider) => provider.page.data[i],
@@ -66,7 +66,8 @@ class UserCardGroupProvider extends BaseProvider {
 
   DataPage<User> get page => _page;
 
-  Future<void> fetch({bool isRefresh = false}) async {
+  Future<void> fetch({bool isRefresh = false, bool load = false}) async {
+    if (load) if (_page.hasMore() == false) return;
     setBusy();
     if (isRefresh) {
       _page.clean();
@@ -76,7 +77,7 @@ class UserCardGroupProvider extends BaseProvider {
     if (data.hasMore()) data.pageNo += 1;
     _page = data;
     setBusy();
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> updateUser({User obj}) async {

@@ -18,6 +18,7 @@ import 'routes/user_edit.dart';
 import 'routes/user_favorite.dart';
 import 'routes/user_follow.dart';
 import 'routes/user_home.dart';
+import 'routes/user_publish.dart';
 import 'states/locale.dart';
 import 'states/theme.dart';
 import 'states/user.dart';
@@ -93,6 +94,7 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_FAVORITE: (context) => UserFavoriteRoute(),
               ROUTE_USER_FOLLOW: (context) => UserFollowRoute(),
               ROUTE_USER_FANS: (context) => UserFansRoute(),
+              ROUTE_USER_PUBLISH: (context) => UserPublishRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(
