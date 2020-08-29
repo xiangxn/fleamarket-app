@@ -52,6 +52,7 @@ class UserFavoriteProvider extends BaseProvider {
     if (res.code == 0) {
       var data = convertPageList<Product>(res.data, "favoriteByUser", new Product(), key2: "product");
       data.update(page.data);
+      if (data.hasMore()) data.pageNo += 1;
       // print("data: $data");
       return data;
     }

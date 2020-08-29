@@ -1,6 +1,7 @@
 import 'package:bitsflea/routes/home.dart';
 import 'package:bitsflea/routes/login.dart';
 import 'package:bitsflea/routes/product_detail.dart';
+import 'package:bitsflea/routes/user_fans.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -16,6 +17,7 @@ import 'routes/search.dart';
 import 'routes/user_edit.dart';
 import 'routes/user_favorite.dart';
 import 'routes/user_follow.dart';
+import 'routes/user_home.dart';
 import 'states/locale.dart';
 import 'states/theme.dart';
 import 'states/user.dart';
@@ -90,6 +92,7 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_EDIT: (context) => UserEditRoute(),
               ROUTE_USER_FAVORITE: (context) => UserFavoriteRoute(),
               ROUTE_USER_FOLLOW: (context) => UserFollowRoute(),
+              ROUTE_USER_FANS: (context) => UserFansRoute(),
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(
@@ -100,6 +103,8 @@ class MyApp extends StatelessWidget {
                       return ProductDetailRoute(product: settings.arguments);
                     case ROUTE_PUBLISH:
                       return PublishRoute(product: settings.arguments);
+                    case ROUTE_USER_HOME:
+                      return UserHomeRoute(user: settings.arguments);
                     default:
                       return Scaffold(
                         appBar: AppBar(),

@@ -156,7 +156,7 @@
         "del_publish": "下架商品",
         "confirm_buy": "确认购买",
         "ok": "确定",
-        "focus": "关注"
+        "follow": "关注"
     },
     "combo_text": {
         "consignee": "收货人:  @s",
@@ -177,5 +177,14 @@
     },
     "user_follow": {
         "title": "我关注的"
+    },
+    "user_fans": {
+        "title": "我的粉丝"
+    },
+    "user_home": {
+        "other_publish": "他发布的",
+        "other_follow": "他关注的",
+        "other_fans": "他的粉丝",
+        "order_detail": "订单详情"
     }
 }

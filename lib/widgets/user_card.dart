@@ -76,6 +76,7 @@ class UserCard extends StatelessWidget {
                         fontSize: 14,
                         width: 80,
                         height: 30,
+                        active: !(provider.isMe),
                         onTap: provider.updateUser,
                         text: provider.hasFollow ? provider.translate('user_card.followed') : provider.translate('user_card.follow'),
                       )
@@ -107,6 +108,11 @@ class UserCardProvider extends BaseProvider {
     return flag;
   }
 
+  bool get isMe {
+    final me = Provider.of<UserModel>(context, listen: false).user;
+    return _user.userid == me.userid;
+  }
+
   int counter = 0;
 
   updateUser() async {
@@ -122,6 +128,8 @@ class UserCardProvider extends BaseProvider {
 
   @override
   void dispose() {
+    _user = null;
+    _updateUser = null;
     super.dispose();
   }
 }

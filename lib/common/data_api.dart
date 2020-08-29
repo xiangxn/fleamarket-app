@@ -303,6 +303,12 @@ class DataApi {
     return await _search(query);
   }
 
+  Future<BaseReply> getProductsByPublisher(int userid, int pageNo, int pageSize) async {
+    String query = "{productByPublisher(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
+    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{userid,head,nickname},photos}}}";
+    return await _search(query);
+  }
+
   Future<BaseReply> searchProductByTitle(String title, int pageNo, int pageSize, {int userid = 0}) async {
     String query = "{productByTitle(title:\"$title\",pageNo:$pageNo,pageSize:$pageSize)";
     if (userid > 0) query = "{productByTitle(userid:$userid,title:\"$title\",pageNo:$pageNo,pageSize:$pageSize)";

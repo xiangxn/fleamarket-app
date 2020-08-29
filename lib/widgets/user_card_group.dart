@@ -27,16 +27,15 @@ class UserCardGroup extends StatelessWidget {
               future: provider.fetch(isRefresh: true),
               builder: (ctx, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  var page = provider.page;
                   return CustomRefreshIndicator(
                     onRefresh: () => provider.fetch(isRefresh: true),
                     onLoad: provider.fetch,
                     child: ListView.builder(
                         controller: controller,
                         physics: ClampingScrollPhysics(),
-                        itemCount: page.data.length,
+                        itemCount: provider.page.data.length,
                         itemBuilder: (_, i) => Selector<UserCardGroupProvider, User>(
-                              selector: (_, __) => page.data[i],
+                              selector: (_, provider) => provider.page.data[i],
                               builder: (_, user, __) {
                                 return UserCard(
                                   key: randomKey(),
@@ -74,6 +73,7 @@ class UserCardGroupProvider extends BaseProvider {
     }
     var data = await _refresh(pageNo: _page.pageNo, pageSize: _page.pageSize);
     data.update(_page.data);
+    if (data.hasMore()) data.pageNo += 1;
     _page = data;
     setBusy();
     notifyListeners();
@@ -81,7 +81,6 @@ class UserCardGroupProvider extends BaseProvider {
 
   Future<void> updateUser({User obj}) async {
     int inx = _page.data.indexWhere((u) => u.userid == obj.userid);
-    _page.data[inx] = obj.clone()..fansTotal -= 1;
     if (_updateUser != null) await _updateUser(obj: _page.data[inx]);
     notifyListeners();
   }
