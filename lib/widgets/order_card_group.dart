@@ -69,6 +69,9 @@ class OrderCardGroupProvider extends BaseProvider {
     var data = await _refresh(pageNo: _page.pageNo, pageSize: _page.pageSize);
     data.update(_page.data);
     _page = data;
+    if (_page.hasMore()) {
+      _page.pageNo += 1;
+    }
     setBusy();
   }
 
