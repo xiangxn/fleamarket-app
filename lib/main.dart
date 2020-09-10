@@ -14,11 +14,13 @@ import 'common/constant.dart';
 import 'common/global.dart';
 import 'routes/publish.dart';
 import 'routes/search.dart';
+import 'routes/user_buys.dart';
 import 'routes/user_edit.dart';
 import 'routes/user_favorite.dart';
 import 'routes/user_follow.dart';
 import 'routes/user_home.dart';
 import 'routes/user_publish.dart';
+import 'routes/user_sells.dart';
 import 'states/locale.dart';
 import 'states/theme.dart';
 import 'states/user.dart';
@@ -94,7 +96,9 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_FAVORITE: (context) => UserFavoriteRoute(),
               ROUTE_USER_FOLLOW: (context) => UserFollowRoute(),
               ROUTE_USER_FANS: (context) => UserFansRoute(),
-              ROUTE_USER_PUBLISH: (context) => UserPublishRoute()
+              ROUTE_USER_PUBLISH: (context) => UserPublishRoute(),
+              ROUTE_USER_BUY: (context) => UserBuysRoute(),
+              ROUTE_USER_SELL: (context) => UserSellsRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(

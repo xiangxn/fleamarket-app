@@ -19,13 +19,15 @@ class UserPublishRoute extends StatelessWidget {
     Color color = Colors.black;
 
     if (status == 0) {
-      color = Colors.green;
-    } else if (status == 1) {
-      color = Colors.orange;
-    } else if (status == 2) {
       color = Colors.red;
-    } else if (status == 3) {
+    } else if (status == 100) {
+      color = Colors.green;
+    } else if (status == 200) {
+      color = Colors.orange;
+    } else if (status == 300) {
       color = Colors.grey;
+    } else if (status == 400) {
+      color = Colors.red;
     }
     return Text(provider.translate('product_type.$status'), style: TextStyle(color: color));
   }

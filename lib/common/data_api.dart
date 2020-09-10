@@ -390,9 +390,25 @@ class DataApi {
     return null;
   }
 
-  Future<dynamic> fetchBuyByUser(int userid, int pageNo, int pageSize) async {}
+  Future<BaseReply> fetchBuysByUser(int userid, int pageNo, int pageSize) async {
+    String query = "{orderByBuyer(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
+    query += "{pageNo,pageSize,totalCount,list{";
+    query += "orderid,seller,buyer,status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
+    query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,";
+    query += "productInfo{productId,title,photos}";
+    query += "}}}";
+    return await _search(query);
+  }
 
-  Future<dynamic> fetchSellByUser(int userid, int pageNo, int pageSize) async {}
+  Future<BaseReply> fetchSellerByUser(int userid, int pageNo, int pageSize) async {
+    String query = "{orderBySeller(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
+    query += "{pageNo,pageSize,totalCount,list{";
+    query += "orderid,seller,buyer,status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
+    query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,";
+    query += "productInfo{productId,title,photos}";
+    query += "}}}";
+    return await _search(query);
+  }
 
   Future<dynamic> fetchOrder(int orderid) async {}
 
