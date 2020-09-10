@@ -395,7 +395,7 @@ class DataApi {
     query += "{pageNo,pageSize,totalCount,list{";
     query += "orderid,seller,buyer,status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,";
-    query += "productInfo{productId,title,photos}";
+    query += "productInfo{productId,title,photos,price,postage}";
     query += "}}}";
     return await _search(query);
   }
@@ -405,7 +405,7 @@ class DataApi {
     query += "{pageNo,pageSize,totalCount,list{";
     query += "orderid,seller,buyer,status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,";
-    query += "productInfo{productId,title,photos}";
+    query += "productInfo{productId,title,photos,price,postage}";
     query += "}}}";
     return await _search(query);
   }

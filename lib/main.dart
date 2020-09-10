@@ -12,6 +12,7 @@ import 'package:provider/single_child_widget.dart';
 import 'common/chinese_cupertino.dart';
 import 'common/constant.dart';
 import 'common/global.dart';
+import 'routes/order_detail.dart';
 import 'routes/publish.dart';
 import 'routes/search.dart';
 import 'routes/user_buys.dart';
@@ -111,6 +112,8 @@ class MyApp extends StatelessWidget {
                       return PublishRoute(product: settings.arguments);
                     case ROUTE_USER_HOME:
                       return UserHomeRoute(user: settings.arguments);
+                    case ROUTE_ORDER_DETAIL:
+                      return OrderDetailRoute(order: settings.arguments);
                     default:
                       return Scaffold(
                         appBar: AppBar(),
