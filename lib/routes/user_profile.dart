@@ -156,7 +156,7 @@ class UserProfilePage extends StatelessWidget {
                           text: provider.translate('user_profile.mine_recommended'),
                           subText: (user?.referralTotal ?? 0).toString(),
                           prefixIcon: Icons.account_box,
-                          onTap: () => provider.pushNamed(ROUTE_USER_INVITE),
+                          onTap: () => provider.pushNamed(ROUTE_USER_INVITED),
                         ),
                       ]),
                       LineButtonGroup(margin: EdgeInsets.only(top: 10), children: [

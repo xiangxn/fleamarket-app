@@ -172,31 +172,25 @@ class DataApi {
   }
 
   Future<BaseReply> getFollowByUser(int userid, int pageNo, int pageSize) async {
-    var query = "{followByUser(userid:" +
-        userid.toString() +
-        ", pageNo:" +
-        pageNo.toString() +
-        ", pageSize:" +
-        pageSize.toString() +
-        ")" +
+    var query = "{followByUser(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)" +
         " {pageNo,pageSize,totalCount,list{follower{userid,eosid,status,nickname,head,fansTotal,creditValue,isReviewer}}}}";
     return await _search(query);
   }
 
   Future<BaseReply> getFollowByFollower(int userid, int pageNo, int pageSize) async {
-    var query = "{followByFollower(userid:" +
-        userid.toString() +
-        ", pageNo:" +
-        pageNo.toString() +
-        ", pageSize:" +
-        pageSize.toString() +
-        ")" +
+    var query = "{followByFollower(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)" +
         " {pageNo,pageSize,totalCount,list{user{userid,eosid,status,nickname,head,fansTotal,creditValue,isReviewer}}}}";
     return await _search(query);
   }
 
   Future<BaseReply> getRecAddrByUser(int userid) async {
     var query = "{recAddrByUser(userid:" + userid.toString() + "){rid,province,city,district,phone,name,address,postcode,default}}";
+    return await _search(query);
+  }
+
+  Future<BaseReply> getInvitedUser(int userid, int pageNo, int pageSize) async {
+    var query = "{userInvited(ref:\"$userid\",pageNo:$pageNo,pageSize:$pageSize)" +
+        "{pageNo,pageSize,totalCount,list{userid,eosid,status,nickname,head,fansTotal,creditValue,isReviewer}}}";
     return await _search(query);
   }
 
