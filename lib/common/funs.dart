@@ -64,6 +64,11 @@ formatPrice2(String price) {
   return "";
 }
 
+formatPrice3(double price) {
+  if (price % price.floor() == 0) return price.floor().toString();
+  return price.toString();
+}
+
 Key randomKey() {
   return Key(DateTime.now().toIso8601String() + Random.secure().nextInt(10000).toString());
 }

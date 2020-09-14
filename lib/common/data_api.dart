@@ -406,6 +406,14 @@ class DataApi {
 
   Future<dynamic> fetchOrder(int orderid) async {}
 
+  Future<List<Holding>> getUserBalances(String eosid) async {
+    EOSClient client = EOSClient(URL_EOS_API, "v1");
+    var res = await client.getCurrencyBalance("eosio.token", eosid);
+    final res2 = await client.getCurrencyBalance(CONTRACT_NAME, eosid);
+    res.addAll(res2);
+    return res;
+  }
+
   Future<bool> publishProduct(EOSPrivateKey actKey, String eosid, int userId, Map product, [Map productAuction]) async {
     final token = await getToken();
     TransactionRequest tr = TransactionRequest();

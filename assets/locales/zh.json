@@ -145,7 +145,7 @@
         "password_error": "密码错误"
     },
     "controller": {
-        "copy_pubkey": "@s 已复制到剪贴板",
+        "copy_pubkey": "{value} 已复制到剪贴板",
         "add": "新增",
         "edit": "编辑",
         "delete": "删除",
@@ -227,5 +227,14 @@
     },
     "user_invited": {
         "title": "我邀请的"
+    },
+    "user_balances": {
+        "title": "我的资产"
+    },
+    "user_keys": {
+        "title": "我的密钥",
+        "owner": "所有权公钥",
+        "active": "活动权公钥",
+        "auth": "平台授权公钥"
     }
 }

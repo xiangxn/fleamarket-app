@@ -15,12 +15,14 @@ import 'common/global.dart';
 import 'routes/order_detail.dart';
 import 'routes/publish.dart';
 import 'routes/search.dart';
+import 'routes/user_balances.dart';
 import 'routes/user_buys.dart';
 import 'routes/user_edit.dart';
 import 'routes/user_favorite.dart';
 import 'routes/user_follow.dart';
 import 'routes/user_home.dart';
 import 'routes/user_invited.dart';
+import 'routes/user_keys.dart';
 import 'routes/user_publish.dart';
 import 'routes/user_sells.dart';
 import 'states/locale.dart';
@@ -101,7 +103,9 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_PUBLISH: (context) => UserPublishRoute(),
               ROUTE_USER_BUY: (context) => UserBuysRoute(),
               ROUTE_USER_SELL: (context) => UserSellsRoute(),
-              ROUTE_USER_INVITED:(context)=>UserInvitedRoute()
+              ROUTE_USER_INVITED: (context) => UserInvitedRoute(),
+              ROUTE_USER_BALANCES: (context) => UserBalancesRoute(),
+              ROUTE_USER_KEYS: (context) => UserKeysRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(

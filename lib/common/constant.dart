@@ -10,6 +10,10 @@ const DEFAULT_HEAD = 'https://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4Pcskkf
 const int TIMER_RESET = 60;
 const KEY_AMAP = "92e8c56420d01d5e106deaad56e0505f";
 
+const KEY_NAME_OWNER = 'owner';
+const KEY_NAME_ACTIVE = 'active';
+const KEY_NAME_AUTH = 'auth';
+
 //ROUTE
 const ROUTE_HOME = "/";
 const ROUTE_LOGIN = "login";
