@@ -41,6 +41,19 @@ DataPage<T> convertPageList<T extends GeneratedMessage>(Any data, String key, T 
   return DataPage<T>.fromJson(json[key], type, key2: key2);
 }
 
+List<T> convertList<T extends GeneratedMessage>(Any data, String key, T type) {
+  var val = StringValue();
+  data.unpackInto(val);
+  final json = jsonDecode(val.value);
+  List<T> list = [];
+  (json[key] as List).forEach((e) {
+    var obj = type.createEmptyInstance();
+    obj.mergeFromProto3Json(e);
+    list.add(obj);
+  });
+  return list;
+}
+
 List<EOSPrivateKey> generateKeys(String phone, String password) {
   EOSPrivateKey ownerKey = EOSPrivateKey.fromSeed('$phone $password owner');
   EOSPrivateKey activeKey = EOSPrivateKey.fromSeed('$phone $password active');

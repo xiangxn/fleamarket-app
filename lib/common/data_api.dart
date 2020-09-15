@@ -459,4 +459,55 @@ class DataApi {
       return false;
     }
   }
+
+  Future<List<Map<String, dynamic>>> getCoins() async {
+    EOSClient client = EOSClient(URL_EOS_API, "v1");
+    return await client.getTableRows(CONTRACT_NAME, CONTRACT_NAME, "coins");
+  }
+
+  Future<BaseReply> getCoinAddrs(int userid) async {
+    String query = "{withdrawAddr(userid:$userid){oaid,coinType,addr}}";
+    return await _search(query);
+  }
+
+  Future<bool> setCoinAddr(EOSPrivateKey actKey, String eosid, int userId, OtherAddr addr) async {
+    final token = await getToken();
+    TransactionRequest tr = TransactionRequest();
+    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
+    List<Authorization> auth = [
+      // Authorization()
+      //   ..actor = CONTRACT_NAME
+      //   ..permission = 'active',
+      Authorization()
+        ..actor = eosid
+        ..permission = 'active'
+    ];
+    Map data = {'uid': userId, 'user_eosid': eosid, 'sym': addr.coinType, 'addr': addr.addr};
+    List<Action> actions = [
+      Action()
+        ..account = CONTRACT_NAME
+        ..name = 'bindaddr'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+    final serTrxArgs = await client.createTransaction(transaction);
+    // print("serTrxArgs:$serTrxArgs");
+    final trx = {
+      'signatures': serTrxArgs.signatures,
+      'compression': 0,
+      'packed_context_free_data': '',
+      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
+    };
+    tr.trx = jsonEncode(trx);
+    // print("trx:$tr");
+    try {
+      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
+      // print("result:$result");
+      return result.code == 0;
+    } on GrpcError catch (e) {
+      print(e.message);
+      return false;
+    }
+  }
 }

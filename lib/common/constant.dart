@@ -13,6 +13,7 @@ const KEY_AMAP = "92e8c56420d01d5e106deaad56e0505f";
 const KEY_NAME_OWNER = 'owner';
 const KEY_NAME_ACTIVE = 'active';
 const KEY_NAME_AUTH = 'auth';
+const TAG_SHOW_CNY = false;
 
 //ROUTE
 const ROUTE_HOME = "/";
@@ -34,8 +35,8 @@ const ROUTE_USER_BALANCES = 'mineBalances';
 const ROUTE_USER_KEYS = 'mineKeys';
 const ROUTE_USER_ADDRESS = 'mineAddress';
 const ROUTE_EDIT_ADDRESS = 'editAddress';
-const ROUTE_USER_WITHDRAWAL = 'mineWithdrawal';
-const ROUTE_EDIT_WITHDRAWAL = 'editWithdrawal';
+const ROUTE_USER_WITHDRAWADDR = 'mineWithdrawal';
+const ROUTE_EDIT_WITHDRAWADDR = 'editWithdrawal';
 const ROUTE_USER_VOTE = 'mineVote';
 const ROUTE_TRY_REVIEWER = 'tryReviewer';
 const ROUTE_AUDIT_GOODS = 'auditGoods';

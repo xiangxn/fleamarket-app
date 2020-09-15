@@ -236,5 +236,11 @@
         "owner": "所有权公钥",
         "active": "活动权公钥",
         "auth": "平台授权公钥"
+    },
+    "user_withdraw_addr": {
+        "title": "提现地址",
+        "edit_title": "编辑提现地址",
+        "hint": "请输入或粘贴提现地址",
+        "set_error":"设置地址失败，请稍后再试"
     }
 }
