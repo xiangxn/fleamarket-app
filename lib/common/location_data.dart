@@ -8,6 +8,19 @@ import 'package:permission_handler/permission_handler.dart';
 import 'constant.dart';
 import 'data_api.dart';
 
+class Address {
+  String code;
+  District privonce;
+  District city;
+  District district;
+  Address({this.code, this.privonce, this.city, this.district});
+
+  @override
+  String toString() {
+    return '${privonce.name} ${city?.name ?? ''} ${district.name}';
+  }
+}
+
 class LocationData {
   DataApi _api;
   String _adcode;
@@ -22,7 +35,7 @@ class LocationData {
     fetchDistricts();
   }
 
-  String getAddress([String adcode]) {
+  Address getAddress([String adcode]) {
     adcode ??= _adcode;
     if (adcode != null && _district != null) {
       String privonceCode = adcode.substring(0, 2) + '0000';
@@ -36,7 +49,7 @@ class LocationData {
       } else {
         district = privonce.districts.firstWhere((d) => d.adcode == adcode);
       }
-      return '${privonce.name} ${city?.name ?? ''} ${district.name}';
+      return Address(code: adcode, privonce: privonce, city: city, district: district);
     }
     return null;
   }

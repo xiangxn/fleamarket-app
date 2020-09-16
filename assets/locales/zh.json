@@ -160,9 +160,9 @@
         "follow": "关注"
     },
     "combo_text": {
-        "consignee": "收货人:  @s",
-        "contact": "联系方式:  @s",
-        "shipping_address": "收货地址:  @s",
+        "consignee": "收货人:  {name}",
+        "contact": "联系方式:  {value}",
+        "shipping_address": "收货地址:  {addr}",
         "user_credit": "信用分:  {amount}",
         "vote_count": "票数:  @s",
         "favorite_count": "收藏数:  {count}",
@@ -242,5 +242,21 @@
         "edit_title": "编辑提现地址",
         "hint": "请输入或粘贴提现地址",
         "set_error":"设置地址失败，请稍后再试"
+    },
+    "user_address":{
+        "title":"收货地址",
+        "no_data_address": "没有收货地址",
+        "add_address": "新增收货地址",
+        "edit_address": "编辑收货地址",
+        "consignee":"收货人",
+        "hint_consignee": "请填写收货人",
+        "contact": "联系方式",
+        "hint_contact": "请填写联系方式",
+        "location": "省市区",
+        "hint_location": "请选择省市区",
+        "address": "详细地址",
+        "hint_address": "请填写详细地址",
+        "postcode": "邮编",
+        "hint_postcode": "请填写邮编，默认为000000"
     }
 }

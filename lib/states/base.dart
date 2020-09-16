@@ -41,7 +41,7 @@ class BaseProvider extends ChangeNotifier {
   }
 
   confirm(String msg, {String title, Function callback}) {
-    ExtDialog.confirm(context, msg, title).then((val) => callback(val) ?? null);
+    return ExtDialog.confirm(context, msg, title).then((val) => callback == null ? val : callback(val));
   }
 
   Future<T> pushNamed<T>(String routeName, {Object arguments}) {

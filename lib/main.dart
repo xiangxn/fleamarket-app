@@ -15,6 +15,8 @@ import 'common/global.dart';
 import 'routes/order_detail.dart';
 import 'routes/publish.dart';
 import 'routes/search.dart';
+import 'routes/user_address.dart';
+import 'routes/user_address_edit.dart';
 import 'routes/user_balances.dart';
 import 'routes/user_buys.dart';
 import 'routes/user_edit.dart';
@@ -108,7 +110,8 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_INVITED: (context) => UserInvitedRoute(),
               ROUTE_USER_BALANCES: (context) => UserBalancesRoute(),
               ROUTE_USER_KEYS: (context) => UserKeysRoute(),
-              ROUTE_USER_WITHDRAWADDR: (context) => UserWithdrawAddrRoute()
+              ROUTE_USER_WITHDRAWADDR: (context) => UserWithdrawAddrRoute(),
+              ROUTE_USER_ADDRESS: (context) => UserAddressRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(
@@ -125,6 +128,8 @@ class MyApp extends StatelessWidget {
                       return OrderDetailRoute(order: settings.arguments);
                     case ROUTE_EDIT_WITHDRAWADDR:
                       return UserEditWithdrawAddrRoute(coin: settings.arguments);
+                    case ROUTE_EDIT_ADDRESS:
+                      return UserAddressEditRoute(address: settings.arguments);
                     default:
                       return Scaffold(
                         appBar: AppBar(),

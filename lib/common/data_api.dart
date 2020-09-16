@@ -184,7 +184,7 @@ class DataApi {
   }
 
   Future<BaseReply> getRecAddrByUser(int userid) async {
-    var query = "{recAddrByUser(userid:" + userid.toString() + "){rid,province,city,district,phone,name,address,postcode,default}}";
+    var query = "{recAddrByUser(userid:" + userid.toString() + "){rid,province,city,district,phone,name,address,postcode,isDefault}}";
     return await _search(query);
   }
 
@@ -218,6 +218,7 @@ class DataApi {
   Future<bool> delRecAddr(AddressRequest addr) async {
     final token = await getToken();
     final res = await _client.delAddress(addr, options: CallOptions(metadata: {'token': token}));
+    print("res:$res");
     return res.code == 0;
   }
 

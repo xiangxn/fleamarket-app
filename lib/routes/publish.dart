@@ -327,8 +327,8 @@ class PublishProvider extends BaseProvider {
       title: translate('publish.address_selector'),
       locationData: _locationData,
     );
-    String local = await this.showDialog(screen);
-    _location = local;
+    Address local = await this.showDialog(screen);
+    _location = local.toString();
     notifyListeners();
   }
 
@@ -393,7 +393,7 @@ class PublishProvider extends BaseProvider {
     if (this._isUpdate) {
       if (await super.confirm(translate('message.goods_re_publish'))) {
         // toast('重新编辑');
-        super.pop();
+        pop();
       }
     } else {
       final um = Provider.of<UserModel>(context, listen: false);
