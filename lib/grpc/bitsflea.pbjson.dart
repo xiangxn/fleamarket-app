@@ -230,7 +230,7 @@ const AddressRequest$json = const {
     const {'1': 'name', '3': 7, '4': 1, '5': 9, '10': 'name'},
     const {'1': 'address', '3': 8, '4': 1, '5': 9, '10': 'address'},
     const {'1': 'postcode', '3': 9, '4': 1, '5': 9, '10': 'postcode'},
-    const {'1': 'default', '3': 10, '4': 1, '5': 5, '10': 'default'},
+    const {'1': 'isDefault', '3': 10, '4': 1, '5': 8, '10': 'isDefault'},
   ],
 };
 
@@ -423,6 +423,6 @@ const ReceiptAddress$json = const {
     const {'1': 'name', '3': 7, '4': 1, '5': 9, '10': 'name'},
     const {'1': 'address', '3': 8, '4': 1, '5': 9, '10': 'address'},
     const {'1': 'postcode', '3': 9, '4': 1, '5': 9, '10': 'postcode'},
-    const {'1': 'default', '3': 10, '4': 1, '5': 8, '10': 'default'},
+    const {'1': 'isDefault', '3': 10, '4': 1, '5': 8, '10': 'isDefault'},
   ],
 };

@@ -1409,7 +1409,7 @@ class AddressRequest extends $pb.GeneratedMessage {
     ..aOS(7, 'name')
     ..aOS(8, 'address')
     ..aOS(9, 'postcode')
-    ..a<$core.int>(10, 'default', $pb.PbFieldType.O3)
+    ..aOB(10, 'isDefault', protoName: 'isDefault')
     ..hasRequiredFields = false;
 
   AddressRequest._() : super();
@@ -1543,16 +1543,16 @@ class AddressRequest extends $pb.GeneratedMessage {
   void clearPostcode() => clearField(9);
 
   @$pb.TagNumber(10)
-  $core.int get default_10 => $_getIZ(9);
+  $core.bool get isDefault => $_getBF(9);
   @$pb.TagNumber(10)
-  set default_10($core.int v) {
-    $_setSignedInt32(9, v);
+  set isDefault($core.bool v) {
+    $_setBool(9, v);
   }
 
   @$pb.TagNumber(10)
-  $core.bool hasDefault_10() => $_has(9);
+  $core.bool hasIsDefault() => $_has(9);
   @$pb.TagNumber(10)
-  void clearDefault_10() => clearField(10);
+  void clearIsDefault() => clearField(10);
 }
 
 class SetDefaultAddrRequest extends $pb.GeneratedMessage {
@@ -2654,7 +2654,7 @@ class ReceiptAddress extends $pb.GeneratedMessage {
     ..aOS(7, 'name')
     ..aOS(8, 'address')
     ..aOS(9, 'postcode')
-    ..aOB(10, 'default')
+    ..aOB(10, 'isDefault', protoName: 'isDefault')
     ..hasRequiredFields = false;
 
   ReceiptAddress._() : super();
@@ -2788,14 +2788,14 @@ class ReceiptAddress extends $pb.GeneratedMessage {
   void clearPostcode() => clearField(9);
 
   @$pb.TagNumber(10)
-  $core.bool get default_10 => $_getBF(9);
+  $core.bool get isDefault => $_getBF(9);
   @$pb.TagNumber(10)
-  set default_10($core.bool v) {
+  set isDefault($core.bool v) {
     $_setBool(9, v);
   }
 
   @$pb.TagNumber(10)
-  $core.bool hasDefault_10() => $_has(9);
+  $core.bool hasIsDefault() => $_has(9);
   @$pb.TagNumber(10)
-  void clearDefault_10() => clearField(10);
+  void clearIsDefault() => clearField(10);
 }
