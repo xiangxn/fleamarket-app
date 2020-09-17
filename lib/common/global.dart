@@ -32,7 +32,7 @@ class Global {
     if (_profile != null) {
       try {
         profile = Profile.fromJson(jsonDecode(_profile));
-        print("global init: $profile");
+        console("global init: $profile");
       } catch (e) {
         print(e);
       }
@@ -50,4 +50,8 @@ class Global {
   static removeProfile() => _prefs.remove("profile");
 
   static SharedPreferences get prefs => _prefs;
+
+  static console(Object msg) {
+    if (isRelease == false) print(msg);
+  }
 }

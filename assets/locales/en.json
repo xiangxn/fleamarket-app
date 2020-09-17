@@ -63,8 +63,6 @@
         "mine_keys": "我的密钥",
         "mine_address": "收货地址",
         "mine_withdrawal": "提现地址",
-        "version": "当前版本",
-        "about": "关于我们",
         "logout": "退出登录",
         "user_normal": "普通用户",
         "user_reviewer": "评审员",
@@ -241,14 +239,14 @@
         "title": "提现地址",
         "edit_title": "编辑提现地址",
         "hint": "请输入或粘贴提现地址",
-        "set_error":"设置地址失败，请稍后再试"
+        "set_error": "设置地址失败，请稍后再试"
     },
-    "user_address":{
-        "title":"收货地址",
+    "user_address": {
+        "title": "收货地址",
         "no_data_address": "没有收货地址",
         "add_address": "新增收货地址",
         "edit_address": "编辑收货地址",
-        "consignee":"收货人",
+        "consignee": "收货人",
         "hint_consignee": "请填写收货人",
         "contact": "联系方式",
         "hint_contact": "请填写联系方式",
@@ -258,5 +256,16 @@
         "hint_address": "请填写详细地址",
         "postcode": "邮编",
         "hint_postcode": "请填写邮编，默认为000000"
+    },
+    "setting": {
+        "title": "Settings",
+        "version": "Version",
+        "language": "Language",
+        "theme": "Theme",
+        "about": "About us",
+        "select_local": "Select Language",
+        "zh_CN": "中文简体",
+        "en_US": "English",
+        "null": "Default"
     }
 }

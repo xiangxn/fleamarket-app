@@ -201,9 +201,8 @@ class UserProfilePage extends StatelessWidget {
                       LineButtonGroup(
                         margin: EdgeInsets.only(top: 10),
                         children: [
-                          LineButtonItem(text: provider.translate('user_profile.version'), subText: Global.appInfo.version, prefixIcon: Icons.info),
                           LineButtonItem(
-                              text: provider.translate('user_profile.about'), prefixIcon: Icons.insert_emoticon, onTap: () => provider.pushNamed(ROUTE_ABOUT))
+                              text: provider.translate('setting.title'), prefixIcon: Icons.settings, onTap: () => provider.pushNamed(ROUTE_SETTING))
                         ],
                       ),
                       Container(

@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:bitsflea/states/profile.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class LocaleModel extends ProfileChangeNotifier {
   // 获取当前用户的APP语言配置Locale类，如果为null，则语言跟随系统语言
@@ -14,9 +16,10 @@ class LocaleModel extends ProfileChangeNotifier {
   String get locale => profile.locale;
 
   // 用户改变APP语言后，通知依赖项更新，新语言会立即生效
-  set locale(String locale) {
+  setLocale(BuildContext context, String locale) async {
     if (locale != profile.locale) {
       profile.locale = locale;
+      await FlutterI18n.refresh(context, getLocale());
       notifyListeners();
     }
   }

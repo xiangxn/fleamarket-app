@@ -12,7 +12,7 @@ class ChineseCupertinoLocalizations implements CupertinoLocalizations {
 
   Future init() async {
     ml = await materialDelegate.load(local);
-    print(ml.pasteButtonLabel);
+    // print(ml.pasteButtonLabel);
   }
 
   @override

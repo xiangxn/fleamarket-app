@@ -6,6 +6,7 @@ const URL_EOS_API = 'https://api-bostest.blockzone.net';
 //const String URL_EOS_API = 'http://127.0.0.1:8888';
 const URL_IPFS_GATEWAY = "https://source.bitsflea.com:10001/ipfs/";
 const DEFAULT_HEAD = 'https://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';
+
 /// 短信重发延时
 const int TIMER_RESET = 60;
 const KEY_AMAP = "92e8c56420d01d5e106deaad56e0505f";
@@ -25,7 +26,7 @@ const ROUTE_CREATE_ORDER = "createOrder";
 const ROUTE_USER_EDIT = "userEdit";
 const ROUTE_USER_HOME = 'userHome';
 const ROUTE_USER_FAVORITE = 'userFavorite';
-const ROUTE_USER_FOLLOW= 'userFollow';
+const ROUTE_USER_FOLLOW = 'userFollow';
 const ROUTE_USER_FANS = 'mineFans';
 const ROUTE_USER_PUBLISH = 'minePublish';
 const ROUTE_USER_BUY = 'mineBuy';
@@ -43,6 +44,7 @@ const ROUTE_AUDIT_GOODS = 'auditGoods';
 const ROUTE_ORDER_DETAIL = 'orderDetail';
 const ROUTE_LOGISTICS = 'logistics';
 const ROUTE_ABOUT = 'about';
+const ROUTE_SETTING = "setting";
 
 //Store
 const STORE_SEARCH_HISTORY = "searchHistory";
@@ -56,4 +58,3 @@ const CITY_LV = 'city';
 const CACHE_DISTRICT = 'cacheDisrict';
 const COUNTRY_LV = 'country';
 const DISTRICT_LV = 'district';
-

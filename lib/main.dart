@@ -15,6 +15,7 @@ import 'common/global.dart';
 import 'routes/order_detail.dart';
 import 'routes/publish.dart';
 import 'routes/search.dart';
+import 'routes/setting.dart';
 import 'routes/user_address.dart';
 import 'routes/user_address_edit.dart';
 import 'routes/user_balances.dart';
@@ -111,7 +112,8 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_BALANCES: (context) => UserBalancesRoute(),
               ROUTE_USER_KEYS: (context) => UserKeysRoute(),
               ROUTE_USER_WITHDRAWADDR: (context) => UserWithdrawAddrRoute(),
-              ROUTE_USER_ADDRESS: (context) => UserAddressRoute()
+              ROUTE_USER_ADDRESS: (context) => UserAddressRoute(),
+              ROUTE_SETTING: (context) => SettingRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(
