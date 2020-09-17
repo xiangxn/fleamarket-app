@@ -9,7 +9,8 @@ class LocaleModel extends ProfileChangeNotifier {
   Locale getLocale() {
     if (profile.locale == null) return null;
     var t = profile.locale.split("_");
-    return Locale(t[0], t[1]);
+    // return Locale(t[0], t[1]);
+    return Locale(t[0]);
   }
 
   // 获取当前Locale的字符串表示

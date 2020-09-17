@@ -68,8 +68,10 @@ class MyApp extends StatelessWidget {
             // locale: localeModel.getLocale(),
             //我们只支持美国英语和中文简体
             supportedLocales: [
-              const Locale('zh', 'CN'), // 中文简体
-              const Locale('en', 'US'), // 美国英语
+              // const Locale('zh', 'CN'), // 中文简体
+              // const Locale('en', 'US'), // 美国英语
+              const Locale('zh'), // 中文简体
+              const Locale('en'), // 美国英语
               //其它Locales
             ],
             localizationsDelegates: [
@@ -87,10 +89,11 @@ class MyApp extends StatelessWidget {
                 Locale locale;
                 //APP语言跟随系统语言，如果系统语言不是中文简体或美国英语，
                 //则默认使用中文简体
-                if (supportedLocales.contains(_locale)) {
+                if (supportedLocales.any((e) => e.languageCode == _locale.languageCode)) {
                   locale = _locale;
                 } else {
-                  locale = Locale('zh', 'CN');
+                  // locale = Locale('zh', 'CN');
+                  locale = Locale('zh');
                 }
                 return locale;
               }
