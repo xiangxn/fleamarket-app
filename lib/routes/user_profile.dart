@@ -90,6 +90,12 @@ class UserProfilePage extends StatelessWidget {
                                                     ? provider.translate('user_profile.user_reviewer')
                                                     : provider.translate('user_profile.user_normal'),
                                                 style: TextStyle(color: Colors.grey[900])),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 20),
+                                            child:
+                                                Text(provider.translate("combo_text.user_credit", translationParams: {"amount": user?.creditValue.toString()}),
+                                                style: TextStyle(color: Colors.orange)),
                                           )
                                         ],
                                       ),
@@ -201,8 +207,7 @@ class UserProfilePage extends StatelessWidget {
                       LineButtonGroup(
                         margin: EdgeInsets.only(top: 10),
                         children: [
-                          LineButtonItem(
-                              text: provider.translate('setting.title'), prefixIcon: Icons.settings, onTap: () => provider.pushNamed(ROUTE_SETTING))
+                          LineButtonItem(text: provider.translate('setting.title'), prefixIcon: Icons.settings, onTap: () => provider.pushNamed(ROUTE_SETTING))
                         ],
                       ),
                       Container(
