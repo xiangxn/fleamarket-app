@@ -14,4 +14,6 @@ class ProfileChangeNotifier extends ChangeNotifier {
   void removeProfile() {
     Global.removeProfile();
   }
+
+  void logout() => profile.cleanUser();
 }

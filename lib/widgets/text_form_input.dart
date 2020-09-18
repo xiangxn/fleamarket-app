@@ -1,5 +1,7 @@
+import 'package:bitsflea/states/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 typedef Validator = String Function(String);
 
@@ -50,6 +52,7 @@ class TextFormInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = Provider.of<ThemeModel>(context, listen: false).theme;
     return Container(
       margin: margin,
       padding: padding,
@@ -69,7 +72,7 @@ class TextFormInput extends StatelessWidget {
               fillColor: Colors.white,
               contentPadding: contentPadding ?? EdgeInsets.all(16),
               hintText: hintText,
-              focusedBorder: _commonBorder(Colors.green),
+              focusedBorder: _commonBorder(style.primarySwatch),
               enabledBorder: _commonBorder(Colors.grey[200]),
               errorBorder: _commonBorder(Colors.red),
               focusedErrorBorder: _commonBorder(Colors.red),

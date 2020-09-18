@@ -1,7 +1,6 @@
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
-import 'package:bitsflea/models/profile.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'profile.dart';
 
@@ -39,9 +38,11 @@ class UserModel extends ProfileChangeNotifier {
     notifyListeners();
   }
 
+  @override
   void logout() {
-    Global.profile = new Profile();
-    removeProfile();
+    // Global.profile = new Profile();
+    // removeProfile();
+    super.logout();
     _favorites.clear();
     _follows.clear();
     notifyListeners();

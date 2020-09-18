@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
-import 'package:flutter/material.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 
 class Profile {
@@ -14,7 +14,7 @@ class Profile {
   List<EOSPrivateKey> keys;
 
   Profile() {
-    theme = Colors.red[500].value;
+    theme = Global.themes.keys.first;
     keys = new List<EOSPrivateKey>();
   }
 
@@ -49,5 +49,13 @@ class Profile {
   void setToken(String token, String time) {
     this.token = token;
     this.tokenTime = time;
+  }
+
+  void cleanUser() {
+    this.lastLogin = this.user.userid;
+    this.user = null;
+    this.token = null;
+    this.keys.clear();
+    this.keys = new List<EOSPrivateKey>();
   }
 }
