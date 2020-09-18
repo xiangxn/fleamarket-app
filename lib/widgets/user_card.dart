@@ -24,7 +24,7 @@ class UserCard extends StatelessWidget {
         listen: true,
         provider: UserCardProvider(context, user, updateUser),
         builder: (_, provider, __) {
-          final style = Provider.of<ThemeModel>(context).theme;
+          final style = Provider.of<ThemeModel>(context, listen: false).theme;
           return InkWell(
             onTap: provider.toUserHome,
             child: Padding(

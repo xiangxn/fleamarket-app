@@ -72,7 +72,7 @@ class ProductDetailRoute extends StatelessWidget {
           initialData: false,
           future: provider.fetchProductInfo(),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            final style = Provider.of<ThemeModel>(context).theme;
+            final style = Provider.of<ThemeModel>(context, listen: false).theme;
             if (snapshot.connectionState == ConnectionState.done && snapshot.data) {
               return Scaffold(
                 appBar: AppBar(

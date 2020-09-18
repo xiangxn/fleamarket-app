@@ -31,7 +31,7 @@ class CustomButton extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    final style = Provider.of<ThemeModel>(context).theme;
+    final style = Provider.of<ThemeModel>(context, listen: false).theme;
     return Container(
       margin: margin,
       width: width,

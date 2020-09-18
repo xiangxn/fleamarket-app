@@ -31,7 +31,7 @@ class PublishRoute extends StatelessWidget {
       listen: true,
       provider: PublishProvider(context, product),
       builder: (_, provider, loading) {
-        final style = Provider.of<ThemeModel>(context).theme;
+        final style = Provider.of<ThemeModel>(context, listen: false).theme;
         return Scaffold(
             key: provider.scaffoldKey,
             appBar: AppBar(

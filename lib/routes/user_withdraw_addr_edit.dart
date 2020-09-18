@@ -16,7 +16,7 @@ class UserEditWithdrawAddrRoute extends StatelessWidget {
     return BaseRoute<UserEditWithdrawAddrProvider>(
       provider: UserEditWithdrawAddrProvider(context, coin),
       builder: (_, provider, __) {
-        final style = Provider.of<ThemeModel>(context).theme;
+        final style = Provider.of<ThemeModel>(context, listen: false).theme;
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,

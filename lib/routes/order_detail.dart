@@ -25,7 +25,7 @@ class OrderDetailRoute extends StatelessWidget {
         provider: OrderDetailProvider(context, order),
         builder: (_, provider, loading) {
           final curUser = Provider.of<UserModel>(context).user;
-          final style = Provider.of<ThemeModel>(context).theme;
+          final style = Provider.of<ThemeModel>(context, listen: false).theme;
           bool isSell = provider.order.seller.userid == curUser.userid;
           return Scaffold(
             appBar: AppBar(

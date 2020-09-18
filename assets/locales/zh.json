@@ -266,6 +266,9 @@
         "select_local": "选择语言",
         "zh_CN": "中文简体",
         "en_US": "English",
-        "null": "默认"
+        "null": "默认",
+        "select_theme": "选择主题",
+        "red": "红色",
+        "green": "绿色"
     }
 }

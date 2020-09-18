@@ -20,7 +20,7 @@ class UserEditRoute extends StatelessWidget {
       listen: true,
       provider: UserEditProvider(context),
       builder: (ctx, provider, __) {
-        final style = Provider.of<ThemeModel>(ctx).theme;
+        final style = Provider.of<ThemeModel>(ctx, listen: false).theme;
         final user = Provider.of<UserModel>(ctx).user;
         return Scaffold(
           appBar: AppBar(

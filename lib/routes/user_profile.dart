@@ -45,7 +45,7 @@ class UserProfilePage extends StatelessWidget {
           selector: (_, provider) => provider.currentUser,
           builder: (_, user, __) {
             print("user profile build*************");
-            final style = Provider.of<ThemeModel>(context).theme;
+            final style = Provider.of<ThemeModel>(context, listen: false).theme;
             return CustomRefreshIndicator(
                 onRefresh: provider.refreshUser,
                 child: SingleChildScrollView(

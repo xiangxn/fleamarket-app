@@ -68,7 +68,7 @@ class SearchRoute extends StatelessWidget {
         listen: true,
         provider: SearchProvider(context),
         builder: (_, provider, loading) {
-          final theme = Provider.of<ThemeModel>(context).theme;
+          final theme = Provider.of<ThemeModel>(context, listen: false).theme;
           return Scaffold(
               appBar: AppBar(
                 centerTitle: true,

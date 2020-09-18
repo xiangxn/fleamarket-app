@@ -44,7 +44,7 @@ class UserAddressEditRoute extends StatelessWidget {
       listen: true,
       provider: UserAddressEditProvider(context, address),
       builder: (_, model, __) {
-        final style = Provider.of<ThemeModel>(context).theme;
+        final style = Provider.of<ThemeModel>(context, listen: false).theme;
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,

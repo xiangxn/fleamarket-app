@@ -14,7 +14,7 @@ class DialogSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = Provider.of<ThemeModel>(context).theme;
+    final style = Provider.of<ThemeModel>(context, listen: false).theme;
     return Scaffold(
       appBar: AppBar(
         title: Text(this.title),

@@ -23,7 +23,7 @@ class AddressSelector extends StatelessWidget {
       listen: true,
       provider: AddressSelectorProvider(context, locationData),
       builder: (_, provider, __) {
-        final style = Provider.of<ThemeModel>(context).theme;
+        final style = Provider.of<ThemeModel>(context, listen: false).theme;
         return Scaffold(
           appBar: AppBar(
             title: Text(this.title),

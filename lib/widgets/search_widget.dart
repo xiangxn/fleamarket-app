@@ -76,7 +76,7 @@ class _SearchWidget extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeModel>(context).theme;
+    final theme = Provider.of<ThemeModel>(context, listen: false).theme;
     return Hero(
         tag: 'searchBar',
         child: Material(

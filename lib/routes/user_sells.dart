@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class UserSellsRoute extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    final style = Provider.of<ThemeModel>(context).theme;
+    final style = Provider.of<ThemeModel>(context, listen: false).theme;
     return BaseRoute<UserSellsProvider>(
       provider: UserSellsProvider(context),
       builder: (_, provider, __){

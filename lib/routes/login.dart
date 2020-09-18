@@ -121,7 +121,7 @@ class LoginRoute extends StatelessWidget {
     return BaseRoute<LoginProvider>(
       provider: LoginProvider(context),
       builder: (ctx, provider, __) {
-        final style = Provider.of<ThemeModel>(ctx).theme;
+        final style = Provider.of<ThemeModel>(ctx, listen: false).theme;
         return Scaffold(
           appBar: AppBar(
             title: Text(provider.translate('title')),

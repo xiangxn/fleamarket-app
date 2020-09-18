@@ -50,7 +50,7 @@ class PhotosSelectPage extends StatelessWidget {
       provider: PhotosSelectPageProvider(context, this.maxCount, this.selectedPhotos),
       builder: (_, provider, child) {
         print('photos selector build .......');
-        final style = Provider.of<ThemeModel>(context).theme;
+        final style = Provider.of<ThemeModel>(context, listen: false).theme;
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,

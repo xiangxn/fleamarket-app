@@ -8,17 +8,16 @@ import 'package:bitsflea/widgets/dialog_selector.dart';
 import 'package:bitsflea/widgets/line_button_group.dart';
 import 'package:bitsflea/widgets/line_button_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
 
-class SettingRoute extends StatelessWidget {
+class SettingsRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseRoute<SettingProvider>(
         // listen: true,
         provider: SettingProvider(context),
         builder: (ctx, provider, _) {
-          final style = Provider.of<ThemeModel>(context).theme;
+          final style = Provider.of<ThemeModel>(context,listen: false).theme;
           return Scaffold(
               appBar: AppBar(
                 centerTitle: true,
@@ -38,8 +37,12 @@ class SettingRoute extends StatelessWidget {
                         subText: provider.translate("setting.${provider.language}"),
                         prefixIcon: Icons.language,
                         onTap: () => provider.onSelectLang()),
-                    LineButtonItem(text: provider.translate('setting.theme'), prefixIcon: Icons.style, onTap: () => provider.onSelectStyle()),
-                    LineButtonItem(text: provider.translate('setting.about'), prefixIcon: Icons.insert_emoticon, onTap: () => provider.pushNamed(ROUTE_ABOUT))
+                    LineButtonItem(
+                        text: provider.translate('setting.theme'),
+                        suffix: Icon(Icons.style, color: provider.style),
+                        prefixIcon: Icons.style,
+                        onTap: () => provider.onSelectStyle()),
+                    // LineButtonItem(text: provider.translate('setting.about'), prefixIcon: Icons.insert_emoticon, onTap: () => provider.pushNamed(ROUTE_ABOUT))
                   ],
                 )
               ]));
@@ -49,16 +52,18 @@ class SettingRoute extends StatelessWidget {
 
 class SettingProvider extends BaseProvider {
   String _language;
-  String _style;
+  MaterialColor _style;
 
   SettingProvider(BuildContext context) : super(context) {
     final local = Provider.of<LocaleModel>(context);
+    final theme = Provider.of<ThemeModel>(context, listen: false).theme;
     _language = local.locale;
+    _style = theme.primarySwatch;
   }
 
   String get version => Global.appInfo.version;
   String get language => _language;
-  String get style => _style;
+  MaterialColor get style => _style;
 
   onSelectLang() async {
     final lm = Provider.of<LocaleModel>(context, listen: false);
@@ -76,5 +81,14 @@ class SettingProvider extends BaseProvider {
     // await FlutterI18n.refresh(context, lm.getLocale());
   }
 
-  onSelectStyle() {}
+  onSelectStyle() async {
+    final tm = Provider.of<ThemeModel>(context, listen: false);
+    final screen = DialogSelector(title: translate("setting.select_theme"), data: [
+      {translate("setting.red"): Colors.red},
+      {translate("setting.green"): Colors.green}
+    ]);
+    Map styles = await this.showDialog(screen);
+    _style = styles[styles.keys.first];
+    tm.setTheme(_style[500].value);
+  }
 }

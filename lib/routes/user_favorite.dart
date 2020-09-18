@@ -18,7 +18,7 @@ class UserFavoriteRoute extends StatelessWidget {
       listen: true,
       provider: UserFavoriteProvider(context),
       builder: (_, provider, loading) {
-        final style = Provider.of<ThemeModel>(context).theme;
+        final style = Provider.of<ThemeModel>(context, listen: false).theme;
         return Scaffold(
             appBar: AppBar(
               centerTitle: true,

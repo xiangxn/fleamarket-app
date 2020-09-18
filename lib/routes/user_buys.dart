@@ -15,7 +15,7 @@ class UserBuysRoute extends StatelessWidget {
     return BaseRoute<UserBuysProvider>(
       provider: UserBuysProvider(context),
       builder: (_, provider, __) {
-        final style = Provider.of<ThemeModel>(context).theme;
+        final style = Provider.of<ThemeModel>(context, listen: false).theme;
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,

@@ -22,7 +22,7 @@ class HomeRoute extends StatelessWidget {
           selector: (_, pv) => pv.pageIndex,
           builder: (_, pageIndex, __) {
             print('************************** home view model build **************************');
-            final theme = Provider.of<ThemeModel>(context).theme;
+            final theme = Provider.of<ThemeModel>(context,listen: false).theme;
             return Scaffold(
               appBar: PreferredSize(
                   child: AppBar(
