@@ -17,7 +17,7 @@ class SettingsRoute extends StatelessWidget {
         // listen: true,
         provider: SettingProvider(context),
         builder: (ctx, provider, _) {
-          final style = Provider.of<ThemeModel>(context,listen: false).theme;
+          final style = Provider.of<ThemeModel>(context, listen: false).theme;
           return Scaffold(
               appBar: AppBar(
                 centerTitle: true,
@@ -76,9 +76,11 @@ class SettingProvider extends BaseProvider {
       ],
     );
     Map lang = await this.showDialog(screen);
-    _language = lang[lang.keys.first];
-    await lm.setLocale(context, _language);
-    // await FlutterI18n.refresh(context, lm.getLocale());
+    if (lang != null) {
+      _language = lang[lang.keys.first];
+      await lm.setLocale(context, _language);
+      // await FlutterI18n.refresh(context, lm.getLocale());
+    }
   }
 
   onSelectStyle() async {
@@ -88,7 +90,9 @@ class SettingProvider extends BaseProvider {
       {translate("setting.green"): Colors.green}
     ]);
     Map styles = await this.showDialog(screen);
-    _style = styles[styles.keys.first];
-    tm.setTheme(_style[500].value);
+    if (styles != null) {
+      _style = styles[styles.keys.first];
+      tm.setTheme(_style[500].value);
+    }
   }
 }
