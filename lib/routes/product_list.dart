@@ -14,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
-
-
 class ProductList extends StatefulWidget {
   ProductList({
     Key key,
@@ -224,9 +222,13 @@ class ProductListProvider extends BaseProvider {
     }
   }
 
-  onLoad(int categoryid) async {
+  Future<bool> onLoad(int categoryid) async {
+    int hc = 0;
     if (productPage.hasMore()) {
+      hc = productPage.hashCode;
       await this.onRefresh(categoryid: categoryid);
+      return hc != productPage.hashCode;
     }
+    return false;
   }
 }

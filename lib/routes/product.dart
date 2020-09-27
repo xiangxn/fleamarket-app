@@ -125,9 +125,13 @@ class ProductProvider extends BaseProvider implements TickerProvider {
     // print("res:$res");
     if (res.code == 0) {
       var data = convertPageList<Product>(res.data, "productByCid", Product());
-      data.update(page.data);
-      _map[categoryid] = data;
-      return data;
+      if (data.data.length > 0) {
+        data.update(page.data);
+        _map[categoryid] = data;
+        return data;
+      } else {
+        return page;
+      }
     }
     return page;
   }
