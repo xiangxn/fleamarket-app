@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LineButtonItem extends StatelessWidget {
-  LineButtonItem({Key key, this.text, this.subText, this.prefix, this.suffix, this.prefixIcon, this.suffixIcon, this.onTap}) : super(key: key);
+  LineButtonItem(
+      {Key key, this.text, this.subText, this.prefix, this.suffix, this.prefixIcon, this.suffixIcon, this.onTap, this.prefixIconSize, this.prefixPadding})
+      : super(key: key);
 
   final String text;
   final String subText;
@@ -12,6 +14,8 @@ class LineButtonItem extends StatelessWidget {
   final IconData prefixIcon;
   final IconData suffixIcon;
   final Function onTap;
+  final double prefixIconSize;
+  final double prefixPadding;
 
   List<Widget> _buildMiddle() {
     List<Widget> widgets = [];
@@ -58,9 +62,9 @@ class LineButtonItem extends StatelessWidget {
               Offstage(
                   offstage: this.prefixIcon == null,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 12),
+                    padding: EdgeInsets.only(right: this.prefixPadding??12),
                     // child: Icon(this.prefixIcon, size: 24, color: Colors.grey[600]),
-                    child: Icon(this.prefixIcon, size: 24, color: style.primarySwatch),
+                    child: Icon(this.prefixIcon, size: this.prefixIconSize ?? 24, color: style.primarySwatch),
                   )),
               ..._buildMiddle(),
               Offstage(

@@ -92,8 +92,8 @@ class UserProfilePage extends StatelessWidget {
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(left: 20),
-                                            child:
-                                                Text(provider.translate("combo_text.user_credit", translationParams: {"amount": user?.creditValue.toString()}),
+                                            child: Text(
+                                                provider.translate("combo_text.user_credit", translationParams: {"amount": user?.creditValue.toString()}),
                                                 style: TextStyle(color: Colors.orange)),
                                           )
                                         ],
@@ -186,27 +186,21 @@ class UserProfilePage extends StatelessWidget {
                         margin: EdgeInsets.only(top: 10),
                         children: <Widget>[
                           LineButtonItem(
-                            text: provider.translate('user_profile.mine_vote'),
-                            prefixIcon: Icons.account_balance,
-                            onTap: () => provider.pushNamed(ROUTE_USER_VOTE),
-                          ),
-                          user?.isReviewer ?? false
-                              ? LineButtonItem(
-                                  text: provider.translate('user_profile.audit_goods'),
-                                  prefixIcon: Icons.assignment,
-                                  onTap: () => provider.pushNamed(ROUTE_AUDIT_GOODS),
-                                )
-                              : LineButtonItem(
-                                  text: provider.translate('user_profile.try_reviewer'),
-                                  prefixIcon: Icons.assignment_ind,
-                                  onTap: () => provider.pushNamed(ROUTE_TRY_REVIEWER),
-                                )
+                            text: provider.translate('user_profile.govern'),
+                            prefixIcon: FontAwesomeIcons.balanceScale,
+                            prefixIconSize: 18,
+                            prefixPadding: 18,
+                            onTap: () => provider.pushNamed(ROUTE_GOVERN),
+                          )
                         ],
                       ),
                       LineButtonGroup(
                         margin: EdgeInsets.only(top: 10),
                         children: [
-                          LineButtonItem(text: provider.translate('setting.title'), prefixIcon: Icons.settings, onTap: () => provider.pushNamed(ROUTE_SETTING))
+                          LineButtonItem(
+                              text: provider.translate('setting.title'),
+                              prefixIcon: Icons.settings,
+                              onTap: () => provider.pushNamed(ROUTE_SETTING))
                         ],
                       ),
                       Container(

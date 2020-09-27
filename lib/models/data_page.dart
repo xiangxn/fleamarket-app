@@ -11,8 +11,7 @@ class DataPage<T extends GeneratedMessage> {
       : pageNo = 1,
         pageSize = 10,
         totalCount = 0,
-        totalPage = 0,
-        data = [];
+        totalPage = 0;
 
   DataPage.fromJson(Map<String, dynamic> json, T type, {String key2}) {
     this.pageNo = json['pageNo'];
@@ -41,7 +40,7 @@ class DataPage<T extends GeneratedMessage> {
 
   clean() {
     this.pageNo = 1;
-    this.data.clear();
+    this.data?.clear();
   }
 
   update(List<T> pre) {
@@ -53,6 +52,7 @@ class DataPage<T extends GeneratedMessage> {
   }
 
   hasMore() {
+    if (this.data == null) return true;
     return this.data.length < this.totalCount;
   }
 

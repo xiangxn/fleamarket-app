@@ -12,8 +12,10 @@ import 'package:provider/single_child_widget.dart';
 import 'common/chinese_cupertino.dart';
 import 'common/constant.dart';
 import 'common/global.dart';
+import 'routes/govern.dart';
 import 'routes/order_detail.dart';
 import 'routes/publish.dart';
+import 'routes/reviewer_list.dart';
 import 'routes/search.dart';
 import 'routes/settings.dart';
 import 'routes/user_address.dart';
@@ -116,7 +118,9 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_KEYS: (context) => UserKeysRoute(),
               ROUTE_USER_WITHDRAWADDR: (context) => UserWithdrawAddrRoute(),
               ROUTE_USER_ADDRESS: (context) => UserAddressRoute(),
-              ROUTE_SETTING: (context) => SettingsRoute()
+              ROUTE_SETTING: (context) => SettingsRoute(),
+              ROUTE_GOVERN: (context) => GovernRoute(),
+              ROUTE_REVIEWER_LIST: (context) => ReviewerListRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(

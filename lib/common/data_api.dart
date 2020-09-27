@@ -291,6 +291,19 @@ class DataApi {
     return await _search(query);
   }
 
+  Future<BaseReply> fetchReviewers() async {
+    String query = "{reviewers{edges{node{rid,user{userid,nickname,head,creditValue},eosid,votedCount,createTime,lastActiveTime,voterApprove,voterAgainst}}}}";
+    return await _search(query);
+  }
+
+  Future<BaseReply> getReviewers(int pageNo, int pageSize) async {
+    String query = "{reviewerPage(pageNo:$pageNo,pageSize:$pageSize)";
+    query +=
+        "{pageNo,pageSize,totalCount,list{rid,user{userid,nickname,head,creditValue},eosid,votedCount,createTime,lastActiveTime,voterApprove,voterAgainst}}";
+    query += "}";
+    return await _search(query);
+  }
+
   Future<BaseReply> fetchProductList(int categoryId, int pageNo, int pageSize, {int userid = 0}) async {
     String query = "{productByCid(categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
     if (userid > 0) query = "{productByCid(userid:$userid,categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
@@ -507,8 +520,46 @@ class DataApi {
       // print("result:$result");
       return result.code == 0;
     } on GrpcError catch (e) {
-      print(e.message);
+      Global.console(e.message);
       return false;
+    }
+  }
+
+  Future<BaseReply> voteReviewer(EOSPrivateKey actKey, int vUid, String vEosid, int rUid, bool isSupport) async {
+    final token = await getToken();
+    TransactionRequest tr = TransactionRequest();
+    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = vEosid
+        ..permission = 'active'
+    ];
+    Map data = {'voter_uid': vUid, 'voter_eosid': vEosid, 'reviewer_uid': rUid, 'is_support': isSupport};
+    List<Action> actions = [
+      Action()
+        ..account = CONTRACT_NAME
+        ..name = 'votereviewer'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+    final serTrxArgs = await client.createTransaction(transaction);
+    // print("serTrxArgs:$serTrxArgs");
+    final trx = {
+      'signatures': serTrxArgs.signatures,
+      'compression': 0,
+      'packed_context_free_data': '',
+      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
+    };
+    tr.trx = jsonEncode(trx);
+    // print("trx:$tr");
+    try {
+      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
+      Global.console("result:$result");
+      return result;
+    } on GrpcError catch (e) {
+      Global.console(e.message);
+      return BaseReply()..code = -1;
     }
   }
 }

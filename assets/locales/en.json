@@ -13,7 +13,7 @@
         "no_data": "没有找到相关商品"
     },
     "category": {
-        "0": "NEW",
+        "0": "最新",
         "1": "数码",
         "2": "玩具",
         "3": "美妆",
@@ -67,9 +67,7 @@
         "user_normal": "普通用户",
         "user_reviewer": "评审员",
         "copy": "邀请码已复制到剪贴板",
-        "try_reviewer": "申请评审员",
-        "audit_goods": "审核商品",
-        "mine_vote": "选举评审员"
+        "govern": "治理"
     },
     "user_favorite": {
         "title": "我收藏的"
@@ -162,7 +160,7 @@
         "contact": "联系方式:  {value}",
         "shipping_address": "收货地址:  {addr}",
         "user_credit": "信用分:  {amount}",
-        "vote_count": "票数:  @s",
+        "vote_count": "票数:  {count}",
         "favorite_count": "收藏数:  {count}",
         "price": "价格:  {price}",
         "postage": "运费:  {price}",
@@ -258,17 +256,29 @@
         "hint_postcode": "请填写邮编，默认为000000"
     },
     "setting": {
-        "title": "Settings",
-        "version": "Version",
-        "language": "Language",
-        "theme": "Theme",
-        "about": "About us",
-        "select_local": "Select Language",
+        "title": "设置",
+        "version": "当前版本",
+        "language": "语言",
+        "theme": "主题",
+        "about": "关于我们",
+        "select_local": "选择语言",
         "zh_CN": "中文简体",
         "en_US": "English",
-        "null": "Default",
+        "null": "默认",
         "select_theme": "选择主题",
-        "red": "Red",
-        "green": "Green"
+        "red": "红色",
+        "green": "绿色"
+    },
+    "govern": {
+        "title": "治理",
+        "vote_reviewer": "评审员",
+        "apply_reviewer": "申请评审员",
+        "audit_product": "审核商品",
+        "proposal": "提案"
+    },
+    "reviewer_list": {
+        "title": "评审员投票",
+        "vote_error":"投票发生异常，请稍候再试",
+        "vote_already":"你已经投过票了"
     }
 }
