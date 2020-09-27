@@ -1,5 +1,6 @@
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
+import 'package:bitsflea/common/style.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/models/data_page.dart';
 import 'package:bitsflea/routes/base.dart';
@@ -14,6 +15,18 @@ import 'package:provider/provider.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 
 class ReviewerListRoute extends StatelessWidget {
+  List<Widget> _buildBtn(ReviewerListProvider model, Style style) {
+    if (model.isReviewer() == false) {
+      return <Widget>[
+        IconButton(
+          onPressed: () => model.applyReviewer(),
+          icon: Icon(FontAwesomeIcons.userTie, color: style.primarySwatch),
+        )
+      ];
+    }
+    return <Widget>[];
+  }
+
   @override
   Widget build(BuildContext context) {
     final style = Provider.of<ThemeModel>(context, listen: false).theme;
@@ -26,21 +39,13 @@ class ReviewerListRoute extends StatelessWidget {
         return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              centerTitle: true,
-              title: Text(model.translate('reviewer_list.title')),
-              backgroundColor: style.headerBackgroundColor,
-              brightness: Brightness.light,
-              textTheme: style.headerTextTheme,
-              iconTheme: style.headerIconTheme,
-              actions: <Widget>[
-                model.isReviewer() == false
-                    ? IconButton(
-                        onPressed: () => model.applyReviewer(),
-                        icon: Icon(FontAwesomeIcons.userTie, color: style.primarySwatch),
-                      )
-                    : null
-              ],
-            ),
+                centerTitle: true,
+                title: Text(model.translate('reviewer_list.title')),
+                backgroundColor: style.headerBackgroundColor,
+                brightness: Brightness.light,
+                textTheme: style.headerTextTheme,
+                iconTheme: style.headerIconTheme,
+                actions: _buildBtn(model, style)),
             body: FutureBuilder(
               future: model.fetchReviewers(isRefresh: true),
               builder: (ctx, snapshot) {
@@ -183,6 +188,7 @@ class ReviewerListProvider extends BaseProvider {
     if (res.code == 0) {
       Reviewer r = reviewer.clone();
       r.voterApprove.add($fixnum.Int64.parseInt(um.user.userid.toString()));
+      r.votedCount += 1;
       int idx = _list.data.indexWhere((e) => e.user.userid == reviewer.user.userid);
       _list.data[idx] = r;
       notifyListeners();
@@ -209,6 +215,7 @@ class ReviewerListProvider extends BaseProvider {
     if (res.code == 0) {
       Reviewer r = reviewer.clone();
       r.voterAgainst.add($fixnum.Int64.parseInt(um.user.userid.toString()));
+      r.votedCount -= 1;
       int idx = _list.data.indexWhere((e) => e.user.userid == reviewer.user.userid);
       _list.data[idx] = r;
       notifyListeners();
