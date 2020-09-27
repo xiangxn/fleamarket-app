@@ -562,4 +562,42 @@ class DataApi {
       return BaseReply()..code = -1;
     }
   }
+
+  Future<BaseReply> appReviewer(EOSPrivateKey actKey, int uid, String eosid) async {
+    final token = await getToken();
+    TransactionRequest tr = TransactionRequest();
+    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = eosid
+        ..permission = 'active'
+    ];
+    Map data = {'uid': uid, 'eosid': eosid};
+    List<Action> actions = [
+      Action()
+        ..account = CONTRACT_NAME
+        ..name = 'appreviewer'
+        ..authorization = auth
+        ..data = data
+    ];
+    Transaction transaction = Transaction()..actions = actions;
+    final serTrxArgs = await client.createTransaction(transaction);
+    // print("serTrxArgs:$serTrxArgs");
+    final trx = {
+      'signatures': serTrxArgs.signatures,
+      'compression': 0,
+      'packed_context_free_data': '',
+      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
+    };
+    tr.trx = jsonEncode(trx);
+    // print("trx:$tr");
+    try {
+      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
+      Global.console("result:$result");
+      return result;
+    } on GrpcError catch (e) {
+      Global.console(e.message);
+      return BaseReply()..code = -1;
+    }
+  }
 }

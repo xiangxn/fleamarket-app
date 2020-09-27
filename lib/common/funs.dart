@@ -85,3 +85,8 @@ formatPrice3(double price) {
 Key randomKey() {
   return Key(DateTime.now().toIso8601String() + Random.secure().nextInt(10000).toString());
 }
+
+String getErrorMessage(String src) {
+  if (src.startsWith("assertion failure with message: ")) return src.split(": ")[1];
+  return src;
+}

@@ -12,6 +12,7 @@ import 'package:provider/single_child_widget.dart';
 import 'common/chinese_cupertino.dart';
 import 'common/constant.dart';
 import 'common/global.dart';
+import 'routes/apply_reviewer.dart';
 import 'routes/govern.dart';
 import 'routes/order_detail.dart';
 import 'routes/publish.dart';
@@ -120,7 +121,8 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_ADDRESS: (context) => UserAddressRoute(),
               ROUTE_SETTING: (context) => SettingsRoute(),
               ROUTE_GOVERN: (context) => GovernRoute(),
-              ROUTE_REVIEWER_LIST: (context) => ReviewerListRoute()
+              ROUTE_REVIEWER_LIST: (context) => ReviewerListRoute(),
+              ROUTE_APPLY_REVIEWER:(context)=>ApplyReviewerRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(

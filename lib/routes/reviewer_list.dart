@@ -9,6 +9,7 @@ import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/custom_refresh_indicator.dart';
 import 'package:bitsflea/widgets/ext_circle_avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 
@@ -31,6 +32,14 @@ class ReviewerListRoute extends StatelessWidget {
               brightness: Brightness.light,
               textTheme: style.headerTextTheme,
               iconTheme: style.headerIconTheme,
+              actions: <Widget>[
+                model.isReviewer() == false
+                    ? IconButton(
+                        onPressed: () => model.applyReviewer(),
+                        icon: Icon(FontAwesomeIcons.userTie, color: style.primarySwatch),
+                      )
+                    : null
+              ],
             ),
             body: FutureBuilder(
               future: model.fetchReviewers(isRefresh: true),
@@ -149,8 +158,21 @@ class ReviewerListProvider extends BaseProvider {
     pushNamed(ROUTE_USER_HOME, arguments: user);
   }
 
+  bool isReviewer() {
+    final user = Provider.of<UserModel>(context, listen: false).user;
+    return user?.isReviewer ?? false;
+  }
+
+  void applyReviewer() {
+    pushNamed(ROUTE_APPLY_REVIEWER);
+  }
+
   support(Reviewer reviewer) async {
     final um = Provider.of<UserModel>(context, listen: false);
+    if (um.user.userid == reviewer.user.userid) {
+      showToast(this.translate("reviewer_list.vote_error_1"));
+      return;
+    }
     if (reviewer.voterApprove.any((e) => e.toInt() == um.user.userid) || reviewer.voterAgainst.any((e) => e.toInt() == um.user.userid)) {
       showToast(this.translate("reviewer_list.vote_already"));
       return;
@@ -165,7 +187,7 @@ class ReviewerListProvider extends BaseProvider {
       _list.data[idx] = r;
       notifyListeners();
     } else if (res.code == 500) {
-      showToast(res.msg.split(":")[1]);
+      showToast(getErrorMessage(res.msg));
     } else {
       showToast(this.translate("reviewer_list.vote_error"));
     }
@@ -173,6 +195,10 @@ class ReviewerListProvider extends BaseProvider {
 
   against(Reviewer reviewer) async {
     final um = Provider.of<UserModel>(context, listen: false);
+    if (um.user.userid == reviewer.user.userid) {
+      showToast(this.translate("reviewer_list.vote_error_1"));
+      return;
+    }
     if (reviewer.voterAgainst.any((e) => e.toInt() == um.user.userid) || reviewer.voterApprove.any((e) => e.toInt() == um.user.userid)) {
       showToast(this.translate("reviewer_list.vote_already"));
       return;
@@ -187,7 +213,7 @@ class ReviewerListProvider extends BaseProvider {
       _list.data[idx] = r;
       notifyListeners();
     } else if (res.code == 500) {
-      showToast(res.msg.split(":")[1]);
+      showToast(getErrorMessage(res.msg));
     } else {
       showToast(this.translate("reviewer_list.vote_error"));
     }
