@@ -286,5 +286,12 @@
     "apply_reviewer": {
         "title": "申请成为评审员",
         "agree_terms": "请阅读并勾选同意条款"
+    },
+    "product_review": {
+        "title": "审核产品",
+        "puton": "上架",
+        "pulloff": "下架",
+        "memo_hint": "请输入下架原因",
+        "put_error": "商品状态已经变化，可能已经被其他评审员抢先了"
     }
 }

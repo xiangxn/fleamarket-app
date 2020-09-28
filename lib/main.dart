@@ -15,6 +15,8 @@ import 'common/global.dart';
 import 'routes/apply_reviewer.dart';
 import 'routes/govern.dart';
 import 'routes/order_detail.dart';
+import 'routes/product_review_detail.dart';
+import 'routes/product_review_list.dart';
 import 'routes/publish.dart';
 import 'routes/reviewer_list.dart';
 import 'routes/search.dart';
@@ -122,7 +124,8 @@ class MyApp extends StatelessWidget {
               ROUTE_SETTING: (context) => SettingsRoute(),
               ROUTE_GOVERN: (context) => GovernRoute(),
               ROUTE_REVIEWER_LIST: (context) => ReviewerListRoute(),
-              ROUTE_APPLY_REVIEWER:(context)=>ApplyReviewerRoute()
+              ROUTE_APPLY_REVIEWER: (context) => ApplyReviewerRoute(),
+              ROUTE_PRODUCT_REVIEW_LIST: (context) => ProductReviewListRoute()
             },
             onGenerateRoute: (RouteSettings settings) {
               return CupertinoPageRoute(
@@ -141,6 +144,8 @@ class MyApp extends StatelessWidget {
                       return UserEditWithdrawAddrRoute(coin: settings.arguments);
                     case ROUTE_EDIT_ADDRESS:
                       return UserAddressEditRoute(address: settings.arguments);
+                    case ROUTE_PRODUCT_REVIEW_DETAIL:
+                      return ProductReviewDetailRoute(product: settings.arguments);
                     default:
                       return Scaffold(
                         appBar: AppBar(),

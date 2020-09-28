@@ -23,7 +23,11 @@ class GovernRoute extends StatelessWidget {
     ];
     if (provider.isReviewer()) {
       items.add(LineButtonItem(
-          text: provider.translate('govern.audit_product'), prefixIconSize: 20, prefixPadding: 17, prefixIcon: FontAwesomeIcons.bookReader, onTap: () => null));
+          text: provider.translate('govern.audit_product'),
+          prefixIconSize: 20,
+          prefixPadding: 17,
+          prefixIcon: FontAwesomeIcons.bookReader,
+          onTap: () => provider.pushNamed(ROUTE_PRODUCT_REVIEW_LIST)));
     }
     return items;
   }

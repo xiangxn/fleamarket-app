@@ -61,7 +61,8 @@ class OrderCardGroupProvider extends BaseProvider {
 
   DataPage<Order> get page => _page;
 
-  Future<void> refreshOrders({bool isRefresh = false}) async {
+  Future<bool> refreshOrders({bool isRefresh = false}) async {
+    bool flag = false;
     setBusy();
     if (isRefresh) {
       _page.clean();
@@ -71,8 +72,10 @@ class OrderCardGroupProvider extends BaseProvider {
     _page = data;
     if (_page.hasMore()) {
       _page.pageNo += 1;
+      flag = true;
     }
     setBusy();
+    return flag;
   }
 
   void updateOrder({Order obj}) {}

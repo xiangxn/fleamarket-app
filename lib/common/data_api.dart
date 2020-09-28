@@ -223,46 +223,11 @@ class DataApi {
   }
 
   Future<bool> setProfile(EOSPrivateKey actKey, String eosid, {String head, String nickname}) async {
-    final token = await getToken();
-    TransactionRequest tr = TransactionRequest();
-    tr.sign = 0;
-    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
-    List<Authorization> auth = [
-      Authorization()
-        ..actor = eosid
-        ..permission = 'active'
-    ];
     Map data = {'eosid': eosid};
     data['head'] = head;
     data['nickname'] = nickname;
-    //print("head-data:$data");
-    List<Action> actions = [
-      Action()
-        ..account = CONTRACT_NAME
-        ..name = 'setprofile'
-        ..authorization = auth
-        ..data = data
-    ];
-    Transaction transaction = Transaction()..actions = actions;
-    final serTrxArgs = await client.pushTransaction(transaction, broadcast: false);
-    //print("serTrxArgs:$serTrxArgs");
-    final trx = {
-      'signatures': serTrxArgs.signatures,
-      'compression': 0,
-      'packed_context_free_data': '',
-      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
-    };
-    tr.sign = 0;
-    tr.trx = jsonEncode(trx);
-    //print("trx:$tr");
-    try {
-      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
-      //print("result:$result");
-      return result.code == 0;
-    } on GrpcError catch (e) {
-      print(e.message);
-      return false;
-    }
+    final result = await _putAction(actKey, eosid, "setprofile", data);
+    return result.code == 0;
   }
 
   Future<BaseReply> uploadFile(Uint8List file) async {
@@ -387,6 +352,14 @@ class DataApi {
     return await _search(query);
   }
 
+  Future<BaseReply> fetchProductByStatus(int status, int pageNo, int pageSize) async {
+    String query = "{productByStatus(status:$status, pageNo:$pageNo, pageSize:$pageSize)";
+    query += "{pageNo,pageSize,totalCount,list{";
+    query += "productId,title,price,postage,collections,seller{head,nickname},photos,status";
+    query += "}}}";
+    return await _search(query);
+  }
+
   Future<District> fetchDistricts() async {
     var res = await Dio().get('https://restapi.amap.com/v3/config/district',
         queryParameters: {'keywords': '100000', 'subdistrict': '3', 'key': '92f35a6155436fa0179a80b27adec436'});
@@ -429,10 +402,6 @@ class DataApi {
   }
 
   Future<bool> publishProduct(EOSPrivateKey actKey, String eosid, int userId, Map product, [Map productAuction]) async {
-    final token = await getToken();
-    TransactionRequest tr = TransactionRequest();
-    tr.sign = 1;
-    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
     List<Authorization> auth = [
       Authorization()
         ..actor = CONTRACT_NAME
@@ -444,34 +413,9 @@ class DataApi {
     Map data = {'uid': userId};
     data['product'] = product;
     data['pa'] = productAuction;
-    print("action-data:$data");
-    List<Action> actions = [
-      Action()
-        ..account = CONTRACT_NAME
-        ..name = 'publish'
-        ..authorization = auth
-        ..data = data
-    ];
-    Transaction transaction = Transaction()..actions = actions;
-    //final serTrxArgs = await client.pushTransaction(transaction, broadcast: false);
-    final serTrxArgs = await client.createTransaction(transaction);
-    print("serTrxArgs:$serTrxArgs");
-    final trx = {
-      'signatures': serTrxArgs.signatures,
-      'compression': 0,
-      'packed_context_free_data': '',
-      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
-    };
-    tr.trx = jsonEncode(trx);
-    print("trx:$tr");
-    try {
-      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
-      print("result:$result");
-      return result.code == 0;
-    } on GrpcError catch (e) {
-      print(e.message);
-      return false;
-    }
+
+    final result = await _putAction(actKey, eosid, "publish", data, authList: auth);
+    return result.code == 0;
   }
 
   Future<List<Map<String, dynamic>>> getCoins() async {
@@ -485,61 +429,37 @@ class DataApi {
   }
 
   Future<bool> setCoinAddr(EOSPrivateKey actKey, String eosid, int userId, OtherAddr addr) async {
-    final token = await getToken();
-    TransactionRequest tr = TransactionRequest();
-    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
-    List<Authorization> auth = [
-      // Authorization()
-      //   ..actor = CONTRACT_NAME
-      //   ..permission = 'active',
-      Authorization()
-        ..actor = eosid
-        ..permission = 'active'
-    ];
     Map data = {'uid': userId, 'user_eosid': eosid, 'sym': addr.coinType, 'addr': addr.addr};
-    List<Action> actions = [
-      Action()
-        ..account = CONTRACT_NAME
-        ..name = 'bindaddr'
-        ..authorization = auth
-        ..data = data
-    ];
-    Transaction transaction = Transaction()..actions = actions;
-    final serTrxArgs = await client.createTransaction(transaction);
-    // print("serTrxArgs:$serTrxArgs");
-    final trx = {
-      'signatures': serTrxArgs.signatures,
-      'compression': 0,
-      'packed_context_free_data': '',
-      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
-    };
-    tr.trx = jsonEncode(trx);
-    // print("trx:$tr");
-    try {
-      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
-      // print("result:$result");
-      return result.code == 0;
-    } on GrpcError catch (e) {
-      Global.console(e.message);
-      return false;
-    }
+    final result = await _putAction(actKey, eosid, "bindaddr", data);
+    return result.code == 0;
   }
 
   Future<BaseReply> voteReviewer(EOSPrivateKey actKey, int vUid, String vEosid, int rUid, bool isSupport) async {
+    Map data = {'voter_uid': vUid, 'voter_eosid': vEosid, 'reviewer_uid': rUid, 'is_support': isSupport};
+    return await _putAction(actKey, vEosid, "votereviewer", data);
+  }
+
+  Future<BaseReply> appReviewer(EOSPrivateKey actKey, int uid, String eosid) async {
+    Map data = {'uid': uid, 'eosid': eosid};
+    return await _putAction(actKey, eosid, "appreviewer", data);
+  }
+
+  Future<BaseReply> _putAction(EOSPrivateKey actKey, String authEosid, String actionName, Map data,
+      {String permission = 'active', int sign = 0, List<Authorization> authList}) async {
     final token = await getToken();
     TransactionRequest tr = TransactionRequest();
+    if (sign == 1) tr.sign = 1;
     EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
-    List<Authorization> auth = [
-      Authorization()
-        ..actor = vEosid
-        ..permission = 'active'
-    ];
-    Map data = {'voter_uid': vUid, 'voter_eosid': vEosid, 'reviewer_uid': rUid, 'is_support': isSupport};
     List<Action> actions = [
       Action()
         ..account = CONTRACT_NAME
-        ..name = 'votereviewer'
-        ..authorization = auth
+        ..name = actionName
+        ..authorization = authList ??
+            [
+              Authorization()
+                ..actor = authEosid
+                ..permission = permission
+            ]
         ..data = data
     ];
     Transaction transaction = Transaction()..actions = actions;
@@ -563,41 +483,8 @@ class DataApi {
     }
   }
 
-  Future<BaseReply> appReviewer(EOSPrivateKey actKey, int uid, String eosid) async {
-    final token = await getToken();
-    TransactionRequest tr = TransactionRequest();
-    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
-    List<Authorization> auth = [
-      Authorization()
-        ..actor = eosid
-        ..permission = 'active'
-    ];
-    Map data = {'uid': uid, 'eosid': eosid};
-    List<Action> actions = [
-      Action()
-        ..account = CONTRACT_NAME
-        ..name = 'appreviewer'
-        ..authorization = auth
-        ..data = data
-    ];
-    Transaction transaction = Transaction()..actions = actions;
-    final serTrxArgs = await client.createTransaction(transaction);
-    // print("serTrxArgs:$serTrxArgs");
-    final trx = {
-      'signatures': serTrxArgs.signatures,
-      'compression': 0,
-      'packed_context_free_data': '',
-      'packed_trx': ser.arrayToHex(serTrxArgs.serializedTransaction),
-    };
-    tr.trx = jsonEncode(trx);
-    // print("trx:$tr");
-    try {
-      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
-      Global.console("result:$result");
-      return result;
-    } on GrpcError catch (e) {
-      Global.console(e.message);
-      return BaseReply()..code = -1;
-    }
+  Future<BaseReply> putReview(EOSPrivateKey actKey, int reviewerUid, String reviewerEosid, int productId, bool isDelisted, {String memo}) async {
+    Map data = {'reviewer_uid': reviewerUid, 'reviewer_eosid': reviewerEosid, 'pid': productId, 'is_delisted': isDelisted, 'memo': memo};
+    return await _putAction(actKey, reviewerEosid, "review", data);
   }
 }

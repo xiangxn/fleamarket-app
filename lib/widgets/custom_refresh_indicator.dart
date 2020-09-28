@@ -35,18 +35,18 @@ const Duration _kIndicatorScaleDuration = Duration(milliseconds: 200);
 /// finished.
 ///
 /// Used by [RefreshIndicator.onRefresh].
-typedef RefreshCallback = Future<void> Function();
+typedef RefreshCallback = Future<bool> Function();
 
-typedef LoadCallback = Future<void> Function();
+typedef LoadCallback = Future<bool> Function();
 
 // The state machine moves through these modes only when the scrollable
 // identified by scrollableKey has been scrolled to its min or max limit.
 enum _RefreshIndicatorMode {
-  drag,     // Pointer is down.
-  armed,    // Dragged far enough that an up event will run the onRefresh callback.
-  snap,     // Animating to the indicator's final "displacement".
-  refresh,  // Running the refresh callback.
-  done,     // Animating the indicator's fade-out after refreshing.
+  drag, // Pointer is down.
+  armed, // Dragged far enough that an up event will run the onRefresh callback.
+  snap, // Animating to the indicator's final "displacement".
+  refresh, // Running the refresh callback.
+  done, // Animating the indicator's fade-out after refreshing.
   canceled, // Animating the indicator's fade-out after not arming.
 }
 
@@ -107,13 +107,14 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.semanticsLabel,
     this.semanticsValue,
-  }) : assert(child != null),
-       assert(onRefresh != null),
-       assert(notificationPredicate != null),
-       super(key: key);
+  })  : assert(child != null),
+        assert(onRefresh != null),
+        assert(notificationPredicate != null),
+        super(key: key);
 
   /// 是否初始化加载 [default] is [true]
   final bool autoInit;
+
   /// The widget below this widget in the tree.
   ///
   /// The refresh indicator will be stacked on top of this child. The indicator
@@ -193,8 +194,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     _scaleController = AnimationController(vsync: this);
     _scaleFactor = _scaleController.drive(_oneToZeroTween);
     // 启用初始化更新时，调用show
-    if(widget.autoInit)
-      show();
+    if (widget.autoInit) show();
   }
 
   @override
@@ -204,9 +204,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
       ColorTween(
         begin: (widget.color ?? theme.accentColor).withOpacity(0.0),
         end: (widget.color ?? theme.accentColor).withOpacity(1.0),
-      ).chain(CurveTween(
-        curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit)
-      )),
+      ).chain(CurveTween(curve: const Interval(0.0, 1.0 / _kDragSizeFactorLimit))),
     );
     super.didChangeDependencies();
   }
@@ -219,10 +217,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
-    if (!widget.notificationPredicate(notification))
-      return false;
-    if (notification is ScrollStartNotification && notification.metrics.extentBefore == 0.0 &&
-        _mode == null && _start(notification.metrics.axisDirection)) {
+    if (!widget.notificationPredicate(notification)) return false;
+    if (notification is ScrollStartNotification && notification.metrics.extentBefore == 0.0 && _mode == null && _start(notification.metrics.axisDirection)) {
       setState(() {
         _mode = _RefreshIndicatorMode.drag;
       });
@@ -241,15 +237,15 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
         indicatorAtTopNow = null;
         break;
     }
-    
+
     if (indicatorAtTopNow != _isIndicatorAtTop) {
       if (_mode == _RefreshIndicatorMode.drag || _mode == _RefreshIndicatorMode.armed)
         _dismiss(_RefreshIndicatorMode.canceled);
-      else if(notification is ScrollUpdateNotification){
+      else if (notification is ScrollUpdateNotification) {
         // 当scroll滚动到最底部时，触发onload，即上拉加载更多。当onLoad回调返回false 说明该列表已无更多数据，此时不会继续加载
         // 直到refresh后更新_hasMore属性
         // 因为允许onLoad 为空，则需要判断onLoad是否为函数
-        if(notification.metrics.extentBefore >= notification.metrics.maxScrollExtent && _hasMore && widget.onLoad != null){
+        if (notification.metrics.extentBefore >= notification.metrics.maxScrollExtent && _hasMore && widget.onLoad != null) {
           show(atTop: false, isRefresh: false);
         }
       }
@@ -290,8 +286,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   }
 
   bool _handleGlowNotification(OverscrollIndicatorNotification notification) {
-    if (notification.depth != 0 || !notification.leading)
-      return false;
+    if (notification.depth != 0 || !notification.leading) return false;
     if (_mode == _RefreshIndicatorMode.drag) {
       notification.disallowGlow();
       return true;
@@ -325,11 +320,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   void _checkDragOffset(double containerExtent) {
     assert(_mode == _RefreshIndicatorMode.drag || _mode == _RefreshIndicatorMode.armed);
     double newValue = _dragOffset / (containerExtent * _kDragContainerExtentPercentage);
-    if (_mode == _RefreshIndicatorMode.armed)
-      newValue = math.max(newValue, 1.0 / _kDragSizeFactorLimit);
+    if (_mode == _RefreshIndicatorMode.armed) newValue = math.max(newValue, 1.0 / _kDragSizeFactorLimit);
     _positionController.value = newValue.clamp(0.0, 1.0); // this triggers various rebuilds
-    if (_mode == _RefreshIndicatorMode.drag && _valueColor.value.alpha == 0xFF)
-      _mode = _RefreshIndicatorMode.armed;
+    if (_mode == _RefreshIndicatorMode.drag && _valueColor.value.alpha == 0xFF) _mode = _RefreshIndicatorMode.armed;
   }
 
   // Stop showing the refresh indicator.
@@ -367,43 +360,38 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     final Completer<void> completer = Completer<void>();
     _pendingRefreshFuture = completer.future;
     _mode = _RefreshIndicatorMode.snap;
-    _positionController
-      .animateTo(1.0 / _kDragSizeFactorLimit, duration: _kIndicatorSnapDuration)
-      .then<void>((void value) {
-        if (mounted && _mode == _RefreshIndicatorMode.snap) {
-          assert(widget.onRefresh != null);
-          setState(() {
-            // Show the indeterminate progress indicator.
-            _mode = _RefreshIndicatorMode.refresh;
-          });
+    _positionController.animateTo(1.0 / _kDragSizeFactorLimit, duration: _kIndicatorSnapDuration).then<void>((void value) {
+      if (mounted && _mode == _RefreshIndicatorMode.snap) {
+        assert(widget.onRefresh != null);
+        setState(() {
+          // Show the indeterminate progress indicator.
+          _mode = _RefreshIndicatorMode.refresh;
+        });
 
-          final Future refreshResult = isRefresh ?? true ? widget.onRefresh() : widget.onLoad();
-          assert(() {
-            if (refreshResult == null)
-              FlutterError.reportError(FlutterErrorDetails(
-                exception: FlutterError(
-                  'The onRefresh callback returned null.\n'
-                  'The RefreshIndicator onRefresh callback must return a Future.'
-                ),
-                context: ErrorDescription('when calling onRefresh'),
-                library: 'material library',
-              ));
-            return true;
-          }());
+        final Future refreshResult = isRefresh ?? true ? widget.onRefresh() : widget.onLoad();
+        assert(() {
           if (refreshResult == null)
-            return;
-          // 当回调返回值为true 或 null 时，允许onLoad继续生效，兼容原模式
-          refreshResult.then((f) {
-            _hasMore = f ?? true;
-          });
-          refreshResult.whenComplete(() {
-            if (mounted && _mode == _RefreshIndicatorMode.refresh) {
-              completer.complete();
-              _dismiss(_RefreshIndicatorMode.done);
-            }
-          });
-        }
-      });
+            FlutterError.reportError(FlutterErrorDetails(
+              exception: FlutterError('The onRefresh callback returned null.\n'
+                  'The RefreshIndicator onRefresh callback must return a Future.'),
+              context: ErrorDescription('when calling onRefresh'),
+              library: 'material library',
+            ));
+          return true;
+        }());
+        if (refreshResult == null) return;
+        // 当回调返回值为true 或 null 时，允许onLoad继续生效，兼容原模式
+        refreshResult.then((f) {
+          _hasMore = f ?? true;
+        });
+        refreshResult.whenComplete(() {
+          if (mounted && _mode == _RefreshIndicatorMode.refresh) {
+            completer.complete();
+            _dismiss(_RefreshIndicatorMode.done);
+          }
+        });
+      }
+    });
   }
 
   /// Show the refresh indicator and run the refresh callback as if it had
@@ -422,11 +410,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   /// When initiated in this manner, the refresh indicator is independent of any
   /// actual scroll view. It defaults to showing the indicator at the top. To
   /// show it at the bottom, set `atTop` to false.
-  Future<void> show({ bool atTop = true, bool isRefresh = true }) {
-    if (_mode != _RefreshIndicatorMode.refresh &&
-        _mode != _RefreshIndicatorMode.snap) {
-      if (_mode == null)
-        _start(atTop ? AxisDirection.down : AxisDirection.up);
+  Future<void> show({bool atTop = true, bool isRefresh = true}) {
+    if (_mode != _RefreshIndicatorMode.refresh && _mode != _RefreshIndicatorMode.snap) {
+      if (_mode == null) _start(atTop ? AxisDirection.down : AxisDirection.up);
       _show(isRefresh);
     }
     return _pendingRefreshFuture;
@@ -453,8 +439,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
     assert(_dragOffset != null);
     assert(_isIndicatorAtTop != null);
 
-    final bool showIndeterminateIndicator =
-      _mode == _RefreshIndicatorMode.refresh || _mode == _RefreshIndicatorMode.done;
+    final bool showIndeterminateIndicator = _mode == _RefreshIndicatorMode.refresh || _mode == _RefreshIndicatorMode.done;
 
     return Stack(
       children: <Widget>[
@@ -468,12 +453,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
             axisAlignment: _isIndicatorAtTop ? 1.0 : -1.0,
             sizeFactor: _positionFactor, // this is what brings it down
             child: Container(
-              padding: _isIndicatorAtTop
-                ? EdgeInsets.only(top: widget.displacement)
-                : EdgeInsets.only(bottom: widget.displacement),
-              alignment: _isIndicatorAtTop
-                ? Alignment.topCenter
-                : Alignment.bottomCenter,
+              padding: _isIndicatorAtTop ? EdgeInsets.only(top: widget.displacement) : EdgeInsets.only(bottom: widget.displacement),
+              alignment: _isIndicatorAtTop ? Alignment.topCenter : Alignment.bottomCenter,
               child: ScaleTransition(
                 scale: _scaleFactor,
                 child: AnimatedBuilder(

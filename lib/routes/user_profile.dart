@@ -197,10 +197,7 @@ class UserProfilePage extends StatelessWidget {
                       LineButtonGroup(
                         margin: EdgeInsets.only(top: 10),
                         children: [
-                          LineButtonItem(
-                              text: provider.translate('setting.title'),
-                              prefixIcon: Icons.settings,
-                              onTap: () => provider.pushNamed(ROUTE_SETTING))
+                          LineButtonItem(text: provider.translate('setting.title'), prefixIcon: Icons.settings, onTap: () => provider.pushNamed(ROUTE_SETTING))
                         ],
                       ),
                       Container(
@@ -236,18 +233,19 @@ class UserProfileProvider extends BaseProvider {
 
   ScrollController get controller => _controller;
 
-  Future<void> refreshUser() async {
+  Future<bool> refreshUser() async {
     final um = Provider.of<UserModel>(context, listen: false);
     if (um.user != null) {
       final res = await api.getUserByUserid(um.user.userid);
       if (res.code == 0) {
         User user = convertEdge<User>(res.data, "users", User());
-        if (user == null) return;
+        if (user == null) return false;
         user.head = URL_IPFS_GATEWAY + user.head;
         um.user = user;
         notifyListeners();
       }
     }
+    return false;
   }
 
   logout() async {
