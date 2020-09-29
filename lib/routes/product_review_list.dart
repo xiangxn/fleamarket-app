@@ -5,6 +5,7 @@ import 'package:bitsflea/models/data_page.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
+import 'package:bitsflea/states/user.dart';
 // import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/custom_refresh_indicator.dart';
 import 'package:bitsflea/widgets/ext_network_image.dart';
@@ -55,7 +56,7 @@ class ProductReviewListRoute extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return ListView.builder(
                         // physics: ClampingScrollPhysics(),
-                        itemCount: provider.productPage.data.length,
+                        itemCount: provider.productPage.data?.length ?? 0,
                         itemBuilder: (_, i) {
                           return Selector<ProductReviewListProvider, Product>(
                             selector: (ctx, provider) => provider.productPage.data[i],
@@ -135,13 +136,14 @@ class ProductReviewListProvider extends BaseProvider {
   DataPage<Product> get productPage => _page;
 
   Future<bool> fetchProducts({bool isRefresh = false}) async {
-    // final user = Provider.of<UserModel>(context, listen: false).user;
+    final user = Provider.of<UserModel>(context, listen: false).user;
     bool flag = false;
     setBusy();
     if (isRefresh) {
+      _page.pageNo = 1;
       _page.clean();
     }
-    final res = await api.fetchProductByStatus(0, _page.pageNo, _page.pageSize);
+    final res = await api.fetchProductByStatus(0, user.userid, _page.pageNo, _page.pageSize);
     if (res.code == 0) {
       var data = convertPageList(res.data, "productByStatus", Product());
       if (data.data.length > 0) {

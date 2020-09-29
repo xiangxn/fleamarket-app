@@ -19,13 +19,15 @@ class GovernRoute extends StatelessWidget {
           prefixPadding: 18,
           onTap: () => provider.pushNamed(ROUTE_REVIEWER_LIST)),
       LineButtonItem(
-          text: provider.translate('govern.proposal'), prefixIconSize: 20, prefixPadding: 17, prefixIcon: FontAwesomeIcons.listAlt, onTap: () => null)
+          text: provider.translate('govern.proposal'), prefixIconSize: 20, prefixPadding: 17, prefixIcon: FontAwesomeIcons.listAlt, onTap: () => null),
+      LineButtonItem(
+          text: provider.translate('govern.arbitration'), prefixIconSize: 18, prefixPadding: 19, prefixIcon: FontAwesomeIcons.balanceScale, onTap: () => null)
     ];
     if (provider.isReviewer()) {
       items.add(LineButtonItem(
           text: provider.translate('govern.audit_product'),
-          prefixIconSize: 20,
-          prefixPadding: 17,
+          prefixIconSize: 22,
+          prefixPadding: 14,
           prefixIcon: FontAwesomeIcons.bookReader,
           onTap: () => provider.pushNamed(ROUTE_PRODUCT_REVIEW_LIST)));
     }

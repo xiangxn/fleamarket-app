@@ -140,8 +140,9 @@ class ReviewerListProvider extends BaseProvider {
   DataPage<Reviewer> _list;
   DataPage<Reviewer> get list => _list;
 
-  fetchReviewers({bool isRefresh = false, bool isLoad = false}) async {
-    if (isLoad && _list.hasMore() == false) return;
+  Future<bool> fetchReviewers({bool isRefresh = false, bool isLoad = false}) async {
+    if (isLoad && _list.hasMore() == false) return false;
+    bool flag = false;
     setBusy();
     if (isRefresh) _list.clean();
     final res = await api.getReviewers(_list.pageNo, _list.pageSize);
@@ -152,11 +153,13 @@ class ReviewerListProvider extends BaseProvider {
         _list = data;
         if (_list.hasMore()) {
           _list.pageNo += 1;
+          flag = true;
         }
       }
     }
     setBusy();
     // notifyListeners();
+    return flag;
   }
 
   void onToHome(User user) {

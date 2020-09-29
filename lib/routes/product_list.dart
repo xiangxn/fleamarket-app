@@ -60,7 +60,7 @@ class _ProductList extends State<ProductList> {
               child: StaggeredGridView.countBuilder(
                 controller: widget.controller,
                 // physics: ClampingScrollPhysics(),
-                itemCount: provider.productPage.data.length,
+                itemCount: provider.productPage.data?.length ?? 0,
                 staggeredTileBuilder: (inx) => StaggeredTile.fit(2),
                 crossAxisCount: 4,
                 mainAxisSpacing: 6, // 垂直间距
@@ -206,20 +206,23 @@ class ProductListProvider extends BaseProvider {
     return page;
   }
 
-  onRefresh({int categoryid = 0, bool isRefresh = false, bool notify = true}) async {
+  Future<bool> onRefresh({int categoryid = 0, bool isRefresh = false, bool notify = true}) async {
+    bool flag = false;
     if (isRefresh) {
       _productPage.pageNo = 1;
       _productPage.clean();
-    } else {
-      _productPage.pageNo += 1;
-      _productPage.incres();
     }
     setBusy();
     _productPage = await this.onGetData(categoryid: categoryid, page: _productPage);
+    if (_productPage.hasMore()) {
+      _productPage.pageNo += 1;
+      flag = true;
+    }
     setBusy();
     if (notify) {
       notifyListeners();
     }
+    return flag;
   }
 
   Future<bool> onLoad(int categoryid) async {

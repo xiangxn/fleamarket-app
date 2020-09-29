@@ -31,7 +31,7 @@ class OrderCardGroup extends StatelessWidget {
                       if (snapshot.connectionState == ConnectionState.done) {
                         return ListView.builder(
                             physics: ClampingScrollPhysics(),
-                            itemCount: provider.page.data.length,
+                            itemCount: provider.page.data?.length ?? 0,
                             itemBuilder: (_, i) => Selector<OrderCardGroupProvider, Order>(
                                   selector: (_, __) => provider.page.data[i],
                                   builder: (_, order, __) {

@@ -128,7 +128,8 @@ class UserPublishProvider extends BaseProvider {
 
   DataPage<Product> get productPage => _page;
 
-  Future<void> fetchPublish({bool isRefresh = false}) async {
+  Future<bool> fetchPublish({bool isRefresh = false}) async {
+    bool flag = false;
     final user = Provider.of<UserModel>(context, listen: false).user;
     setBusy();
     if (isRefresh) {
@@ -141,16 +142,19 @@ class UserPublishProvider extends BaseProvider {
       _page = data;
       if (_page.hasMore()) {
         _page.pageNo += 1;
+        flag = true;
       }
     }
     setBusy();
     // notifyListeners();
+    return flag;
   }
 
-  Future<void> load() async {
+  Future<bool> load() async {
     if (_page.hasMore()) {
       await fetchPublish();
     }
+    return false;
   }
 
   toEdit(Product goods) async {

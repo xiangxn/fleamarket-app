@@ -214,11 +214,12 @@ class ProductReviewDetailProvider extends BaseProvider {
       showToast(this.translate("product_review.put_error"));
       return;
     }
-    String txt = await showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return InputDialog();
-        });
+    final txt = await Navigator.push(context, PopRoute(child: InputDialog()));
+    if (txt.runtimeType != String) return;
+    if (txt == null || txt.isEmpty || txt.length < 1) {
+      showToast(this.translate("product_review.memo_hint"));
+      return;
+    }
     final um = Provider.of<UserModel>(context, listen: false);
     showLoading();
     final res = await api.putReview(um.keys[1], um.user.userid, um.user.eosid, product.productId, true, memo: txt);
@@ -235,39 +236,56 @@ class ProductReviewDetailProvider extends BaseProvider {
 class InputDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final style = Provider.of<ThemeModel>(context, listen: false).theme;
     return BaseRoute<InputDialogProvider>(
       provider: InputDialogProvider(context),
       builder: (ctx, provider, widget) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-              child: TextField(
-                autofocus: true,
-                maxLines: 6,
-                maxLength: 500,
-                maxLengthEnforced: false,
-                textInputAction: TextInputAction.done,
-                controller: provider.memoController,
-                decoration: InputDecoration(
-                    hintText: provider.translate('product_review.memo_hint'),
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: EdgeInsets.all(8),
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.none))),
-              ),
-            ),
-            CustomButton(
-              width: double.infinity,
-              margin: EdgeInsets.all(8),
-              padding: EdgeInsets.all(16),
-              onTap: provider.submit,
-              text: provider.translate('controller.ok'),
-            )
-          ],
-        );
+        return Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Expanded(
+                    child: new GestureDetector(
+                        child: new Container(
+                          color: Colors.black54,
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        })),
+                Container(
+                    color: style.scaffoldBackgroundColor,
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                          child: TextField(
+                            autofocus: true,
+                            maxLines: 6,
+                            maxLength: 500,
+                            maxLengthEnforced: false,
+                            textInputAction: TextInputAction.done,
+                            controller: provider.memoController,
+                            decoration: InputDecoration(
+                                hintText: provider.translate('product_review.memo_hint'),
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding: EdgeInsets.all(8),
+                                enabledBorder: OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.none))),
+                          ),
+                        ),
+                        CustomButton(
+                          width: double.infinity,
+                          margin: EdgeInsets.all(8),
+                          padding: EdgeInsets.all(16),
+                          onTap: provider.submit,
+                          text: provider.translate('controller.ok'),
+                        )
+                      ],
+                    ))
+              ],
+            ));
       },
     );
   }
@@ -282,5 +300,58 @@ class InputDialogProvider extends BaseProvider {
 
   submit() async {
     pop(_memoController.text);
+  }
+}
+
+class PopRoute<T> extends PopupRoute {
+  final Duration _duration = Duration(milliseconds: 300);
+  Widget child;
+
+  PopRoute({@required this.child});
+
+  @override
+  Color get barrierColor => null;
+
+  @override
+  bool get barrierDismissible => true;
+
+  @override
+  String get barrierLabel => null;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+    return child;
+  }
+
+  @override
+  Duration get transitionDuration => _duration;
+}
+
+class BottomInputDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      backgroundColor: Colors.transparent,
+      body: new Column(
+        children: <Widget>[
+          Expanded(
+              child: new GestureDetector(
+            child: new Container(
+              color: Colors.black54,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          )),
+          new Container(
+              height: 50,
+              color: Colors.white,
+              child: TextField(
+                autofocus: true,
+                maxLines: 100,
+              ))
+        ],
+      ),
+    );
   }
 }

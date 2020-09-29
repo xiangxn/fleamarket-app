@@ -352,8 +352,8 @@ class DataApi {
     return await _search(query);
   }
 
-  Future<BaseReply> fetchProductByStatus(int status, int pageNo, int pageSize) async {
-    String query = "{productByStatus(status:$status, pageNo:$pageNo, pageSize:$pageSize)";
+  Future<BaseReply> fetchProductByStatus(int status, int ignoreUid, int pageNo, int pageSize) async {
+    String query = "{productByStatus(status:$status, ignoreUid:$ignoreUid, pageNo:$pageNo, pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
     query += "productId,title,price,postage,collections,seller{head,nickname},photos,status";
     query += "}}}";
@@ -414,7 +414,7 @@ class DataApi {
     data['product'] = product;
     data['pa'] = productAuction;
 
-    final result = await _putAction(actKey, eosid, "publish", data, authList: auth);
+    final result = await _putAction(actKey, eosid, "publish", data, authList: auth, sign: 1);
     return result.code == 0;
   }
 

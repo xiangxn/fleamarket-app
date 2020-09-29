@@ -13,7 +13,7 @@
         "no_data": "没有找到相关商品"
     },
     "category": {
-        "0": "最新",
+        "0": "NEW",
         "1": "数码",
         "2": "玩具",
         "3": "美妆",
@@ -275,7 +275,8 @@
         "vote_reviewer": "评审员",
         "apply_reviewer": "申请评审员",
         "audit_product": "审核商品",
-        "proposal": "提案"
+        "proposal": "提案",
+        "arbitration": "仲裁"
     },
     "reviewer_list": {
         "title": "评审员投票",

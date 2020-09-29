@@ -275,7 +275,8 @@
         "vote_reviewer": "评审员",
         "apply_reviewer": "申请评审员",
         "audit_product": "审核商品",
-        "proposal": "提案"
+        "proposal": "提案",
+        "arbitration": "仲裁"
     },
     "reviewer_list": {
         "title": "评审员投票",
