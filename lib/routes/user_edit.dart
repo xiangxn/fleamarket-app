@@ -104,7 +104,9 @@ class UserEditProvider extends BaseProvider {
     String headHash;
     String nn;
     if (head != null) {
+      showLoading(this.translate("dialog.uploading"));
       final result = await api.uploadFile(head);
+      closeLoading();
       if (result.code == 0) {
         headHash = result.msg;
       }
@@ -113,7 +115,9 @@ class UserEditProvider extends BaseProvider {
       nn = nickname;
     }
     //print("head:$headHash, nickname:$nn");
+    showLoading();
     final result = await api.setProfile(keys[1], user.eosid, head: headHash, nickname: nn);
+    closeLoading();
     if (result) {
       if (headHash != null) user.head = URL_IPFS_GATEWAY + headHash;
       if (nickname != null) user.nickname = nickname;
@@ -122,13 +126,13 @@ class UserEditProvider extends BaseProvider {
   }
 
   submit() async {
-    showLoading();
+    // showLoading();
     Uint8List imgData;
     String name;
     if (_photo != null) imgData = await _photo.originBytes;
     if (_controller.text != null && _controller.text != "") name = _controller.text;
     final result = await _setProfile(head: imgData, nickname: name);
-    closeLoading();
+    // closeLoading();
     if (result) {
       pop();
     } else {

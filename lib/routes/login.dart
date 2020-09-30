@@ -349,7 +349,7 @@ class LoginProvider extends BaseProvider implements TickerProvider {
   }
 
   sendVcode() async {
-    if (_phoneKey.currentState.validate() && !super.busy) {
+    if (_phoneKey.currentState.validate() && !this.busy) {
       _phoneKey.currentState.save();
       setBusy();
       final res = await api.sendSmsCode(_phone);
@@ -357,7 +357,7 @@ class LoginProvider extends BaseProvider implements TickerProvider {
         Global.prefs.setString(STORE_VCODE_TIMER, DateTime.now().toString());
         checkVcodeTimer();
       }
-      super.setBusy();
+      setBusy();
     }
   }
 

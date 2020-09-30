@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/common/location_data.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
@@ -353,8 +354,10 @@ class PublishProvider extends BaseProvider {
         futures.add(api.uploadFile(data));
       }
       try {
+        showLoading(this.translate("dialog.uploading"));
         final resList = await Future.wait(futures);
-        print("uploadFiles: $resList");
+        closeLoading();
+        Global.console("uploadFiles: $resList");
         if (resList.length > 0) {
           resList.forEach((f) {
             if (f.code == 0) (product['photos'] as List).add(f.msg);
@@ -366,7 +369,10 @@ class PublishProvider extends BaseProvider {
       }
     }
     // print("product: $product");
-    return await api.publishProduct(actKey, eosid, userId, product);
+    showLoading();
+    final res = await api.publishProduct(actKey, eosid, userId, product);
+    closeLoading();
+    return res;
   }
 
   submit() async {
@@ -391,13 +397,13 @@ class PublishProvider extends BaseProvider {
       showToast(translate('message.goods_location_empty'));
     }
     if (this._isUpdate) {
-      if (await super.confirm(translate('message.goods_re_publish'))) {
+      if (await confirm(translate('message.goods_re_publish'))) {
         // toast('重新编辑');
         pop();
       }
     } else {
       final um = Provider.of<UserModel>(context, listen: false);
-      showLoading();
+      // showLoading();
       Map product = {
         "pid": 0,
         "uid": um.user.userid,
@@ -419,7 +425,7 @@ class PublishProvider extends BaseProvider {
         "release_time": DateTime.now().toIso8601String()
       };
       final result = await _publishProduct(um.keys[1], um.user.eosid, um.user.userid, product, _photos);
-      closeLoading();
+      // closeLoading();
       if (result) {
         pop();
       } else {

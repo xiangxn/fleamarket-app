@@ -3,6 +3,7 @@
     "dialog": {
         "title": "温馨提示",
         "loading": "处理中...",
+        "uploading":"图片上传中...",
         "ok": "确定",
         "cancel": "取消"
     },
