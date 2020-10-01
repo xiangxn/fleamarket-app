@@ -1,6 +1,7 @@
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/data_api.dart';
 import 'package:bitsflea/common/ext_dialog.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:flutter/cupertino.dart';
@@ -66,9 +67,9 @@ class BaseProvider extends ChangeNotifier {
     if (loading) showLoading(msg);
     var res = await process;
     if (loading) closeLoading();
-    if (res.code == 0) {
-    } else {
-      if (toast) showToast(msg);
+    if (res.code != 0) {
+      Global.console(res.msg);
+      if (toast) showToast(res.msg);
     }
     return res;
   }

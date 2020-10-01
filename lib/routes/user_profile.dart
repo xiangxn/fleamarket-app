@@ -264,6 +264,7 @@ class UserProfileProvider extends BaseProvider {
 
   toEdit() async {
     await pushNamed(ROUTE_USER_EDIT);
+    notifyListeners();
   }
 
   /// 申请评审员

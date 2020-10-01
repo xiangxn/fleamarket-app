@@ -1,5 +1,5 @@
 //data
-const CONTRACT_NAME = "bitsfleamain";
+const CONTRACT_NAME = "bitsfleatest";
 const GRPC_HOST = 'api.bitsflea.com';
 //const String GRPC_HOST = '127.0.0.1';
 const URL_EOS_API = 'https://api-bostest.blockzone.net';
@@ -56,7 +56,8 @@ const STORE_FOLLOWS = "follows";
 const STORE_VCODE_TIMER = 'vcodeTimer';
 
 //其他
-const Map COIN_PRECISION = {"BOS": 4, "ETH": 8, "FMP": 4, "EOS": 4, "BTS": 5, "CNY": 4, "NULS": 8, "USDT": 8};
+// const Map COIN_PRECISION = {"BOS": 4, "ETH": 8, "FMP": 4, "EOS": 4, "BTS": 5, "CNY": 4, "NULS": 8, "USDT": 8};
+const Map COIN_PRECISION = {"FMP": 4, "BOS": 4, "EOS": 4, "NULS": 8, "USDT": 8};
 const CITY_LV = 'city';
 const CACHE_DISTRICT = 'cacheDisrict';
 const COUNTRY_LV = 'country';

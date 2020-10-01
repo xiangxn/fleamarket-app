@@ -55,7 +55,7 @@ class ReviewerListRoute extends StatelessWidget {
                       onLoad: () => model.fetchReviewers(isLoad: true),
                       child: ListView.separated(
                         // physics: ClampingScrollPhysics(),
-                        itemCount: model.list.data.length,
+                        itemCount: model.list.data?.length ?? 0,
                         itemBuilder: (_, i) {
                           return Selector<ReviewerListProvider, Reviewer>(
                             selector: (ctx, provider) => provider.list.data[i],
