@@ -11,6 +11,7 @@ import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/address_selector.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
+import 'package:bitsflea/widgets/ext_network_image.dart';
 import 'package:bitsflea/widgets/line_button_group.dart';
 import 'package:bitsflea/widgets/line_button_item.dart';
 import 'package:bitsflea/widgets/number_pad.dart';
@@ -24,6 +25,46 @@ import 'photos_selector.dart';
 class PublishRoute extends StatelessWidget {
   final Product product;
   PublishRoute({Key key, this.product}) : super(key: key);
+
+  Widget _buildImg(PublishProvider provider, dynamic photo) {
+    if (photo.runtimeType == AssetEntity) {
+      AssetEntity p = (photo as AssetEntity);
+      return FutureBuilder(
+          future: p.thumbData,
+          builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+            if (snapshot.hasData) return Image.memory(snapshot.data, fit: BoxFit.cover);
+            return CircularProgressIndicator();
+          });
+    }
+    return ExtNetworkImage('$URL_IPFS_GATEWAY$photo');
+  }
+
+  Widget _buildImgs(PublishProvider provider) {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+      ),
+      physics: ClampingScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: provider.photosCount,
+      itemBuilder: (_, i) {
+        final photo = i < provider.photos.length ? provider.photos[i] : null;
+        return GestureDetector(
+          onTap: provider.selectPhotos,
+          child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: photo != null
+                  ? ClipRRect(borderRadius: BorderRadius.circular(4), child: _buildImg(provider, photo))
+                  : Icon(Icons.add, color: Colors.grey, size: 28)),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,41 +131,7 @@ class PublishRoute extends StatelessWidget {
                                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.none))),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-                                child: GridView.builder(
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4,
-                                    mainAxisSpacing: 8,
-                                    crossAxisSpacing: 8,
-                                  ),
-                                  physics: ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: provider.photosCount,
-                                  itemBuilder: (_, i) {
-                                    AssetEntity photo = i < provider.photos.length ? provider.photos[i] : null;
-                                    return GestureDetector(
-                                      onTap: provider.selectPhotos,
-                                      child: DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(4),
-                                          ),
-                                          child: photo != null
-                                              ? ClipRRect(
-                                                  borderRadius: BorderRadius.circular(4),
-                                                  child: FutureBuilder(
-                                                      future: photo.thumbData,
-                                                      builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                                                        if (snapshot.hasData) return Image.memory(snapshot.data, fit: BoxFit.cover);
-                                                        return CircularProgressIndicator();
-                                                      }),
-                                                )
-                                              : Icon(Icons.add, color: Colors.grey, size: 28)),
-                                    );
-                                  },
-                                ),
-                              ),
+                              Padding(padding: EdgeInsets.fromLTRB(8, 8, 8, 8), child: _buildImgs(provider)),
                               LineButtonGroup(
                                 children: [
                                   LineButtonItem(
@@ -144,24 +151,25 @@ class PublishRoute extends StatelessWidget {
                                       onTap: provider.showAddressSelector),
                                 ],
                               ),
-                              CustomButton(
-                                width: double.infinity,
-                                margin: EdgeInsets.all(8),
-                                padding: EdgeInsets.all(16),
-                                onTap: provider.submit,
-                                text: provider.translate(provider.isUpdate ? 'controller.re_publish' : 'publish.publish_text'),
-                              ),
                               Offstage(
-                                offstage: !provider.isUpdate,
-                                child: CustomButton(
-                                  width: double.infinity,
-                                  margin: EdgeInsets.all(8),
-                                  padding: EdgeInsets.all(16),
-                                  color: Colors.red[500],
-                                  onTap: provider.delPublish,
-                                  text: provider.translate('controller.del_publish'),
-                                ),
-                              )
+                                  offstage: !(provider.product.status == ProductStatus.delisted),
+                                  child: CustomButton(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.all(8),
+                                    padding: EdgeInsets.all(16),
+                                    onTap: provider.submit,
+                                    text: provider.translate(provider.isUpdate ? 'controller.re_publish' : 'publish.publish_text'),
+                                  )),
+                              Offstage(
+                                  offstage: !(provider.product.status == ProductStatus.normal),
+                                  child: CustomButton(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.all(8),
+                                    padding: EdgeInsets.all(16),
+                                    color: Colors.red[500],
+                                    onTap: provider.delPublish,
+                                    text: provider.translate('controller.del_publish'),
+                                  ))
                             ],
                           )),
                     ),
@@ -186,7 +194,7 @@ class PublishProvider extends BaseProvider {
   double _pricingAmount = 0;
   double _freightAmount = 0;
   String _symbol;
-  List<AssetEntity> _photos = [];
+  List<dynamic> _photos = [];
   int _maxCount = 8;
   bool _isUpdate = false;
 
@@ -223,7 +231,7 @@ class PublishProvider extends BaseProvider {
   get titleLimit => 20;
   get descLimit => 100;
   get isUpdate => _isUpdate;
-  get product => _product;
+  Product get product => _product;
 
   Future<BaseReply> fetchCategories() async {
     BaseReply res = await api.fetchCategories();
@@ -279,6 +287,11 @@ class PublishProvider extends BaseProvider {
     _describeController.text = _product.description ?? '';
     _location = _product.position ?? _location;
     _category = _product.category ?? _categories[_categories.length - 1];
+
+    //处理已经上传的图片
+    if (_product.photos.length > 0) {
+      _photos.addAll(_product.photos);
+    }
 
     await Future.delayed(Duration(milliseconds: 500));
     _locationData = LocationData(api);
@@ -339,33 +352,53 @@ class PublishProvider extends BaseProvider {
       maxCount: _maxCount,
       selectedPhotos: [..._photos],
     );
-    List<AssetEntity> photos = await this.showDialog(screen);
+    List<dynamic> photos = await this.showDialog(screen);
     if (photos != null && photos.length != 0) {
       _photos = photos;
       notifyListeners();
     }
   }
 
-  Future<bool> _publishProduct(EOSPrivateKey actKey, String eosid, int userId, Map product, List<AssetEntity> photos) async {
+  Future<Map<int, BaseReply>> _uploadFile(Uint8List data, int index) async {
+    BaseReply res = await api.uploadFile(data);
+    return {index: res};
+  }
+
+  Future<bool> _publishProduct(EOSPrivateKey actKey, String eosid, int userId, Map product, List<dynamic> photos) async {
     if (photos != null) {
-      var futures = List<Future<BaseReply>>();
-      for (int i = 0; i < photos.length; i++) {
-        var data = await photos[i].originBytes;
-        futures.add(api.uploadFile(data));
+      var list = (product['photos'] as List);
+      if (list.length < photos.length) {
+        list.length = photos.length;
       }
-      try {
-        showLoading(this.translate("dialog.uploading"));
-        final resList = await Future.wait(futures);
-        closeLoading();
-        Global.console("uploadFiles: $resList");
-        if (resList.length > 0) {
-          resList.forEach((f) {
-            if (f.code == 0) (product['photos'] as List).add(f.msg);
-          });
+      var futures = List<Future<Map<int, BaseReply>>>();
+      for (int i = 0; i < photos.length; i++) {
+        if (photos[i].runtimeType == AssetEntity) {
+          final photo = (photos[i] as AssetEntity);
+          final data = await photo.originBytes;
+          futures.add(_uploadFile(data, i));
+        } else {
+          list[i] = photos[i];
         }
-      } catch (e) {
-        print(e);
-        return false;
+      }
+      if (futures.length > 0) {
+        try {
+          showLoading(this.translate("dialog.uploading"));
+          final resList = await Future.wait(futures);
+          closeLoading();
+          Global.console("uploadFiles: $resList");
+          if (resList.length > 0) {
+            resList.forEach((f) {
+              if (f.values.first.code == 0) {
+                list[f.keys.first] = f.values.first.msg;
+              } else {
+                Global.console("uploadFiles: upload failed. [${f.values.first.msg}]");
+              }
+            });
+          }
+        } catch (e) {
+          Global.console("uploadFiles Error: $e");
+          return false;
+        }
       }
     }
     // print("product: $product");
@@ -381,6 +414,7 @@ class PublishProvider extends BaseProvider {
     _product.price = '${this.pricingAmount} ${this._symbol}';
     _product.postage = '${this.freightAmount} ${this._symbol}';
     _product.position = this._location;
+    _product.status = ProductStatus.publish;
     if (_product.title.isEmpty) {
       showToast(translate('message.goods_title_empty'));
     } else if (_product.title.length > this.titleLimit) {
@@ -396,22 +430,21 @@ class PublishProvider extends BaseProvider {
     } else if (_product.position == null || _product.position.isEmpty) {
       showToast(translate('message.goods_location_empty'));
     }
+    bool isDo = true;
     if (this._isUpdate) {
-      if (await confirm(translate('message.goods_re_publish'))) {
-        // toast('重新编辑');
-        pop();
-      }
-    } else {
+      isDo = await confirm(translate('message.goods_re_publish'));
+    }
+    if (isDo) {
       final um = Provider.of<UserModel>(context, listen: false);
       // showLoading();
       Map product = {
-        "pid": 0,
+        "pid": _product.productId,
         "uid": um.user.userid,
         "title": _product.title,
         "description": _product.description,
         "photos": [],
         "category": _category.cid,
-        "status": 0,
+        "status": _product.status,
         "is_new": true,
         "is_returns": false,
         "reviewer": 0,
@@ -427,7 +460,10 @@ class PublishProvider extends BaseProvider {
       final result = await _publishProduct(um.keys[1], um.user.eosid, um.user.userid, product, _photos);
       // closeLoading();
       if (result) {
-        pop();
+        if (this._isUpdate)
+          pop(_product);
+        else
+          pop();
       } else {
         showToast(translate("publish.failure"));
       }
@@ -436,7 +472,16 @@ class PublishProvider extends BaseProvider {
 
   delPublish() async {
     if (await confirm(translate('message.goods_del_publish'))) {
-      pop();
+      showLoading();
+      final um = Provider.of<UserModel>(context, listen: false);
+      final user = um.user;
+      final res = await api.pulloff(um.keys[1], user.userid, user.eosid, _product.productId);
+      closeLoading();
+      if (res.code == 0) {
+        pop();
+      } else {
+        showToast(getErrorMessage(res.msg));
+      }
     }
   }
 

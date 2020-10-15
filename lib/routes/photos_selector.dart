@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
+import 'package:bitsflea/widgets/ext_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -15,7 +18,7 @@ import 'package:provider/provider.dart';
 class PhotosSelectPage extends StatelessWidget {
   final String title;
   final int maxCount;
-  final List<AssetEntity> selectedPhotos;
+  final List<dynamic> selectedPhotos;
 
   PhotosSelectPage({Key key, this.title, this.maxCount, this.selectedPhotos}) : super(key: key);
 
@@ -42,6 +45,21 @@ class PhotosSelectPage extends StatelessWidget {
             return Container(color: Colors.black);
           }
         });
+  }
+
+  Widget _buildPhoto(dynamic photo) {
+    if (photo.runtimeType == AssetEntity) {
+      return FutureBuilder(
+        future: photo.thumbData,
+        builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+          if (snapshot.hasData)
+            return Image.memory(snapshot.data, fit: BoxFit.cover);
+          else
+            return CircularProgressIndicator();
+        },
+      );
+    }
+    return ExtNetworkImage('$URL_IPFS_GATEWAY$photo');
   }
 
   @override
@@ -122,7 +140,7 @@ class PhotosSelectPage extends StatelessWidget {
                           Stack(
                             children: <Widget>[
                               _buildCamera(provider),
-                              Selector<PhotosSelectPageProvider, List<AssetEntity>>(
+                              Selector<PhotosSelectPageProvider, List<dynamic>>(
                                   selector: (ctx, provider) => provider.selectedPhotos,
                                   builder: (ctx, list, _) {
                                     return Positioned(
@@ -150,7 +168,7 @@ class PhotosSelectPage extends StatelessWidget {
                             ],
                           )
                         ])),
-                    Selector<PhotosSelectPageProvider, List<AssetEntity>>(
+                    Selector<PhotosSelectPageProvider, List<dynamic>>(
                         selector: (ctx, provider) => provider.selectedPhotos,
                         builder: (ctx, list, _) {
                           return AnimatedPositioned(
@@ -168,7 +186,7 @@ class PhotosSelectPage extends StatelessWidget {
                                     itemExtent: 75,
                                     itemCount: list.length,
                                     itemBuilder: (_, i) {
-                                      AssetEntity photo = list[i];
+                                      var photo = list[i];
                                       return GestureDetector(
                                           onTap: () => provider.selectPhoto(photo),
                                           child: Container(
@@ -176,18 +194,7 @@ class PhotosSelectPage extends StatelessWidget {
                                             height: 70,
                                             margin: EdgeInsets.only(left: i == 0 ? 0 : 5),
                                             child: Stack(children: [
-                                              Positioned.fill(
-                                                  child: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(3),
-                                                      child: FutureBuilder(
-                                                        future: photo.thumbData,
-                                                        builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                                                          if (snapshot.hasData)
-                                                            return Image.memory(snapshot.data, fit: BoxFit.cover);
-                                                          else
-                                                            return CircularProgressIndicator();
-                                                        },
-                                                      ))),
+                                              Positioned.fill(child: ClipRRect(borderRadius: BorderRadius.circular(3), child: _buildPhoto(photo))),
                                               Positioned(
                                                   top: 3,
                                                   right: 3,
@@ -219,7 +226,7 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
   List<CameraDescription> _cameras;
   int _cameraId = 0;
   List<AssetEntity> _photos = [];
-  List<AssetEntity> _selectedPhotos;
+  List<dynamic> _selectedPhotos;
   double _offset = 0;
   int _maxCount;
 
@@ -228,11 +235,11 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
   CameraController get cameraController => _cameraController;
   bool get cameraInit => _cameraController?.value?.isInitialized ?? false;
   List<AssetEntity> get photos => _photos;
-  List<AssetEntity> get selectedPhotos => _selectedPhotos;
+  List<dynamic> get selectedPhotos => _selectedPhotos;
   double get offset => _offset;
   int get cameraId => _cameraId;
 
-  PhotosSelectPageProvider(BuildContext context, int maxCount, List<AssetEntity> selectedPhotos) : super(context) {
+  PhotosSelectPageProvider(BuildContext context, int maxCount, List<dynamic> selectedPhotos) : super(context) {
     _tabs = [translate('photos.album'), translate('photos.camera')];
     _tabController = TabController(length: _tabs.length, vsync: this);
     _maxCount = maxCount ?? 1;
@@ -304,15 +311,26 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
     _offset = _selectedPhotos.length > 0 ? 80 : 0;
   }
 
-  bool hasSelected(AssetEntity photo) {
-    return _selectedPhotos.indexWhere((p) => p.id == photo.id) >= 0;
+  bool hasSelected(dynamic photo) {
+    int index = _selectedPhotos.indexWhere((p) {
+      if (p.runtimeType == AssetEntity) {
+        return p.id == photo.id;
+      }
+      return p == photo;
+    });
+    return index >= 0;
   }
 
-  selectPhoto(AssetEntity photo) {
+  selectPhoto(dynamic photo) {
     bool flag = true;
     var list = [..._selectedPhotos];
     if (hasSelected(photo)) {
-      list.removeWhere((p) => p.id == photo.id);
+      list.removeWhere((p) {
+        if (p.runtimeType == AssetEntity) {
+          return p.id == photo.id;
+        }
+        return p == photo;
+      });
     } else {
       if (list.length >= _maxCount) {
         flag = false;
@@ -360,7 +378,7 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
   }
 
   done() {
+    Global.console("selected photos: $_selectedPhotos");
     pop(_selectedPhotos);
-    print('完成照片选择...');
   }
 }

@@ -202,7 +202,7 @@ class ProductReviewDetailProvider extends BaseProvider {
     final res = await api.putReview(um.keys[1], um.user.userid, um.user.eosid, product.productId, false);
     closeLoading();
     if (res.code == 0) {
-      _product.status = 100;
+      _product.status = ProductStatus.normal;
       pop(_product);
     } else {
       showToast(getErrorMessage(res.msg));
@@ -225,7 +225,7 @@ class ProductReviewDetailProvider extends BaseProvider {
     final res = await api.putReview(um.keys[1], um.user.userid, um.user.eosid, product.productId, true, memo: txt);
     closeLoading();
     if (res.code == 0) {
-      _product.status = 300;
+      _product.status = ProductStatus.delisted;
       pop(_product);
     } else {
       showToast(getErrorMessage(res.msg));

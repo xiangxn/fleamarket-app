@@ -304,11 +304,13 @@ class DataApi {
     FavoriteRequest request = FavoriteRequest();
     request.user = userid;
     request.product = productId;
+    print("req: $request");
     try {
       final result = await _client.favorite(request, options: CallOptions(metadata: {'token': token}));
+      print("res: $result");
       return result.code == 0;
     } on GrpcError catch (e) {
-      print("favorite error: ${e.message}");
+      Global.console("favorite error: ${e.message}");
       return false;
     }
   }
@@ -486,5 +488,10 @@ class DataApi {
   Future<BaseReply> putReview(EOSPrivateKey actKey, int reviewerUid, String reviewerEosid, int productId, bool isDelisted, {String memo}) async {
     Map data = {'reviewer_uid': reviewerUid, 'reviewer_eosid': reviewerEosid, 'pid': productId, 'is_delisted': isDelisted, 'memo': memo};
     return await _putAction(actKey, reviewerEosid, "review", data);
+  }
+
+  Future<BaseReply> pulloff(EOSPrivateKey actKey, int userId, String eosId, int productId) async {
+    Map data = {'seller_uid': userId, "seller_eosid": eosId, "pid": productId};
+    return await _putAction(actKey, eosId, "pulloff", data);
   }
 }

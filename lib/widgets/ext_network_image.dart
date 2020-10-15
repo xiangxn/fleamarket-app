@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 typedef void OnTapEvent();
 
@@ -38,7 +39,8 @@ class ExtNetworkImage extends StatelessWidget {
       onTap: this.onTap,
       child: ClipRRect(
         borderRadius: this.borderRadius ?? BorderRadius.zero,
-        child: CachedNetworkImage(imageUrl: this.url, width: this.width, height: this.height, placeholder: _placeholder, imageBuilder: this.imageBuilder),
+        child: CachedNetworkImage(imageUrl: this.url, width: this.width, height: this.height, placeholder: _placeholder, imageBuilder: this.imageBuilder,
+        cacheManager: DefaultCacheManager(),),
       ),
     );
   }

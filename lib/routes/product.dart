@@ -72,7 +72,6 @@ class ProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("product build ********");
     return BaseRoute<ProductProvider>(
-      listen: false,
       provider: this.provider,
       builder: (_, provider, child) {
         return _createTabBar();
