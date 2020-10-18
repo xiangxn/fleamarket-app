@@ -1,4 +1,4 @@
-import 'package:bitsflea/common/constant.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
@@ -42,6 +42,10 @@ class SettingsRoute extends StatelessWidget {
                         suffix: Icon(Icons.style, color: provider.style),
                         prefixIcon: Icons.style,
                         onTap: () => provider.onSelectStyle()),
+                    LineButtonItem(
+                        text: provider.translate('setting.clean_cache'),
+                        prefixIcon: Icons.clear_all,
+                        onTap: () => provider.onClearCache()),
                     // LineButtonItem(text: provider.translate('setting.about'), prefixIcon: Icons.insert_emoticon, onTap: () => provider.pushNamed(ROUTE_ABOUT))
                   ],
                 )
@@ -94,5 +98,12 @@ class SettingProvider extends BaseProvider {
       _style = styles[styles.keys.first];
       tm.setTheme(_style[500].value);
     }
+  }
+
+  onClearCache() async{
+    final manager = DefaultCacheManager();
+    showLoading();
+    await manager.emptyCache();
+    closeLoading();
   }
 }

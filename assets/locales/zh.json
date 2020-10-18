@@ -3,7 +3,7 @@
     "dialog": {
         "title": "温馨提示",
         "loading": "处理中...",
-        "uploading":"图片上传中...",
+        "uploading": "图片上传中...",
         "ok": "确定",
         "cancel": "取消"
     },
@@ -270,7 +270,8 @@
         "null": "默认",
         "select_theme": "选择主题",
         "red": "红色",
-        "green": "绿色"
+        "green": "绿色",
+        "clean_cache": "清理缓存"
     },
     "govern": {
         "title": "治理",
