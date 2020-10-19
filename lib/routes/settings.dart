@@ -105,5 +105,6 @@ class SettingProvider extends BaseProvider {
     showLoading();
     await manager.emptyCache();
     closeLoading();
+    this.showToast(translate("setting.toast_clean_cache"));
   }
 }

@@ -122,6 +122,16 @@ class ChineseCupertinoLocalizations implements CupertinoLocalizations {
 
   @override
   String get todayLabel => "今天";
+
+  @override
+  String get modalBarrierDismissLabel => "关闭";
+
+  @override
+  String tabSemanticsLabel({int tabIndex, int tabCount}) {
+    assert(tabIndex >= 1);
+    assert(tabCount >= 1);
+    return '标签 $tabIndex of $tabCount';
+  }
 }
 
 class _ChineseDelegate extends LocalizationsDelegate<CupertinoLocalizations> {

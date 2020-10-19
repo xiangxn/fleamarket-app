@@ -45,9 +45,9 @@ class AddressSelector extends StatelessWidget {
               Container(
                 color: Colors.white,
                 child: LineButtonItem(
-                          text: provider.location,
-                          onTap: provider.selectCurrent,
-                        ),
+                  text: provider.location,
+                  onTap: provider.selectCurrent,
+                ),
               ),
               Container(
                 alignment: Alignment.centerLeft,
@@ -218,4 +218,9 @@ class AddressSelectorProvider extends BaseProvider implements WidgetsBindingObse
   void onPaused() {}
 
   void onDetached() {}
+
+  @override
+  Future<bool> didPushRouteInformation(RouteInformation routeInformation) {
+    return Future<bool>.value(false);
+  }
 }

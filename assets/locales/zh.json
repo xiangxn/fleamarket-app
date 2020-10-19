@@ -100,7 +100,7 @@
         "type": "类型",
         "address": "发货地址",
         "publish_text": "发布",
-        "desc_empty": "清填写商品描述",
+        "desc_empty": "请填写商品描述",
         "prices_empty": "请填写价格",
         "type_selector": "选择类型",
         "address_selector": "发货地址",
@@ -271,7 +271,8 @@
         "select_theme": "选择主题",
         "red": "红色",
         "green": "绿色",
-        "clean_cache": "清理缓存"
+        "clean_cache": "清理缓存",
+        "toast_clean_cache": "清理完成"
     },
     "govern": {
         "title": "治理",

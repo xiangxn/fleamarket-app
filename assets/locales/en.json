@@ -271,7 +271,8 @@
         "select_theme": "选择主题",
         "red": "红色",
         "green": "绿色",
-        "clean_cache": "清除缓存"
+        "clean_cache": "清除缓存",
+        "toast_clean_cache": "清理完成"
     },
     "govern": {
         "title": "治理",

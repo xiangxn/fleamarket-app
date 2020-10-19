@@ -4,6 +4,7 @@ import 'package:bitsflea/routes/product_detail.dart';
 import 'package:bitsflea/routes/user_fans.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,18 @@ import 'states/user.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Global.init().then((value) => runApp(MyApp()));
+  Global.init().then((value) {
+    runApp(MyApp());
+    SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Color(0xFF000000),
+      systemNavigationBarDividerColor: null,
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+    );
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  });
 }
 
 class MyApp extends StatelessWidget {
