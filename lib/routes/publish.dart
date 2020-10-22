@@ -152,13 +152,22 @@ class PublishRoute extends StatelessWidget {
                                 ],
                               ),
                               Offstage(
+                                  offstage: provider.isUpdate,
+                                  child: CustomButton(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.all(8),
+                                    padding: EdgeInsets.all(16),
+                                    onTap: provider.submit,
+                                    text: provider.translate('publish.publish_text'),
+                                  )),
+                              Offstage(
                                   offstage: !(provider.product.status == ProductStatus.delisted),
                                   child: CustomButton(
                                     width: double.infinity,
                                     margin: EdgeInsets.all(8),
                                     padding: EdgeInsets.all(16),
                                     onTap: provider.submit,
-                                    text: provider.translate(provider.isUpdate ? 'controller.re_publish' : 'publish.publish_text'),
+                                    text: provider.translate('controller.re_publish'),
                                   )),
                               Offstage(
                                   offstage: !(provider.product.status == ProductStatus.normal),
@@ -230,7 +239,7 @@ class PublishProvider extends BaseProvider {
 
   get titleLimit => 20;
   get descLimit => 100;
-  get isUpdate => _isUpdate;
+  bool get isUpdate => _isUpdate;
   Product get product => _product;
 
   Future<BaseReply> fetchCategories() async {
