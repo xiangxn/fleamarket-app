@@ -89,7 +89,7 @@ class UserEditProvider extends BaseProvider {
     Widget screen = PhotosSelectPage(
       title: translate('publish.photos_selector'),
     );
-    List<AssetEntity> photos = await this.showDialog(screen);
+    List<dynamic> photos = await this.showDialog(screen);
     if (photos != null && photos.length != 0) {
       _photo = photos[0];
       notifyListeners();
