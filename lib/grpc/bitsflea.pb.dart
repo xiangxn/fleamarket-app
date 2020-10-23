@@ -2799,3 +2799,203 @@ class ReceiptAddress extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   void clearIsDefault() => clearField(10);
 }
+
+class PayInfo extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('PayInfo',
+      package: const $pb.PackageName('bitsflea'), createEmptyInstance: create)
+    ..aOS(1, 'orderid')
+    ..a<$core.double>(2, 'amount', $pb.PbFieldType.OD)
+    ..aOS(3, 'symbol')
+    ..aOS(4, 'payAddr', protoName: 'payAddr')
+    ..a<$fixnum.Int64>(5, 'userId', $pb.PbFieldType.OU6,
+        protoName: 'userId', defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(6, 'productId', $pb.PbFieldType.OU3, protoName: 'productId')
+    ..hasRequiredFields = false;
+
+  PayInfo._() : super();
+  factory PayInfo() => create();
+  factory PayInfo.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory PayInfo.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  PayInfo clone() => PayInfo()..mergeFromMessage(this);
+  PayInfo copyWith(void Function(PayInfo) updates) =>
+      super.copyWith((message) => updates(message as PayInfo));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static PayInfo create() => PayInfo._();
+  PayInfo createEmptyInstance() => create();
+  static $pb.PbList<PayInfo> createRepeated() => $pb.PbList<PayInfo>();
+  @$core.pragma('dart2js:noInline')
+  static PayInfo getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PayInfo>(create);
+  static PayInfo _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get orderid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set orderid($core.String v) {
+    $_setString(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasOrderid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOrderid() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get amount => $_getN(1);
+  @$pb.TagNumber(2)
+  set amount($core.double v) {
+    $_setDouble(1, v);
+  }
+
+  @$pb.TagNumber(2)
+  $core.bool hasAmount() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAmount() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get symbol => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set symbol($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasSymbol() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSymbol() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get payAddr => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set payAddr($core.String v) {
+    $_setString(3, v);
+  }
+
+  @$pb.TagNumber(4)
+  $core.bool hasPayAddr() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPayAddr() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get userId => $_getI64(4);
+  @$pb.TagNumber(5)
+  set userId($fixnum.Int64 v) {
+    $_setInt64(4, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasUserId() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearUserId() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get productId => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set productId($core.int v) {
+    $_setUnsignedInt32(5, v);
+  }
+
+  @$pb.TagNumber(6)
+  $core.bool hasProductId() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearProductId() => clearField(6);
+}
+
+class PayInfoRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('PayInfoRequest',
+      package: const $pb.PackageName('bitsflea'), createEmptyInstance: create)
+    ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6,
+        protoName: 'userId', defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(2, 'productId', $pb.PbFieldType.OU3, protoName: 'productId')
+    ..a<$core.double>(3, 'amount', $pb.PbFieldType.OD)
+    ..aOS(4, 'symbol')
+    ..aOB(5, 'mainPay', protoName: 'mainPay')
+    ..hasRequiredFields = false;
+
+  PayInfoRequest._() : super();
+  factory PayInfoRequest() => create();
+  factory PayInfoRequest.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory PayInfoRequest.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  PayInfoRequest clone() => PayInfoRequest()..mergeFromMessage(this);
+  PayInfoRequest copyWith(void Function(PayInfoRequest) updates) =>
+      super.copyWith((message) => updates(message as PayInfoRequest));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static PayInfoRequest create() => PayInfoRequest._();
+  PayInfoRequest createEmptyInstance() => create();
+  static $pb.PbList<PayInfoRequest> createRepeated() =>
+      $pb.PbList<PayInfoRequest>();
+  @$core.pragma('dart2js:noInline')
+  static PayInfoRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PayInfoRequest>(create);
+  static PayInfoRequest _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get userId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set userId($fixnum.Int64 v) {
+    $_setInt64(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasUserId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get productId => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set productId($core.int v) {
+    $_setUnsignedInt32(1, v);
+  }
+
+  @$pb.TagNumber(2)
+  $core.bool hasProductId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearProductId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get amount => $_getN(2);
+  @$pb.TagNumber(3)
+  set amount($core.double v) {
+    $_setDouble(2, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasAmount() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAmount() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get symbol => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set symbol($core.String v) {
+    $_setString(3, v);
+  }
+
+  @$pb.TagNumber(4)
+  $core.bool hasSymbol() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSymbol() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.bool get mainPay => $_getBF(4);
+  @$pb.TagNumber(5)
+  set mainPay($core.bool v) {
+    $_setBool(4, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasMainPay() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMainPay() => clearField(5);
+}

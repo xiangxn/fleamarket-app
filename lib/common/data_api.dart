@@ -12,6 +12,7 @@ import 'constant.dart';
 import '../grpc/google/protobuf/wrappers.pb.dart';
 import 'package:eosdart/eosdart.dart';
 import 'package:eosdart/src/serialize.dart' as ser;
+import 'package:fixnum/fixnum.dart' as $fixnum;
 
 class DataApi {
   static BitsFleaClient _client;
@@ -201,6 +202,11 @@ class DataApi {
     request.userid = userid;
     final res = await _client.setDefaultAddr(request, options: CallOptions(metadata: {'token': token}));
     return res.code == 0;
+  }
+
+  Future<BaseReply> getDefaultAddr(int userid) async {
+    final query = "{receiptaddresses(userid:$userid,isDefault:true){edges{node{rid,userid,province,city,district,phone,name,address,postcode}}}}";
+    return await _search(query);
   }
 
   Future<bool> addRecAddr(AddressRequest addr) async {
@@ -397,10 +403,20 @@ class DataApi {
 
   Future<List<Holding>> getUserBalances(String eosid) async {
     EOSClient client = EOSClient(URL_EOS_API, "v1");
-    var res = await client.getCurrencyBalance("eosio.token", eosid);
+    var res = await client.getCurrencyBalance(MAIN_NET_CONTRACT_NAME, eosid);
     final res2 = await client.getCurrencyBalance(CONTRACT_NAME, eosid);
     res.addAll(res2);
     return res;
+  }
+
+  Future<Holding> getUserBalance(String eosId, String symbol, {String contract}) async {
+    if (contract == null) {
+      contract = symbol == MAIN_NET_ASSET_SYMBOL ? MAIN_NET_CONTRACT_NAME : CONTRACT_NAME;
+    }
+    EOSClient client = EOSClient(URL_EOS_API, "v1");
+    final list = await client.getCurrencyBalance(contract, eosId, symbol);
+    if (list.length > 0) return list[0];
+    return Holding.fromJson("0 $symbol");
   }
 
   Future<bool> publishProduct(EOSPrivateKey actKey, String eosid, int userId, Map product, [Map productAuction]) async {
@@ -493,5 +509,21 @@ class DataApi {
   Future<BaseReply> pulloff(EOSPrivateKey actKey, int userId, String eosId, int productId) async {
     Map data = {'seller_uid': userId, "seller_eosid": eosId, "pid": productId};
     return await _putAction(actKey, eosId, "pulloff", data);
+  }
+
+  Future<BaseReply> placeorder(EOSPrivateKey actKey, int userId, String eosId, int productId, String orderId) async {
+    Map data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'pid': productId, 'order_id': 0};
+    return await _putAction(actKey, eosId, "placeorder", data, sign: 1);
+  }
+
+  Future<BaseReply> createPayInfo(int userId, int productId, double amount, String symbol, bool mainPay) async {
+    final token = await getToken();
+    PayInfoRequest pir = PayInfoRequest();
+    pir.userId = $fixnum.Int64.parseInt(userId.toString());
+    pir.productId = productId;
+    pir.amount = amount;
+    pir.symbol = symbol;
+    pir.mainPay = mainPay;
+    return _client.createPayInfo(pir, options: CallOptions(metadata: {'token': token}));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/common/type.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
@@ -79,7 +80,7 @@ class OrderCard extends StatelessWidget {
                       SizedBox(
                         width: 80,
                         height: 80,
-                        child: ExtNetworkImage(provider.order.productInfo.photos[0], imageBuilder: (_, imageProvider) {
+                        child: ExtNetworkImage(getIPFSUrl(provider.order.productInfo.photos[0]), imageBuilder: (_, imageProvider) {
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: Image(

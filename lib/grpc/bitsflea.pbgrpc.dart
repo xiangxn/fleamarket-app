@@ -82,6 +82,11 @@ class BitsFleaClient extends $grpc.Client {
       '/bitsflea.BitsFlea/Upload',
       ($0.FileRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
+  static final _$createPayInfo =
+      $grpc.ClientMethod<$0.PayInfoRequest, $0.BaseReply>(
+          '/bitsflea.BitsFlea/CreatePayInfo',
+          ($0.PayInfoRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
 
   BitsFleaClient($grpc.ClientChannel channel, {$grpc.CallOptions options})
       : super(channel, options: options);
@@ -199,6 +204,14 @@ class BitsFleaClient extends $grpc.Client {
         options: options);
     return $grpc.ResponseFuture(call);
   }
+
+  $grpc.ResponseFuture<$0.BaseReply> createPayInfo($0.PayInfoRequest request,
+      {$grpc.CallOptions options}) {
+    final call = $createCall(
+        _$createPayInfo, $async.Stream.fromIterable([request]),
+        options: options);
+    return $grpc.ResponseFuture(call);
+  }
 }
 
 abstract class BitsFleaServiceBase extends $grpc.Service {
@@ -313,6 +326,13 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.FileRequest.fromBuffer(value),
         ($0.BaseReply value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PayInfoRequest, $0.BaseReply>(
+        'CreatePayInfo',
+        createPayInfo_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.PayInfoRequest.fromBuffer(value),
+        ($0.BaseReply value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.BaseReply> register_Pre(
@@ -390,6 +410,11 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
     return upload(call, await request);
   }
 
+  $async.Future<$0.BaseReply> createPayInfo_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.PayInfoRequest> request) async {
+    return createPayInfo(call, await request);
+  }
+
   $async.Future<$0.BaseReply> register(
       $grpc.ServiceCall call, $0.RegisterRequest request);
   $async.Future<$0.BaseReply> sendSmsCode(
@@ -420,4 +445,6 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.SetDefaultAddrRequest request);
   $async.Future<$0.BaseReply> upload(
       $grpc.ServiceCall call, $0.FileRequest request);
+  $async.Future<$0.BaseReply> createPayInfo(
+      $grpc.ServiceCall call, $0.PayInfoRequest request);
 }

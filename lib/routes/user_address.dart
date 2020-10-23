@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UserAddressRoute extends StatelessWidget {
+  UserAddressRoute({Key key, this.isSelecter}) : super(key: key);
+  final bool isSelecter;
+
   @override
   Widget build(BuildContext context) {
     return BaseRoute<UserAddressProvider>(
@@ -69,37 +72,43 @@ class UserAddressRoute extends StatelessWidget {
                               }
                               return Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 4),
-                                child: Card(
-                                  elevation: 0,
-                                  color: address.isDefault ? Colors.green : Colors.white,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 16, top: 16, right: 16),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(provider.translate('combo_text.consignee', translationParams: {"name": address.name}),
+                                child: InkWell(
+                                  onTap: this.isSelecter ? () => provider.onSelect(address) : null,
+                                  child: Card(
+                                    elevation: 0,
+                                    color: address.isDefault ? Colors.green : Colors.white,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 16, top: 16, right: 16),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(provider.translate('combo_text.consignee', translationParams: {"name": address.name}),
+                                                  style: address.isDefault ? activeStyle : inactiveStyle),
+                                              Text(provider.translate('combo_text.contact', translationParams: {"value": address.phone}),
+                                                  style: address.isDefault ? activeStyle : inactiveStyle),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 12),
+                                            child: Text(
+                                                provider.translate('combo_text.shipping_address',
+                                                    translationParams: {"addr": '${address.province}${address.city}${address.district}${address.address}'}),
                                                 style: address.isDefault ? activeStyle : inactiveStyle),
-                                            Text(provider.translate('combo_text.contact', translationParams: {"value": address.phone}),
-                                                style: address.isDefault ? activeStyle : inactiveStyle),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 12),
-                                          child: Text(
-                                              provider.translate('combo_text.shipping_address',
-                                                  translationParams: {"addr": '${address.province}${address.city}${address.district}${address.address}'}),
-                                              style: address.isDefault ? activeStyle : inactiveStyle),
-                                        ),
-                                        DecoratedBox(
-                                            decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey[300]))),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: controller,
-                                            ))
-                                      ],
+                                          ),
+                                          Offstage(
+                                            offstage: this.isSelecter,
+                                            child: DecoratedBox(
+                                                decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey[300]))),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: controller,
+                                                )),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -137,6 +146,10 @@ class UserAddressProvider extends BaseProvider {
     if (flag != null && flag) {
       notifyListeners();
     }
+  }
+
+  onSelect(ReceiptAddress address) {
+    this.pop(address);
   }
 
   setDefault(ReceiptAddress address) async {

@@ -3,7 +3,7 @@
     "dialog": {
         "title": "温馨提示",
         "loading": "处理中...",
-        "uploading":"图片上传中...",
+        "uploading": "图片上传中...",
         "ok": "确定",
         "cancel": "取消"
     },
@@ -100,7 +100,7 @@
         "type": "类型",
         "address": "发货地址",
         "publish_text": "发布",
-        "desc_empty": "清填写商品描述",
+        "desc_empty": "请填写商品描述",
         "prices_empty": "请填写价格",
         "type_selector": "选择类型",
         "address_selector": "发货地址",
@@ -141,7 +141,8 @@
         "order_no_address": "请选择或添加一个收货地址",
         "password_empty": "请输入密码",
         "password_error": "密码错误",
-        "request_error": "请求发生异常，请稍候再试"
+        "request_error": "请求发生异常，请稍候再试",
+        "hint_password": "请输入密码以支付"
     },
     "controller": {
         "copy_pubkey": "{value} 已复制到剪贴板",
@@ -271,7 +272,7 @@
         "select_theme": "选择主题",
         "red": "红色",
         "green": "绿色",
-        "clean_cache": "清除缓存",
+        "clean_cache": "清理缓存",
         "toast_clean_cache": "清理完成"
     },
     "govern": {
@@ -298,5 +299,12 @@
         "pulloff": "下架",
         "memo_hint": "请输入下架原因",
         "put_error": "商品状态已经变化，可能已经被其他评审员抢先了"
+    },
+    "order": {
+        "create_order": "购买商品",
+        "address_select": "选择收货地址",
+        "total_price": "总计:  ",
+        "create_pay_info_err": "创建支付信息失败",
+        "create_order_err": "创建订单失败"
     }
 }

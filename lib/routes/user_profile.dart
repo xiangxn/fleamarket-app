@@ -174,7 +174,7 @@ class UserProfilePage extends StatelessWidget {
                         LineButtonItem(
                           text: provider.translate('user_profile.mine_address'),
                           prefixIcon: Icons.location_on,
-                          onTap: () => provider.pushNamed(ROUTE_USER_ADDRESS),
+                          onTap: () => provider.pushNamed(ROUTE_USER_ADDRESS, arguments: false),
                         ),
                         LineButtonItem(
                           text: provider.translate('user_profile.mine_withdrawal'),

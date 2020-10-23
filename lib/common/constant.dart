@@ -7,6 +7,10 @@ const URL_EOS_API = 'https://api-bostest.blockzone.net';
 const URL_IPFS_GATEWAY = "http://source.bitsflea.com:10001/ipfs/";
 const DEFAULT_HEAD = 'http://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';
 
+//主网配置
+const MAIN_NET_CONTRACT_NAME = "eosio.token";
+const MAIN_NET_ASSET_SYMBOL = "BOS";
+
 /// 短信重发延时
 const int TIMER_RESET = 60;
 const KEY_AMAP = "92e8c56420d01d5e106deaad56e0505f";
@@ -66,12 +70,16 @@ const DISTRICT_LV = 'district';
 class ProductStatus {
   ///发布
   static const publish = 0;
+
   ///正常
   static const normal = 100;
+
   ///完成交易
   static const completed = 200;
+
   ///下架
   static const delisted = 300;
+
   ///锁定
   static const locked = 400;
 }
@@ -79,20 +87,28 @@ class ProductStatus {
 class OrderStatus {
   ///待支付
   static const pendingPayment = 0;
+
   ///待确认
   static const pendingConfirm = 100;
+
   ///已取消
   static const cancelled = 200;
+
   ///待发货
   static const pendingShipment = 300;
+
   ///待收货
   static const pendingReceipt = 400;
+
   ///待结算 (这个状态用于平台结算)
   static const pendingSettle = 500;
+
   ///已完成
   static const completed = 600;
+
   ///仲裁中
   static const arbitration = 700;
+
   ///退货中
   static const returning = 800;
 }

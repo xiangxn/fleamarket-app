@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/funs.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -47,7 +48,7 @@ class ExtCircleAvatar extends StatelessWidget {
     if (this.url == null || this.url.isEmpty)
       return DEFAULT_HEAD;
     else
-      return this.url.startsWith("http://") || this.url.startsWith("https://") ? this.url : URL_IPFS_GATEWAY + this.url;
+      return getIPFSUrl(this.url);
   }
 
   @override

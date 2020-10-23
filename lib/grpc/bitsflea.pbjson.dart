@@ -426,3 +426,26 @@ const ReceiptAddress$json = const {
     const {'1': 'isDefault', '3': 10, '4': 1, '5': 8, '10': 'isDefault'},
   ],
 };
+
+const PayInfo$json = const {
+  '1': 'PayInfo',
+  '2': const [
+    const {'1': 'orderid', '3': 1, '4': 1, '5': 9, '10': 'orderid'},
+    const {'1': 'amount', '3': 2, '4': 1, '5': 1, '10': 'amount'},
+    const {'1': 'symbol', '3': 3, '4': 1, '5': 9, '10': 'symbol'},
+    const {'1': 'payAddr', '3': 4, '4': 1, '5': 9, '10': 'payAddr'},
+    const {'1': 'userId', '3': 5, '4': 1, '5': 4, '10': 'userId'},
+    const {'1': 'productId', '3': 6, '4': 1, '5': 13, '10': 'productId'},
+  ],
+};
+
+const PayInfoRequest$json = const {
+  '1': 'PayInfoRequest',
+  '2': const [
+    const {'1': 'userId', '3': 1, '4': 1, '5': 4, '10': 'userId'},
+    const {'1': 'productId', '3': 2, '4': 1, '5': 13, '10': 'productId'},
+    const {'1': 'amount', '3': 3, '4': 1, '5': 1, '10': 'amount'},
+    const {'1': 'symbol', '3': 4, '4': 1, '5': 9, '10': 'symbol'},
+    const {'1': 'mainPay', '3': 5, '4': 1, '5': 8, '10': 'mainPay'},
+  ],
+};

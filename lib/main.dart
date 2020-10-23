@@ -15,6 +15,7 @@ import 'common/constant.dart';
 import 'common/global.dart';
 import 'routes/apply_reviewer.dart';
 import 'routes/govern.dart';
+import 'routes/order.dart';
 import 'routes/order_detail.dart';
 import 'routes/product_review_detail.dart';
 import 'routes/product_review_list.dart';
@@ -132,7 +133,6 @@ class MyApp extends StatelessWidget {
               ROUTE_USER_BALANCES: (context) => UserBalancesRoute(),
               ROUTE_USER_KEYS: (context) => UserKeysRoute(),
               ROUTE_USER_WITHDRAWADDR: (context) => UserWithdrawAddrRoute(),
-              ROUTE_USER_ADDRESS: (context) => UserAddressRoute(),
               ROUTE_SETTING: (context) => SettingsRoute(),
               ROUTE_GOVERN: (context) => GovernRoute(),
               ROUTE_REVIEWER_LIST: (context) => ReviewerListRoute(),
@@ -158,6 +158,10 @@ class MyApp extends StatelessWidget {
                       return UserAddressEditRoute(address: settings.arguments);
                     case ROUTE_PRODUCT_REVIEW_DETAIL:
                       return ProductReviewDetailRoute(product: settings.arguments);
+                    case ROUTE_CREATE_ORDER:
+                      return CreateOrderRoute(product: settings.arguments);
+                    case ROUTE_USER_ADDRESS:
+                      return UserAddressRoute(isSelecter: settings.arguments);
                     default:
                       return Scaffold(
                         appBar: AppBar(),
