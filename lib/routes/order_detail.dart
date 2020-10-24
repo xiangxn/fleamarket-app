@@ -1,3 +1,5 @@
+import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
@@ -5,9 +7,12 @@ import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:bitsflea/widgets/ext_network_image.dart';
+import 'package:bitsflea/widgets/pay_confirm.dart';
 import 'package:bitsflea/widgets/price_text.dart';
+import 'package:eosdart/eosdart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:fixnum/fixnum.dart' as $fixnum;
 
 class OrderDetailRoute extends StatelessWidget {
   OrderDetailRoute({Key key, this.order}) : super(key: key);
@@ -66,7 +71,8 @@ class OrderDetailRoute extends StatelessWidget {
                                 //   child: ExtCircleAvatar(curUser?.head, 30, strokeWidth: 0),
                                 // ),
                                 Text(
-                                  provider.translate('combo_text.${isSell ? 'buyer' : 'seller'}', translationParams: {"name": curUser.nickname}),
+                                  provider.translate('combo_text.${isSell ? 'buyer' : 'seller'}',
+                                      translationParams: {"name": isSell ? provider.order.buyer.nickname : provider.order.seller.nickname}),
                                   style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                                 ),
                               ],
@@ -77,7 +83,7 @@ class OrderDetailRoute extends StatelessWidget {
                               SizedBox(
                                 width: 80,
                                 height: 80,
-                                child: ExtNetworkImage(provider.order.productInfo.photos[0], imageBuilder: (_, imageProvider) {
+                                child: ExtNetworkImage(getIPFSUrl(provider.order.productInfo.photos[0]), imageBuilder: (_, imageProvider) {
                                   return ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
                                     child: Image(
@@ -103,8 +109,8 @@ class OrderDetailRoute extends StatelessWidget {
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                PriceText(label: provider.translate('combo_text.price'), price: provider.order.productInfo.price),
-                                                PriceText(label: provider.translate('combo_text.postage'), price: provider.order.productInfo.postage),
+                                                PriceText(label: provider.translate('order.price'), price: provider.order.productInfo.price),
+                                                PriceText(label: provider.translate('order.postage'), price: provider.order.productInfo.postage),
                                               ],
                                             ),
                                           ))
@@ -118,7 +124,12 @@ class OrderDetailRoute extends StatelessWidget {
                             padding: EdgeInsets.only(top: 16),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[PriceText(label: provider.translate('order_detail.total_price'), price: provider.order.price)],
+                              children: <Widget>[
+                                PriceText(
+                                    label: provider.translate('order_detail.total_price'),
+                                    priceBold: true,
+                                    price: addPrice(provider.order.price, provider.order.postage))
+                              ],
                             ),
                           ),
                         ],
@@ -149,6 +160,7 @@ class OrderDetailRoute extends StatelessWidget {
                           onTap: provider.onProc,
                           margin: EdgeInsets.only(left: 8, top: 8, right: 8),
                           padding: EdgeInsets.all(16),
+                          color: Colors.orange,
                           text: _buildButtonText(provider, provider.order.status),
                         ),
                         CustomButton(
@@ -192,6 +204,30 @@ class OrderDetailProvider extends BaseProvider {
   }
 
   Future<void> onProc() async {
-    //TODO
+    final um = this.getUserInfo();
+    final price = Holding.fromJson(_order.price);
+    final postage = Holding.fromJson(_order.postage);
+    showLoading();
+    final balance = await api.getUserBalance(um.user.eosid, price.currency);
+    final total = price.amount + postage.amount;
+    bool mainPay = balance.amount >= total;
+    PayInfo payInfo = PayInfo();
+    payInfo.orderid = _order.orderid;
+    payInfo.amount = total;
+    payInfo.symbol = price.currency;
+    payInfo.payAddr = (_order.payAddr == null || _order.payAddr == "") ? CONTRACT_NAME : _order.payAddr;
+    payInfo.userId = $fixnum.Int64.parseInt(um.user.userid.toString());
+    payInfo.productId = _order.productInfo.productId;
+    //打开支付UI
+    // Widget screen = PayConfirm(mainPay: mainPay, payInfo: payInfo);
+    // final result = await this.showDialog(screen);
+    closeLoading();
+    await showModalBottomSheet(
+        context: context,
+        builder: (_) => PayConfirm(
+              mainPay: mainPay,
+              payInfo: payInfo,
+              order: _order,
+            ));
   }
 }

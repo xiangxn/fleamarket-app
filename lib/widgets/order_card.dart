@@ -66,10 +66,11 @@ class OrderCard extends StatelessWidget {
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(right: 16),
-                          child: ExtCircleAvatar(curUser?.head, 30, strokeWidth: 0),
+                          child: ExtCircleAvatar(isSell ? provider.order.buyer.head : provider.order.seller.head, 30, strokeWidth: 0),
                         ),
                         Text(
-                          provider.translate('combo_text.${isSell ? 'buyer' : 'seller'}', translationParams: {"name": curUser.nickname}),
+                          provider.translate('combo_text.${isSell ? 'buyer' : 'seller'}',
+                              translationParams: {"name": isSell ? provider.order.buyer.nickname : provider.order.seller.nickname}),
                           style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                         ),
                       ],
@@ -101,8 +102,13 @@ class OrderCard extends StatelessWidget {
                                 child: Text(provider.order.productInfo.title),
                               ),
                               Align(
-                                  alignment: Alignment.centerRight,
-                                  child: PriceText(label: provider.translate('combo_text.price'), price: provider.order.price))
+                                alignment: Alignment.centerRight,
+                                child: PriceText(
+                                  label: provider.translate('order.price'),
+                                  priceBold: true,
+                                  price: addPrice(provider.order.price, provider.order.postage),
+                                ),
+                              )
                             ],
                           ),
                         ),

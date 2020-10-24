@@ -1,15 +1,16 @@
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/address_select_card.dart';
-import 'package:bitsflea/widgets/address_select_card_group.dart';
 import 'package:bitsflea/widgets/confirm_password.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:bitsflea/widgets/ext_network_image.dart';
+import 'package:bitsflea/widgets/pay_confirm.dart';
 import 'package:bitsflea/widgets/price_text.dart';
 import 'package:eosdart/eosdart.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +113,7 @@ class CreateOrderRoute extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    PriceText(label: model.translate('order.total_price'), price: addPrice(product.price, product.postage), fontSize: 14, priceBold: true),
+                    PriceText(label: model.translate('order_detail.total_price'), price: addPrice(product.price, product.postage), fontSize: 14, priceBold: true),
                     CustomButton(
                       onTap: model.submit,
                       text: model.translate('controller.confirm_buy'),
@@ -163,7 +164,7 @@ class CreateOrderProvider extends BaseProvider {
       final total = price.amount + postage.amount;
       bool mainPay = balance.amount >= total;
       //生成支付信息
-      PayInfo payInfo;
+      PayInfo payInfo = PayInfo();
       final res = await api.createPayInfo(um.user.userid, _product.productId, total, price.currency, mainPay);
       if (res.code == 0) {
         res.data.unpackInto(payInfo);
@@ -172,15 +173,17 @@ class CreateOrderProvider extends BaseProvider {
         showToast(this.translate("order.create_pay_info_err"));
         return;
       }
-      final cRes = await api.placeorder(um.keys[1], um.user.userid, um.user.eosid, _product.productId, payInfo.orderid);
+      final cRes = await api.placeorder(um.keys[1], um.user.userid, um.user.eosid, _product.productId, payInfo.orderid, _address.rid);
       if (cRes.code != 0) {
         closeLoading();
         showToast(this.translate("order.create_order_err"));
         return;
       }
-      //TODO:处理支付UI
       closeLoading();
-      if (res.code == 0) {}
+      Global.console("pay info: $payInfo");
+      //打开支付UI
+      Widget screen = PayConfirm(mainPay: mainPay, payInfo: payInfo);
+      final result = await this.showDialog(screen);
     }
   }
 

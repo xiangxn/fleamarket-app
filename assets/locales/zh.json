@@ -217,7 +217,7 @@
     },
     "order_detail": {
         "title": "订单详情",
-        "total_price": "总计: ",
+        "total_price": "总计:  ",
         "address": "收货地址",
         "logistics_info": "物流信息",
         "cancel": "取消订单",
@@ -303,8 +303,16 @@
     "order": {
         "create_order": "购买商品",
         "address_select": "选择收货地址",
-        "total_price": "总计:  ",
         "create_pay_info_err": "创建支付信息失败",
-        "create_order_err": "创建订单失败"
+        "create_order_err": "创建订单失败",
+        "price": "价格:  ",
+        "postage": "运费:  "
+    },
+    "pay_confirm": {
+        "order_info": "订单信息",
+        "pay_mode": "支付方式",
+        "btn_pay": "立即支付",
+        "0": "余额",
+        "1": "imToken"
     }
 }

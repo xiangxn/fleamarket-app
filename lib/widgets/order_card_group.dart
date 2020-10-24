@@ -78,5 +78,5 @@ class OrderCardGroupProvider extends BaseProvider {
     return flag;
   }
 
-  void updateOrder({Order obj}) {}
+  Future<void> updateOrder({Order obj}) {}
 }

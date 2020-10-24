@@ -382,7 +382,7 @@ class DataApi {
   Future<BaseReply> fetchBuysByUser(int userid, int pageNo, int pageSize) async {
     String query = "{orderByBuyer(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "orderid,seller,buyer,status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
+    query += "orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,";
     query += "productInfo{productId,title,photos,price,postage}";
     query += "}}}";
@@ -392,7 +392,7 @@ class DataApi {
   Future<BaseReply> fetchSellerByUser(int userid, int pageNo, int pageSize) async {
     String query = "{orderBySeller(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "orderid,seller,buyer,status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
+    query += "orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,";
     query += "productInfo{productId,title,photos,price,postage}";
     query += "}}}";
@@ -511,9 +511,18 @@ class DataApi {
     return await _putAction(actKey, eosId, "pulloff", data);
   }
 
-  Future<BaseReply> placeorder(EOSPrivateKey actKey, int userId, String eosId, int productId, String orderId) async {
-    Map data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'pid': productId, 'order_id': 0};
-    return await _putAction(actKey, eosId, "placeorder", data, sign: 1);
+  Future<BaseReply> placeorder(EOSPrivateKey actKey, int userId, String eosId, int productId, String orderId, int toAddr) async {
+    Map data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'pid': productId, 'order_id': orderId, 'to_addr': toAddr};
+    Global.console("placeorder: $data");
+    List<Authorization> auth = [
+      Authorization()
+        ..actor = CONTRACT_NAME
+        ..permission = 'active',
+      Authorization()
+        ..actor = eosId
+        ..permission = 'active'
+    ];
+    return await _putAction(actKey, eosId, "placeorder", data, sign: 1, authList: auth);
   }
 
   Future<BaseReply> createPayInfo(int userId, int productId, double amount, String symbol, bool mainPay) async {

@@ -205,7 +205,7 @@ class UserProfilePage extends StatelessWidget {
                         width: double.infinity,
                         child: CustomButton(
                           text: provider.translate('user_profile.logout'),
-                          color: Colors.red,
+                          color: Colors.orange,
                           onTap: provider.logout,
                           padding: EdgeInsets.symmetric(vertical: 16),
                         ),
