@@ -436,6 +436,7 @@ const PayInfo$json = const {
     const {'1': 'payAddr', '3': 4, '4': 1, '5': 9, '10': 'payAddr'},
     const {'1': 'userId', '3': 5, '4': 1, '5': 4, '10': 'userId'},
     const {'1': 'productId', '3': 6, '4': 1, '5': 13, '10': 'productId'},
+    const {'1': 'payMode', '3': 7, '4': 1, '5': 13, '10': 'payMode'},
   ],
 };
 
