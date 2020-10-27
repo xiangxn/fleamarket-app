@@ -210,8 +210,9 @@ class OrderDetailProvider extends BaseProvider {
     showLoading();
     final balance = await api.getUserBalance(um.user.eosid, price.currency);
     final total = price.amount + postage.amount;
-    bool mainPay = balance.amount >= total;
+    final mainPay = balance.amount >= total;
     PayInfo payInfo = PayInfo();
+    payInfo.payMode = mainPay ? 0 : 1;
     payInfo.orderid = _order.orderid;
     payInfo.amount = total;
     payInfo.symbol = price.currency;
@@ -225,7 +226,6 @@ class OrderDetailProvider extends BaseProvider {
     await showModalBottomSheet(
         context: context,
         builder: (_) => PayConfirm(
-              mainPay: mainPay,
               payInfo: payInfo,
               order: _order,
             ));

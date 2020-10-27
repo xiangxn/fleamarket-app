@@ -1,16 +1,23 @@
+import 'dart:convert';
+
+import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
+import 'package:bitsflea/models/token_pocket.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
+import 'package:eosdart/eosdart.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'confirm_password.dart';
 
 class PayConfirm extends StatelessWidget {
-  final bool mainPay;
   final PayInfo payInfo;
   final Order order;
 
-  PayConfirm({Key key, this.mainPay, this.payInfo, this.order}) : super(key: key);
+  PayConfirm({Key key, this.payInfo, this.order}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +59,10 @@ class PayConfirm extends StatelessWidget {
                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                         Text(model.translate('pay_confirm.pay_mode'), style: TextStyle(color: Colors.grey[700])),
                         Row(
-                          children: [Text(model.translate("pay_confirm.${mainPay ? 0 : 1}")), Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400])],
+                          children: [
+                            Text(model.translate("pay_confirm.${model.payInfo.payMode}")),
+                            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400])
+                          ],
                         )
                       ])),
                   Padding(
@@ -83,10 +93,101 @@ class PayConfirmProvider extends BaseProvider {
 
   PayInfo get payInfo => _payInfo;
   Order get order => _order;
+
   PayConfirmProvider(BuildContext context, PayInfo payInfo, Order order) : super(context) {
     this._payInfo = payInfo;
     this._order = order;
   }
+  String _getChain(String symbol) {
+    String chain = "bos";
+    switch (symbol) {
+      case "USDT":
+      case "ETH":
+        chain = "eth";
+        break;
+      case "EOS":
+        chain = "eos";
+        break;
+      case "NULS":
+        chain = "nuls";
+        break;
+      default:
+        chain = "bos";
+        break;
+    }
+    return chain;
+  }
 
-  onProc() async {}
+  String _getContract(String symbol) {
+    String contract = CONTRACT_NAME;
+    switch (symbol) {
+      case "USDT":
+        contract = ADDR_USDT_ETH_ERC20;
+        break;
+      case "EOS":
+        contract = MAIN_NET_CONTRACT_NAME;
+        break;
+      default:
+        contract = CONTRACT_NAME;
+        break;
+    }
+    return contract;
+  }
+
+  onProc() async {
+    switch (payInfo.payMode) {
+      case 0: //合约主网支付
+        await this._doMainPay();
+        break;
+      case 1: //tokenpocket钱包支付
+        await this._doTokenPocket();
+        break;
+      default:
+        this.showToast("pay_confirm.error_unsupported");
+        break;
+    }
+  }
+
+  Future<void> _doMainPay() async {
+    final pwd = await showModalBottomSheet(context: context, builder: (_) => ConfirmPassword());
+    if (pwd != null) {
+      String contract;
+      if (payInfo.symbol == MAIN_NET_ASSET_SYMBOL) {
+        contract = MAIN_NET_CONTRACT_NAME;
+      } else {
+        contract = CONTRACT_NAME;
+      }
+      final um = this.getUserInfo();
+      final asset = Holding.fromJson("${payInfo.amount} ${payInfo.symbol}");
+      final res = await api.transfer(um.keys[1], um.user.eosid, payInfo.payAddr, asset, "p:${payInfo.orderid}", contract: contract);
+      if (res.code == 0) {
+        this.showToast(translate("pay_confirm.pay_success"));
+      } else {
+        this.showToast(res.msg);
+      }
+      this.pop();
+    }
+  }
+
+  Future<void> _doTokenPocket() async {
+    TokenPocket tp = TokenPocket();
+    tp.blockchain = this._getChain(_payInfo.symbol);
+    tp.contract = this._getContract(_payInfo.symbol);
+    tp.to = _payInfo.payAddr;
+    tp.amount = _payInfo.amount;
+    tp.symbol = _payInfo.symbol;
+    tp.precision = COIN_PRECISION[_payInfo.symbol];
+    tp.memo = "p:${_payInfo.orderid}";
+    tp.expired = (DateTime.now().add(Duration(minutes: 5)).millisecondsSinceEpoch / 1000).toString();
+    tp.desc = translate("pay_confirm.confirm_title");
+    String param = jsonEncode(tp);
+    param = Uri.encodeComponent(param);
+    String url = 'tpoutside://pull.activity?param=$param';
+    bool isOk = await launch(url);
+    if (isOk == false) {
+      this.showToast(translate("pay_confirm.launch_tp_err"));
+    } else {
+      this.pop();
+    }
+  }
 }

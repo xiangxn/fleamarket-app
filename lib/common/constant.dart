@@ -10,6 +10,7 @@ const DEFAULT_HEAD = 'http://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4Pcskkfh
 //主网配置
 const MAIN_NET_CONTRACT_NAME = "eosio.token";
 const MAIN_NET_ASSET_SYMBOL = "BOS";
+const ADDR_USDT_ETH_ERC20 = "0xdac17f958d2ee523a2206206994597c13d831ec7";
 
 /// 短信重发延时
 const int TIMER_RESET = 60;

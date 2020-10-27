@@ -7,7 +7,6 @@ import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/address_select_card.dart';
-import 'package:bitsflea/widgets/confirm_password.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:bitsflea/widgets/ext_network_image.dart';
 import 'package:bitsflea/widgets/pay_confirm.dart';
@@ -113,7 +112,8 @@ class CreateOrderRoute extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    PriceText(label: model.translate('order_detail.total_price'), price: addPrice(product.price, product.postage), fontSize: 14, priceBold: true),
+                    PriceText(
+                        label: model.translate('order_detail.total_price'), price: addPrice(product.price, product.postage), fontSize: 14, priceBold: true),
                     CustomButton(
                       onTap: model.submit,
                       text: model.translate('controller.confirm_buy'),
@@ -165,6 +165,7 @@ class CreateOrderProvider extends BaseProvider {
       bool mainPay = balance.amount >= total;
       //生成支付信息
       PayInfo payInfo = PayInfo();
+      payInfo.payMode = mainPay ? 0 : 1;
       final res = await api.createPayInfo(um.user.userid, _product.productId, total, price.currency, mainPay);
       if (res.code == 0) {
         res.data.unpackInto(payInfo);
@@ -182,7 +183,11 @@ class CreateOrderProvider extends BaseProvider {
       closeLoading();
       Global.console("pay info: $payInfo");
       //打开支付UI
-      Widget screen = PayConfirm(mainPay: mainPay, payInfo: payInfo);
+      Order order = Order();
+      order.orderid = payInfo.orderid;
+      order.productInfo = _product;
+      order.seller = _product.seller;
+      Widget screen = PayConfirm(payInfo: payInfo, order: order);
       final result = await this.showDialog(screen);
     }
   }

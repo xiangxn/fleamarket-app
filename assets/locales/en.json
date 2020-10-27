@@ -313,6 +313,10 @@
         "pay_mode": "支付方式",
         "btn_pay": "立即支付",
         "0": "余额",
-        "1": "imToken"
+        "1": "imToken",
+        "launch_tp_err": "你还没有安装TokenPocket",
+        "confirm_title": "订单支付",
+        "error_unsupported": "不支持的支付方式",
+        "pay_success": "支付成功"
     }
 }

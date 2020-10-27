@@ -463,14 +463,14 @@ class DataApi {
   }
 
   Future<BaseReply> _putAction(EOSPrivateKey actKey, String authEosid, String actionName, Map data,
-      {String permission = 'active', int sign = 0, List<Authorization> authList}) async {
+      {String permission = 'active', int sign = 0, List<Authorization> authList, String contract = CONTRACT_NAME}) async {
     final token = await getToken();
     TransactionRequest tr = TransactionRequest();
     if (sign == 1) tr.sign = 1;
     EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
     List<Action> actions = [
       Action()
-        ..account = CONTRACT_NAME
+        ..account = contract
         ..name = actionName
         ..authorization = authList ??
             [
@@ -534,5 +534,10 @@ class DataApi {
     pir.symbol = symbol;
     pir.mainPay = mainPay;
     return _client.createPayInfo(pir, options: CallOptions(metadata: {'token': token}));
+  }
+
+  Future<BaseReply> transfer(EOSPrivateKey actKey, String from, String to, Holding asset, String memo, {String contract = CONTRACT_NAME}) async {
+    Map data = {'from': from, 'to': to, 'quantity': "${asset.amount} ${asset.currency}", 'memo': memo};
+    return await _putAction(actKey, from, "transfer", data, contract: contract);
   }
 }
