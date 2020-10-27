@@ -19,11 +19,6 @@ class OrderDetailRoute extends StatelessWidget {
 
   final Order order;
 
-  Widget _buildStatus(OrderDetailProvider provider, int status) {
-    Color color = Colors.black;
-    return Text(provider.translate('order_type.$status'), style: TextStyle(color: color, fontSize: 13));
-  }
-
   @override
   Widget build(BuildContext context) {
     return BaseRoute<OrderDetailProvider>(
@@ -57,7 +52,7 @@ class OrderDetailRoute extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(provider.translate('combo_text.order_no', translationParams: {"oid": provider.order.orderid})),
-                                _buildStatus(provider, provider.order.status)
+                                buildOrderStatus(provider, provider.order)
                               ],
                             ),
                           ),
@@ -156,20 +151,24 @@ class OrderDetailRoute extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        CustomButton(
-                          onTap: provider.onProc,
-                          margin: EdgeInsets.only(left: 8, top: 8, right: 8),
-                          padding: EdgeInsets.all(16),
-                          color: Colors.orange,
-                          text: _buildButtonText(provider, provider.order.status),
-                        ),
-                        CustomButton(
-                          onTap: provider.onCancel,
-                          color: Colors.red,
-                          margin: EdgeInsets.all(8),
-                          padding: EdgeInsets.all(16),
-                          text: provider.translate("order_detail.cancel"),
-                        )
+                        Offstage(
+                            offstage: provider.isExpired(),
+                            child: CustomButton(
+                              onTap: provider.onProc,
+                              margin: EdgeInsets.only(left: 8, top: 8, right: 8),
+                              padding: EdgeInsets.all(16),
+                              color: Colors.orange,
+                              text: _buildButtonText(provider, provider.order.status),
+                            )),
+                        Offstage(
+                            offstage: !(provider.order.status == OrderStatus.pendingPayment || provider.order.status == OrderStatus.cancelled),
+                            child: CustomButton(
+                              onTap: provider.onCancel,
+                              color: Colors.red,
+                              margin: EdgeInsets.all(8),
+                              padding: EdgeInsets.all(16),
+                              text: provider.translate("order_detail.cancel"),
+                            )),
                       ],
                     ))
               ],
@@ -180,9 +179,9 @@ class OrderDetailRoute extends StatelessWidget {
 
   _buildButtonText(OrderDetailProvider provider, int status) {
     switch (status) {
-      case 0:
-      case 300:
-      case 400:
+      case OrderStatus.pendingPayment:
+      case OrderStatus.pendingShipment:
+      case OrderStatus.pendingReceipt:
         return provider.translate("order_detail.$status");
       default:
         return "";
@@ -200,7 +199,22 @@ class OrderDetailProvider extends BaseProvider {
   Order get order => _order;
 
   Future<void> onCancel() async {
-    //TODO
+    final um = this.getUserInfo();
+    showLoading();
+    final res = await api.cancelOrder(um.keys[1], um.user.userid, um.user.eosid, _order.orderid);
+    closeLoading();
+    if (res.code == 0) {
+      this.pop();
+    } else {
+      this.showToast(getErrorMessage(res.msg));
+    }
+  }
+
+  bool isExpired() {
+    DateTime now = DateTime.now();
+    DateTime expired = DateTime.parse("${order.payOutTime}Z");
+    expired = expired.add(Duration(hours: now.timeZoneOffset.inHours));
+    return now.isAfter(expired);
   }
 
   Future<void> onProc() async {

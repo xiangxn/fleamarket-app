@@ -213,7 +213,8 @@
         "500": "待结算",
         "600": "已完成",
         "700": "仲裁中",
-        "800": "退货中"
+        "800": "退货中",
+        "-1": "已过期"
     },
     "order_detail": {
         "title": "订单详情",
@@ -313,7 +314,7 @@
         "pay_mode": "支付方式",
         "btn_pay": "立即支付",
         "0": "余额",
-        "1": "imToken",
+        "1": "TokenPocket",
         "launch_tp_err": "你还没有安装TokenPocket",
         "confirm_title": "订单支付",
         "error_unsupported": "不支持的支付方式",

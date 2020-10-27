@@ -187,8 +187,14 @@ class CreateOrderProvider extends BaseProvider {
       order.orderid = payInfo.orderid;
       order.productInfo = _product;
       order.seller = _product.seller;
-      Widget screen = PayConfirm(payInfo: payInfo, order: order);
-      final result = await this.showDialog(screen);
+      // Widget screen = PayConfirm(payInfo: payInfo, order: order);
+      // final result = await this.showDialog(screen);
+      await showModalBottomSheet(
+          context: context,
+          builder: (_) => PayConfirm(
+                payInfo: payInfo,
+                order: order,
+              ));
     }
   }
 

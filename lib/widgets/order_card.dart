@@ -18,22 +18,6 @@ class OrderCard extends StatelessWidget {
   final Order order;
   final UpdateObjectCallback<Order> updateOrder;
 
-  Widget _buildStatus(OrderCardProvider provider, int status) {
-    // status = Random.secure().nextInt(4);
-    Color color = Colors.black;
-
-    if (status == 0) {
-      color = Colors.green;
-    } else if (status == 1) {
-      color = Colors.orange[800];
-    } else if (status == 2) {
-      color = Colors.red;
-    } else if (status == 3) {
-      color = Colors.grey;
-    }
-    return Text(provider.translate('order_type.$status'), style: TextStyle(color: color, fontSize: 13));
-  }
-
   @override
   Widget build(BuildContext context) {
     return BaseRoute<OrderCardProvider>(
@@ -55,7 +39,7 @@ class OrderCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(provider.translate('combo_text.order_no', translationParams: {"oid": provider.order.orderid.toString()})),
-                        _buildStatus(provider, provider.order.status)
+                        buildOrderStatus(provider, provider.order)
                       ],
                     ),
                   ),

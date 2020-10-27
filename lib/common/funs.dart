@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/grpc/google/protobuf/any.pb.dart';
 import 'package:bitsflea/grpc/google/protobuf/wrappers.pb.dart';
 import 'package:bitsflea/models/data_page.dart';
+import 'package:bitsflea/states/base.dart';
 import 'package:flutter/material.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
@@ -111,4 +113,41 @@ String getErrorMessage(String src) {
 
 String getIPFSUrl(String path) {
   return path.startsWith("http://") || path.startsWith("https://") ? path : URL_IPFS_GATEWAY + path;
+}
+
+Widget buildOrderStatus(BaseProvider provider, Order order) {
+  // status = Random.secure().nextInt(4);
+  Color color = Colors.black;
+  int status = order.status;
+
+  DateTime now = DateTime.now();
+  DateTime expired = DateTime.parse("${order.payOutTime}Z");
+  expired = expired.add(Duration(hours: now.timeZoneOffset.inHours));
+
+  if (now.isAfter(expired)) {
+    status = -1;
+  }
+  switch (status) {
+    case OrderStatus.pendingPayment:
+      color = Colors.orange[800];
+      color = Colors.green;
+      break;
+    case OrderStatus.pendingConfirm:
+    case OrderStatus.pendingShipment:
+    case OrderStatus.pendingReceipt:
+      color = Colors.red;
+      break;
+    case OrderStatus.completed:
+      color = Colors.grey;
+      break;
+    case OrderStatus.arbitration:
+    case OrderStatus.returning:
+      color = Colors.orange[800];
+      break;
+    default:
+      color = Colors.grey;
+      break;
+  }
+
+  return Text(provider.translate('order_type.$status'), style: TextStyle(color: color, fontSize: 13));
 }

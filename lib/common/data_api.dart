@@ -540,4 +540,9 @@ class DataApi {
     Map data = {'from': from, 'to': to, 'quantity': "${asset.amount} ${asset.currency}", 'memo': memo};
     return await _putAction(actKey, from, "transfer", data, contract: contract);
   }
+
+  Future<BaseReply> cancelOrder(EOSPrivateKey actKey, int userId, String eosId, String orderId) async {
+    Map data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'order_id': orderId};
+    return await _putAction(actKey, eosId, "cancelorder", data);
+  }
 }
