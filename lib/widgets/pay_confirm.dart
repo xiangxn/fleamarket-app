@@ -159,7 +159,9 @@ class PayConfirmProvider extends BaseProvider {
       }
       final um = this.getUserInfo();
       final asset = Holding.fromJson("${payInfo.amount} ${payInfo.symbol}");
+      showLoading();
       final res = await api.transfer(um.keys[1], um.user.eosid, payInfo.payAddr, asset, "p:${payInfo.orderid}", contract: contract);
+      closeLoading();
       if (res.code == 0) {
         this.showToast(translate("pay_confirm.pay_success"));
       } else {

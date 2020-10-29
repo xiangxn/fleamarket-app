@@ -1863,6 +1863,7 @@ class Order extends $pb.GeneratedMessage {
     ..aOS(17, 'endTime', protoName: 'endTime')
     ..a<$core.int>(18, 'delayedCount', $pb.PbFieldType.OU3,
         protoName: 'delayedCount')
+    ..a<$core.int>(19, 'toAddr', $pb.PbFieldType.OU3, protoName: 'toAddr')
     ..hasRequiredFields = false;
 
   Order._() : super();
@@ -2107,6 +2108,18 @@ class Order extends $pb.GeneratedMessage {
   $core.bool hasDelayedCount() => $_has(17);
   @$pb.TagNumber(18)
   void clearDelayedCount() => clearField(18);
+
+  @$pb.TagNumber(19)
+  $core.int get toAddr => $_getIZ(18);
+  @$pb.TagNumber(19)
+  set toAddr($core.int v) {
+    $_setUnsignedInt32(18, v);
+  }
+
+  @$pb.TagNumber(19)
+  $core.bool hasToAddr() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearToAddr() => clearField(19);
 }
 
 class ProReturn extends $pb.GeneratedMessage {
@@ -3011,4 +3024,72 @@ class PayInfoRequest extends $pb.GeneratedMessage {
   $core.bool hasMainPay() => $_has(4);
   @$pb.TagNumber(5)
   void clearMainPay() => clearField(5);
+}
+
+class LogisticsRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('LogisticsRequest',
+      package: const $pb.PackageName('bitsflea'), createEmptyInstance: create)
+    ..aOS(1, 'com')
+    ..aOS(2, 'number')
+    ..a<$fixnum.Int64>(3, 'userId', $pb.PbFieldType.OU6,
+        protoName: 'userId', defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false;
+
+  LogisticsRequest._() : super();
+  factory LogisticsRequest() => create();
+  factory LogisticsRequest.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory LogisticsRequest.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  LogisticsRequest clone() => LogisticsRequest()..mergeFromMessage(this);
+  LogisticsRequest copyWith(void Function(LogisticsRequest) updates) =>
+      super.copyWith((message) => updates(message as LogisticsRequest));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static LogisticsRequest create() => LogisticsRequest._();
+  LogisticsRequest createEmptyInstance() => create();
+  static $pb.PbList<LogisticsRequest> createRepeated() =>
+      $pb.PbList<LogisticsRequest>();
+  @$core.pragma('dart2js:noInline')
+  static LogisticsRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LogisticsRequest>(create);
+  static LogisticsRequest _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get com => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set com($core.String v) {
+    $_setString(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasCom() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCom() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get number => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set number($core.String v) {
+    $_setString(1, v);
+  }
+
+  @$pb.TagNumber(2)
+  $core.bool hasNumber() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNumber() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get userId => $_getI64(2);
+  @$pb.TagNumber(3)
+  set userId($fixnum.Int64 v) {
+    $_setInt64(2, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasUserId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearUserId() => clearField(3);
 }

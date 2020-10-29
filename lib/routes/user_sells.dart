@@ -37,7 +37,7 @@ class UserSellsProvider extends BaseProvider{
 
   Future<DataPage<Order>> fetchOrders({int pageNo, int pageSize, String key="orderBySeller", String key2}) async {
     final user = Provider.of<UserModel>(context, listen: false).user;
-    final res = await api.fetchBuysByUser(user.userid, pageNo, pageSize);
+    final res = await api.fetchSellerByUser(user.userid, pageNo, pageSize);
     if (res.code == 0) {
       var data = convertPageList(res.data, key, Order());
       return data;

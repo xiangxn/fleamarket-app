@@ -1,22 +1,19 @@
-import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
-import 'package:bitsflea/states/user.dart';
-import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class ConfirmPassword extends StatelessWidget {
+import 'custom_button.dart';
+
+class InputShipmentNumber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BaseRoute<ConfirmPasswordProvider>(
-      provider: ConfirmPasswordProvider(context),
+    return BaseRoute<InputShipmentNumberProvider>(
+      provider: InputShipmentNumberProvider(context),
       builder: (_, model, __) {
         return AnimatedPadding(
           padding: MediaQuery.of(context).viewInsets,
           duration: Duration(milliseconds: 100),
           child: TextField(
-            obscureText: true,
             textInputAction: TextInputAction.done,
             controller: model.controller,
             focusNode: model.focusNode,
@@ -28,7 +25,7 @@ class ConfirmPassword extends StatelessWidget {
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(left: 8),
                 isDense: true,
-                hintText: model.translate('message.hint_password'),
+                hintText: model.translate('order_detail.hint_enter_number'),
                 suffix: CustomButton(
                   autoUnfocus: false,
                   onTap: model.onSubmit,
@@ -42,9 +39,8 @@ class ConfirmPassword extends StatelessWidget {
   }
 }
 
-class ConfirmPasswordProvider extends BaseProvider {
-  ConfirmPasswordProvider(BuildContext context) : super(context);
-
+class InputShipmentNumberProvider extends BaseProvider {
+  InputShipmentNumberProvider(BuildContext context) : super(context);
   TextEditingController _controller = TextEditingController();
   FocusNode _focusNode = FocusNode();
 
@@ -55,17 +51,9 @@ class ConfirmPasswordProvider extends BaseProvider {
     str ??= _controller.text;
     FocusScope.of(context).requestFocus(_focusNode);
     if (str.isEmpty) {
-      this.showToast(translate('message.password_empty'));
+      this.showToast(translate('order_detail.number_err_msg'));
     } else {
-      final um = Provider.of<UserModel>(context, listen: false);
-      showLoading();
-      bool v = await validateKey(um.user.phone, str, um.keys[2]);
-      closeLoading();
-      if (v) {
-        this.pop(str);
-      } else {
-        this.showToast(translate('message.password_error'));
-      }
+      this.pop(str);
     }
   }
 

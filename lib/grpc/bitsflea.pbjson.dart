@@ -343,6 +343,7 @@ const Order$json = const {
     },
     const {'1': 'endTime', '3': 17, '4': 1, '5': 9, '10': 'endTime'},
     const {'1': 'delayedCount', '3': 18, '4': 1, '5': 13, '10': 'delayedCount'},
+    const {'1': 'toAddr', '3': 19, '4': 1, '5': 13, '10': 'toAddr'},
   ],
 };
 
@@ -448,5 +449,14 @@ const PayInfoRequest$json = const {
     const {'1': 'amount', '3': 3, '4': 1, '5': 1, '10': 'amount'},
     const {'1': 'symbol', '3': 4, '4': 1, '5': 9, '10': 'symbol'},
     const {'1': 'mainPay', '3': 5, '4': 1, '5': 8, '10': 'mainPay'},
+  ],
+};
+
+const LogisticsRequest$json = const {
+  '1': 'LogisticsRequest',
+  '2': const [
+    const {'1': 'com', '3': 1, '4': 1, '5': 9, '10': 'com'},
+    const {'1': 'number', '3': 2, '4': 1, '5': 9, '10': 'number'},
+    const {'1': 'userId', '3': 3, '4': 1, '5': 4, '10': 'userId'},
   ],
 };

@@ -383,7 +383,7 @@ class DataApi {
     String query = "{orderByBuyer(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
     query += "orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
-    query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,";
+    query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,toAddr,";
     query += "productInfo{productId,title,photos,price,postage}";
     query += "}}}";
     return await _search(query);
@@ -393,7 +393,7 @@ class DataApi {
     String query = "{orderBySeller(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
     query += "orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
-    query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,";
+    query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,toAddr,";
     query += "productInfo{productId,title,photos,price,postage}";
     query += "}}}";
     return await _search(query);
@@ -511,8 +511,13 @@ class DataApi {
     return await _putAction(actKey, eosId, "pulloff", data);
   }
 
-  Future<BaseReply> placeorder(EOSPrivateKey actKey, int userId, String eosId, int productId, String orderId, int toAddr) async {
-    Map data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'pid': productId, 'order_id': orderId, 'to_addr': toAddr};
+  Future<BaseReply> placeorder(EOSPrivateKey actKey, int userId, String eosId, int productId, String orderId, int toAddr, {String payAddr}) async {
+    Map data;
+    if (payAddr != null) {
+      data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'pid': productId, 'order_id': orderId, 'to_addr': toAddr, 'pay_addr': payAddr};
+    } else {
+      data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'pid': productId, 'order_id': orderId, 'to_addr': toAddr};
+    }
     Global.console("placeorder: $data");
     List<Authorization> auth = [
       Authorization()
@@ -537,12 +542,36 @@ class DataApi {
   }
 
   Future<BaseReply> transfer(EOSPrivateKey actKey, String from, String to, Holding asset, String memo, {String contract = CONTRACT_NAME}) async {
-    Map data = {'from': from, 'to': to, 'quantity': "${asset.amount} ${asset.currency}", 'memo': memo};
+    Map data = {'from': from, 'to': to, 'quantity': "${asset.amount.toStringAsFixed(COIN_PRECISION[asset.currency])} ${asset.currency}", 'memo': memo};
     return await _putAction(actKey, from, "transfer", data, contract: contract);
   }
 
   Future<BaseReply> cancelOrder(EOSPrivateKey actKey, int userId, String eosId, String orderId) async {
     Map data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'order_id': orderId};
     return await _putAction(actKey, eosId, "cancelorder", data);
+  }
+
+  Future<BaseReply> getReceiptAddress(int rid) async {
+    String query = "{receiptaddresses(rid:$rid){edges{node{rid,userid,province,city,district,phone,name,address,postcode}}}}";
+    return await _search(query);
+  }
+
+  Future<BaseReply> shipment(EOSPrivateKey actKey, int sellerUserId, String sellerEosId, String orderId, String number) async {
+    Map data = {'seller_uid': sellerUserId, 'seller_eosid': sellerEosId, 'order_id': orderId, 'number': number};
+    return await _putAction(actKey, sellerEosId, "shipment", data);
+  }
+
+  Future<BaseReply> confirmReceipt(EOSPrivateKey actKey, int buyerUid, String buyerEosId, String orderId) async {
+    Map data = {'buyer_uid': buyerUid, 'buyer_eosid': buyerEosId, 'order_id': orderId};
+    return await _putAction(actKey, buyerEosId, "conreceipt", data);
+  }
+
+  Future<BaseReply> getLogisticsInfo(int userId, String number, {String com = "auto"}) async {
+    final token = await getToken();
+    LogisticsRequest request = LogisticsRequest();
+    request.com = com;
+    request.number = number;
+    request.userId = $fixnum.Int64.parseInt(userId.toString());
+    return await _client.logisticsInfo(request, options: CallOptions(metadata: {'token': token}));
   }
 }

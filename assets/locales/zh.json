@@ -142,7 +142,8 @@
         "password_empty": "请输入密码",
         "password_error": "密码错误",
         "request_error": "请求发生异常，请稍候再试",
-        "hint_password": "请输入密码以支付"
+        "hint_password": "请输入密码以支付",
+        "successful_operation": "操作成功"
     },
     "controller": {
         "copy_pubkey": "{value} 已复制到剪贴板",
@@ -219,12 +220,16 @@
     "order_detail": {
         "title": "订单详情",
         "total_price": "总计:  ",
-        "address": "收货地址",
-        "logistics_info": "物流信息",
+        "address": "收货地址: ",
+        "logistics_info": "物流信息: ",
         "cancel": "取消订单",
         "0": "付款",
         "300": "确认发货",
-        "400": "确认收货"
+        "400": "确认收货",
+        "hint_enter_number": "请输入物流单号",
+        "number_err_msg": "物流单号不能为空",
+        "confirm_prompt": "确认收货后不能发起退货，你确定要收货吗？",
+        "not_logistics": "暂无物流信息"
     },
     "user_invited": {
         "title": "我邀请的"
