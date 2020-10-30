@@ -120,7 +120,10 @@ class OrderCardProvider extends BaseProvider {
 
   Order get order => _order;
 
-  toOrderDetail() {
-    pushNamed(ROUTE_ORDER_DETAIL, arguments: _order);
+  toOrderDetail() async {
+    final o = await pushNamed(ROUTE_ORDER_DETAIL, arguments: _order);
+    if (_updateOrder != null) {
+      _updateOrder(obj: o);
+    }
   }
 }

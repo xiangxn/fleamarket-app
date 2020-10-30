@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
@@ -25,7 +26,7 @@ class OrderDetailRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseRoute<OrderDetailProvider>(
-        // listen: true,
+        listen: true,
         provider: OrderDetailProvider(context, order),
         builder: (_, provider, loading) {
           final curUser = Provider.of<UserModel>(context).user;
@@ -33,6 +34,7 @@ class OrderDetailRoute extends StatelessWidget {
           bool isSell = provider.order.seller.userid == curUser.userid;
           return Scaffold(
             appBar: AppBar(
+              leading: BackButton(onPressed: () => provider.pop(provider.order)),
               centerTitle: true,
               title: Text(provider.translate('order_detail.title')),
               backgroundColor: style.headerBackgroundColor,
@@ -41,6 +43,7 @@ class OrderDetailRoute extends StatelessWidget {
               iconTheme: style.headerIconTheme,
             ),
             body: Stack(
+              fit: StackFit.expand,
               children: <Widget>[
                 SingleChildScrollView(
                   padding: EdgeInsets.only(bottom: 200),
@@ -427,13 +430,16 @@ class OrderDetailProvider extends BaseProvider {
 
   Order get order => _order;
 
+  String get logisticsKey => "logistics${_order.orderid}";
+
   Future<void> onCancel() async {
     final um = this.getUserInfo();
     showLoading();
     final res = await api.cancelOrder(um.keys[1], um.user.userid, um.user.eosid, _order.orderid);
     closeLoading();
     if (res.code == 0) {
-      this.pop();
+      _order.status = OrderStatus.cancelled;
+      this.pop(_order);
     } else {
       this.showToast(getErrorMessage(res.msg));
     }
@@ -441,13 +447,21 @@ class OrderDetailProvider extends BaseProvider {
 
   Future<dynamic> getLogistics() async {
     if (_order.shipNum == null || _order.shipNum.isEmpty) return null;
-    final user = this.getUser();
-    final res = await api.getLogisticsInfo(user.userid, _order.shipNum);
-    if (res.code == 0) {
-      Map data = jsonDecode(res.msg);
-      return data['showapi_res_body'];
+    Map data;
+    final cache = Global.getCache(logisticsKey);
+    if (cache == null || cache.isEmpty) {
+      final user = this.getUser();
+      final res = await api.getLogisticsInfo(user.userid, _order.shipNum);
+      if (res.code != 0) {
+        return null;
+      } else {
+        data = jsonDecode(res.msg);
+        Global.setCache(logisticsKey, res.msg, dt: DateTime.now());
+      }
+    } else {
+      data = jsonDecode(cache);
     }
-    return null;
+    return data['showapi_res_body'];
   }
 
   bool isExpired() {
@@ -511,6 +525,7 @@ class OrderDetailProvider extends BaseProvider {
         this.showToast(this.translate("message.successful_operation"));
         _order = _order.clone();
         _order.status = OrderStatus.completed;
+        notifyListeners();
       } else {
         this.showToast(getErrorMessage(res.msg));
       }
@@ -526,6 +541,8 @@ class OrderDetailProvider extends BaseProvider {
       closeLoading();
       if (res.code == 0) {
         this.showToast(this.translate("message.successful_operation"));
+        _order.status = OrderStatus.pendingReceipt;
+        notifyListeners();
       } else {
         this.showToast(getErrorMessage(res.msg));
       }
@@ -552,12 +569,17 @@ class OrderDetailProvider extends BaseProvider {
     // Widget screen = PayConfirm(mainPay: mainPay, payInfo: payInfo);
     // final result = await this.showDialog(screen);
     closeLoading();
-    await showModalBottomSheet(
+    final isPay = await showModalBottomSheet(
         context: context,
         builder: (_) => PayConfirm(
               payInfo: payInfo,
               order: _order,
             ));
+    print("isPay: $isPay");
+    if (isPay) {
+      _order.status = OrderStatus.pendingShipment;
+      notifyListeners();
+    }
   }
 
   Future<ReceiptAddress> getToAddr(int toAddr) async {

@@ -54,4 +54,24 @@ class Global {
   static console(Object msg) {
     if (isRelease == false) print(msg);
   }
+
+  static setCache(String key, String value, {DateTime dt}) {
+    if (dt != null) {
+      _prefs.setString("dt_$key", dt.toString());
+    }
+    _prefs.setString(key, value);
+  }
+
+  static getCache(String key, {int minutes = 30}) {
+    final t = _prefs.getString("dt_$key");
+    if (t != null && t.isNotEmpty) {
+      final diff = DateTime.now().difference(DateTime.parse(t));
+      if (diff.inMinutes >= minutes) {
+        _prefs.remove(key);
+        _prefs.remove("dt_$key");
+        return null;
+      }
+    }
+    return _prefs.getString(key);
+  }
 }

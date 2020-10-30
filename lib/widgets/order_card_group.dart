@@ -1,3 +1,4 @@
+import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/common/type.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
@@ -18,15 +19,17 @@ class OrderCardGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseRoute<OrderCardGroupProvider>(
+      listen: true,
       provider: OrderCardGroupProvider(context, refresh),
       builder: (_, provider, loading) {
+        print("build ordre card group......");
         return CustomRefreshIndicator(
             onRefresh: () => provider.refreshOrders(isRefresh: true),
             onLoad: provider.page.hasMore() ? provider.refreshOrders : null,
             child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4),
                 child: FutureBuilder(
-                    future: provider.refreshOrders(),
+                    future: provider.refreshOrders(isRefresh: true),
                     builder: (ctx, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         return ListView.builder(
@@ -58,10 +61,15 @@ class OrderCardGroupProvider extends BaseProvider {
 
   DataPage<Order> _page;
   RefreshPageCallback _refresh;
+  bool _localRefresh = false;
 
   DataPage<Order> get page => _page;
 
   Future<bool> refreshOrders({bool isRefresh = false}) async {
+    if (_localRefresh) {
+      _localRefresh = false;
+      return true;
+    }
     bool flag = false;
     setBusy();
     if (isRefresh) {
@@ -78,5 +86,24 @@ class OrderCardGroupProvider extends BaseProvider {
     return flag;
   }
 
-  Future<void> updateOrder({Order obj}) {}
+  Future<void> updateOrder({Order obj}) async {
+    if (obj != null) {
+      int index = _page.data.indexWhere((element) => element.orderid == obj.orderid);
+      if (index < 0) return;
+      if (_page.data[index].status != obj.status) {
+        _localRefresh = true;
+        switch (obj.status) {
+          case OrderStatus.cancelled:
+            _page.data.removeAt(index);
+            _page.totalCount = (_page.totalCount > 0) ? _page.totalCount - 1 : _page.totalCount;
+
+            break;
+          default:
+            _page.data[index].status = obj.status;
+            break;
+        }
+        notifyListeners();
+      }
+    }
+  }
 }

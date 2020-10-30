@@ -120,13 +120,16 @@ Widget buildOrderStatus(BaseProvider provider, Order order) {
   Color color = Colors.black;
   int status = order.status;
 
-  DateTime now = DateTime.now();
-  DateTime expired = DateTime.parse("${order.payOutTime}Z");
-  expired = expired.add(Duration(hours: now.timeZoneOffset.inHours));
+  if (status == OrderStatus.pendingPayment) {
+    DateTime now = DateTime.now();
+    DateTime expired = DateTime.parse("${order.payOutTime}Z");
+    expired = expired.add(Duration(hours: now.timeZoneOffset.inHours));
 
-  if (now.isAfter(expired)) {
-    status = -1;
+    if (now.isAfter(expired)) {
+      status = -1;
+    }
   }
+
   switch (status) {
     case OrderStatus.pendingPayment:
       color = Colors.orange[800];

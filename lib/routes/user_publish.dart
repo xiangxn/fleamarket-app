@@ -50,7 +50,7 @@ class UserPublishRoute extends StatelessWidget {
               onRefresh: () => provider.fetchPublish(isRefresh: true),
               onLoad: provider.load,
               child: FutureBuilder(
-                future: provider.fetchPublish(),
+                future: provider.fetchPublish(isRefresh: true),
                 builder: (ctx, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return ListView.builder(

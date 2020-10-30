@@ -353,8 +353,10 @@ class PublishProvider extends BaseProvider {
       locationData: _locationData,
     );
     Address local = await this.showDialog(screen);
-    _location = local.toString();
-    notifyListeners();
+    if (local != null) {
+      _location = local.toString();
+      notifyListeners();
+    }
   }
 
   selectPhotos() async {

@@ -164,10 +164,11 @@ class PayConfirmProvider extends BaseProvider {
       closeLoading();
       if (res.code == 0) {
         this.showToast(translate("pay_confirm.pay_success"));
+        this.pop(true);
       } else {
         this.showToast(res.msg);
+        this.pop(false);
       }
-      this.pop();
     }
   }
 
