@@ -49,7 +49,8 @@ class ProductReviewListRoute extends StatelessWidget {
             ),
             body: CustomRefreshIndicator(
               onRefresh: () => provider.fetchProducts(isRefresh: true),
-              onLoad: provider.load,
+              onLoad: () => provider.load(),
+              hasMore: () => provider.productPage.hasMore(),
               child: FutureBuilder(
                 future: provider.fetchProducts(isRefresh: true),
                 builder: (ctx, snapshot) {

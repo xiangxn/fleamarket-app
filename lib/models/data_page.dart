@@ -51,7 +51,7 @@ class DataPage<T extends GeneratedMessage> {
     ];
   }
 
-  hasMore() {
+  bool hasMore() {
     if (this.data == null) return true;
     return this.data.length < this.totalCount;
   }

@@ -53,6 +53,7 @@ class ReviewerListRoute extends StatelessWidget {
                   return CustomRefreshIndicator(
                       onRefresh: () => model.fetchReviewers(isRefresh: true),
                       onLoad: () => model.fetchReviewers(isLoad: true),
+                      hasMore: () => model.list.hasMore(),
                       child: ListView.separated(
                         // physics: ClampingScrollPhysics(),
                         itemCount: model.list.data?.length ?? 0,

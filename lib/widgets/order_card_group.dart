@@ -25,7 +25,8 @@ class OrderCardGroup extends StatelessWidget {
         print("build ordre card group......");
         return CustomRefreshIndicator(
             onRefresh: () => provider.refreshOrders(isRefresh: true),
-            onLoad: provider.page.hasMore() ? provider.refreshOrders : null,
+            onLoad: () => provider.refreshOrders(),
+            hasMore: () => provider.page.hasMore(),
             child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4),
                 child: FutureBuilder(

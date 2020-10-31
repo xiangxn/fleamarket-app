@@ -55,6 +55,7 @@ class _ProductList extends State<ProductList> {
           return CustomRefreshIndicator(
             onRefresh: () => provider.onRefresh(categoryid: widget.category, isRefresh: true),
             onLoad: () => provider.onLoad(widget.category),
+            hasMore: () => provider.productPage.hasMore(),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 6),
               child: StaggeredGridView.countBuilder(

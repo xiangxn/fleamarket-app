@@ -39,6 +39,8 @@ typedef RefreshCallback = Future<bool> Function();
 
 typedef LoadCallback = Future<bool> Function();
 
+typedef HashMoreCallback = bool Function();
+
 // The state machine moves through these modes only when the scrollable
 // identified by scrollableKey has been scrolled to its min or max limit.
 enum _RefreshIndicatorMode {
@@ -102,6 +104,7 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.displacement = 40.0,
     @required this.onRefresh,
     this.onLoad,
+    this.hasMore,
     this.color,
     this.backgroundColor,
     this.notificationPredicate = defaultScrollNotificationPredicate,
@@ -135,6 +138,8 @@ class CustomRefreshIndicator extends StatefulWidget {
 
   // 当scroll滚动到底部时，触发onload回调
   final LoadCallback onLoad;
+
+  final HashMoreCallback hasMore;
 
   /// The progress indicator's foreground color. The current theme's
   /// [ThemeData.accentColor] by default.
@@ -178,7 +183,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
   Future<void> _pendingRefreshFuture;
   bool _isIndicatorAtTop;
   double _dragOffset;
-  bool _hasMore = true;
 
   static final Animatable<double> _threeQuarterTween = Tween<double>(begin: 0.0, end: 0.75);
   static final Animatable<double> _kDragSizeFactorLimitTween = Tween<double>(begin: 0.0, end: _kDragSizeFactorLimit);
@@ -243,9 +247,10 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
         _dismiss(_RefreshIndicatorMode.canceled);
       else if (notification is ScrollUpdateNotification) {
         // 当scroll滚动到最底部时，触发onload，即上拉加载更多。当onLoad回调返回false 说明该列表已无更多数据，此时不会继续加载
-        // 直到refresh后更新_hasMore属性
         // 因为允许onLoad 为空，则需要判断onLoad是否为函数
-        if (notification.metrics.extentBefore >= notification.metrics.maxScrollExtent && _hasMore && widget.onLoad != null) {
+        if (notification.metrics.extentBefore >= notification.metrics.maxScrollExtent &&
+            (widget.hasMore != null && widget.hasMore()) &&
+            widget.onLoad != null) {
           show(atTop: false, isRefresh: false);
         }
       }
@@ -382,7 +387,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator> with Tic
         if (refreshResult == null) return;
         // 当回调返回值为true 或 null 时，允许onLoad继续生效，兼容原模式
         refreshResult.then((f) {
-          _hasMore = f ?? true;
+          // _hasMore = f ?? true;
         });
         refreshResult.whenComplete(() {
           if (mounted && _mode == _RefreshIndicatorMode.refresh) {

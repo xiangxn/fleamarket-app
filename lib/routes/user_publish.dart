@@ -48,7 +48,8 @@ class UserPublishRoute extends StatelessWidget {
             ),
             body: CustomRefreshIndicator(
               onRefresh: () => provider.fetchPublish(isRefresh: true),
-              onLoad: provider.load,
+              onLoad: () => provider.load(),
+              hasMore: () => provider.productPage.hasMore(),
               child: FutureBuilder(
                 future: provider.fetchPublish(isRefresh: true),
                 builder: (ctx, snapshot) {

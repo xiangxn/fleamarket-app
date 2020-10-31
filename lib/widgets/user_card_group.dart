@@ -30,6 +30,7 @@ class UserCardGroup extends StatelessWidget {
                   return CustomRefreshIndicator(
                     onRefresh: () => provider.fetch(isRefresh: true),
                     onLoad: () => provider.fetch(load: true),
+                    hasMore: () => provider.page.hasMore(),
                     child: ListView.builder(
                         controller: controller,
                         // physics: ClampingScrollPhysics(),
