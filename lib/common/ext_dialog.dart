@@ -118,9 +118,9 @@ class ExtDialog {
     return _dialog(context, msg, title, 2);
   }
 
-  static void toast(BuildContext context, String msg) {
+  static Future<bool> toast(BuildContext context, String msg) {
     final style = Provider.of<ThemeModel>(context, listen: false).theme;
-    _baseDialog(
+    return _baseDialog(
         context: context,
         autoDismissible: true,
         bgColor: style.primarySwatch,

@@ -460,3 +460,11 @@ const LogisticsRequest$json = const {
     const {'1': 'userId', '3': 3, '4': 1, '5': 4, '10': 'userId'},
   ],
 };
+
+const GetPhoneRequest$json = const {
+  '1': 'GetPhoneRequest',
+  '2': const [
+    const {'1': 'fromUserId', '3': 1, '4': 1, '5': 13, '10': 'fromUserId'},
+    const {'1': 'toUserId', '3': 2, '4': 1, '5': 13, '10': 'toUserId'},
+  ],
+};

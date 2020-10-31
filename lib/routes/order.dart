@@ -189,12 +189,14 @@ class CreateOrderProvider extends BaseProvider {
       order.seller = _product.seller;
       // Widget screen = PayConfirm(payInfo: payInfo, order: order);
       // final result = await this.showDialog(screen);
-      await showModalBottomSheet(
+      final isPay = await showModalBottomSheet<bool>(
           context: context,
           builder: (_) => PayConfirm(
                 payInfo: payInfo,
                 order: order,
               ));
+      print("isPay: $isPay");
+      if (isPay) {}
     }
   }
 

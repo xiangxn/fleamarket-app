@@ -574,4 +574,12 @@ class DataApi {
     request.userId = $fixnum.Int64.parseInt(userId.toString());
     return await _client.logisticsInfo(request, options: CallOptions(metadata: {'token': token}));
   }
+
+  Future<BaseReply> getUserPhone(int fromUserId, int toUserId) async {
+    final token = await getToken();
+    GetPhoneRequest request = GetPhoneRequest();
+    request.fromUserId = fromUserId;
+    request.toUserId = toUserId;
+    return await _client.getPhone(request, options: CallOptions(metadata: {'token': token}));
+  }
 }

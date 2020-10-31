@@ -10,6 +10,7 @@ import 'package:bitsflea/widgets/ext_network_image.dart';
 import 'package:bitsflea/widgets/price_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../states/base.dart';
 
@@ -35,6 +36,9 @@ class ProductDetailRoute extends StatelessWidget {
         break;
       case 2:
         icon = active ? Icons.star : Icons.star_border;
+        break;
+      case 3:
+        icon = active ? Icons.phone_forwarded : Icons.phone_locked;
         break;
       default:
         icon = Icons.chat_bubble_outline;
@@ -204,6 +208,10 @@ class ProductDetailRoute extends StatelessWidget {
                                     children: <Widget>[
                                       _buildBottomButton(provider.translate('product_detail.favorite'), 1, provider.hasFavorite(), provider.favorite, context),
                                       _buildBottomButton(provider.translate('product_detail.follow'), 2, provider.hasFollow(), provider.follow, context),
+                                      Offstage(
+                                          offstage: provider.hasPhone(),
+                                          child: _buildBottomButton(
+                                              provider.translate('product_detail.contact'), 3, provider.hasPhone(), provider.onPhone, context)),
                                       // _buildBottomButton('留言', 0, false, (){}),
                                       Spacer(),
                                       CustomButton(
@@ -254,6 +262,11 @@ class ProductDetailProvider extends BaseProvider {
     return um.hasFollow(_product.seller.userid);
   }
 
+  bool hasPhone() {
+    final user = this.getUser();
+    return user != null;
+  }
+
   favorite() async {
     _product.collections += 1;
     if (checkLogin() && !busy) {
@@ -286,7 +299,7 @@ class ProductDetailProvider extends BaseProvider {
 
   follow() async {
     if (checkLogin() && !busy) {
-      final um = Provider.of<UserModel>(context, listen: false);
+      final um = this.getUserInfo();
       setBusy();
       var process;
       bool isFollow = false;
@@ -308,6 +321,17 @@ class ProductDetailProvider extends BaseProvider {
       }
       setBusy();
       // notifyListeners();
+    }
+  }
+
+  onPhone() async {
+    final user = this.getUser();
+    if (user == null) return;
+    showLoading();
+    final res = await api.getUserPhone(user.userid, _product.seller.userid);
+    closeLoading();
+    if (res.code == 0) {
+      await launch("tel:${res.msg}");
     }
   }
 

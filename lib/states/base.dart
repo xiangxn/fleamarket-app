@@ -52,8 +52,8 @@ class BaseProvider extends ChangeNotifier {
     ExtDialog.close(context, true);
   }
 
-  showToast(String msg) {
-    ExtDialog.toast(context, msg);
+  Future<bool> showToast(String msg) {
+    return ExtDialog.toast(context, msg);
   }
 
   Future showDialog(Widget screen) {

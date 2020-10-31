@@ -150,6 +150,8 @@ class PayConfirmProvider extends BaseProvider {
 
   Future<void> _doMainPay() async {
     final pwd = await showModalBottomSheet(context: context, builder: (_) => ConfirmPassword());
+    // Widget screen = ConfirmPassword();
+    // final pwd = await this.showDialog(screen);
     if (pwd != null) {
       String contract;
       if (payInfo.symbol == MAIN_NET_ASSET_SYMBOL) {
@@ -163,10 +165,9 @@ class PayConfirmProvider extends BaseProvider {
       final res = await api.transfer(um.keys[1], um.user.eosid, payInfo.payAddr, asset, "p:${payInfo.orderid}", contract: contract);
       closeLoading();
       if (res.code == 0) {
-        this.showToast(translate("pay_confirm.pay_success"));
-        this.pop(true);
+        this.showToast(translate("pay_confirm.pay_success")).then((value) => this.pop(true));
       } else {
-        this.showToast(res.msg);
+        await this.showToast(getErrorMessage(res.msg));
         this.pop(false);
       }
     }

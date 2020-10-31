@@ -17,6 +17,7 @@ import 'package:eosdart/eosdart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailRoute extends StatelessWidget {
   OrderDetailRoute({Key key, this.order}) : super(key: key);
@@ -56,7 +57,7 @@ class OrderDetailRoute extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             Padding(
-                              padding: EdgeInsets.only(bottom: 16),
+                              padding: EdgeInsets.only(bottom: 6),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
@@ -66,7 +67,7 @@ class OrderDetailRoute extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(bottom: 16),
+                              padding: EdgeInsets.only(bottom: 6),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
@@ -75,10 +76,10 @@ class OrderDetailRoute extends StatelessWidget {
                                   //   child: ExtCircleAvatar(curUser?.head, 30, strokeWidth: 0),
                                   // ),
                                   Text(
-                                    provider.translate('combo_text.${isSell ? 'buyer' : 'seller'}',
-                                        translationParams: {"name": isSell ? provider.order.buyer.nickname : provider.order.seller.nickname}),
-                                    style: TextStyle(fontSize: 13, color: Colors.grey[700]),
-                                  ),
+                                      provider.translate('combo_text.${isSell ? 'buyer' : 'seller'}',
+                                          translationParams: {"name": isSell ? provider.order.buyer.nickname : provider.order.seller.nickname}),
+                                      style: TextStyle(fontSize: 13, color: Colors.grey[700])),
+                                  IconButton(icon: Icon(Icons.phone_forwarded, color: style.primarySwatch), iconSize: 20, onPressed: () => provider.onPhone())
                                 ],
                               ),
                             ),
@@ -172,30 +173,28 @@ class OrderDetailRoute extends StatelessWidget {
                           margin: EdgeInsets.only(top: 8),
                           color: Colors.white,
                           padding: EdgeInsets.all(16),
-                          child: FutureBuilder<dynamic>(
-                              future: provider.getLogistics(),
-                              builder: (BuildContext ctx, AsyncSnapshot<dynamic> snapshot) {
-                                if (snapshot.connectionState == ConnectionState.done) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(provider.translate("order_detail.logistics_info")),
-                                          Padding(
-                                              padding: EdgeInsets.only(left: 10),
-                                              child: snapshot.data != null ? Text("${snapshot.data['expTextName']}(${snapshot.data['mailNo']})") : null)
-                                        ],
-                                      ),
-                                      Column(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(provider.translate("order_detail.logistics_info")),
+                                  Padding(padding: EdgeInsets.only(left: 10), child: Text("${provider.order.shipNum}"))
+                                ],
+                              ),
+                              FutureBuilder<dynamic>(
+                                  future: provider.getLogistics(),
+                                  builder: (BuildContext ctx, AsyncSnapshot<dynamic> snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.done) {
+                                      return Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: _buildLogistics(provider, snapshot.data == null ? null : snapshot.data['data']),
-                                      )
-                                    ],
-                                  );
-                                }
-                                return loading;
-                              })),
+                                      );
+                                    }
+                                    return loading;
+                                  })
+                            ],
+                          )),
                     ],
                   ),
                 ),
@@ -445,6 +444,17 @@ class OrderDetailProvider extends BaseProvider {
     }
   }
 
+  onPhone() async {
+    final user = this.getUser();
+    if (user == null) return;
+    showLoading();
+    final res = await api.getUserPhone(user.userid, _order.seller.userid);
+    closeLoading();
+    if (res.code == 0) {
+      await launch("tel:${res.msg}");
+    }
+  }
+
   Future<dynamic> getLogistics() async {
     if (_order.shipNum == null || _order.shipNum.isEmpty) return null;
     Map data;
@@ -456,7 +466,11 @@ class OrderDetailProvider extends BaseProvider {
         return null;
       } else {
         data = jsonDecode(res.msg);
-        Global.setCache(logisticsKey, res.msg, dt: DateTime.now());
+        if (_order.status == OrderStatus.completed) {
+          Global.setCache(logisticsKey, res.msg);
+        } else {
+          Global.setCache(logisticsKey, res.msg, dt: DateTime.now());
+        }
       }
     } else {
       data = jsonDecode(cache);

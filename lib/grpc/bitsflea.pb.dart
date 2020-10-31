@@ -3093,3 +3093,58 @@ class LogisticsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearUserId() => clearField(3);
 }
+
+class GetPhoneRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('GetPhoneRequest',
+      package: const $pb.PackageName('bitsflea'), createEmptyInstance: create)
+    ..a<$core.int>(1, 'fromUserId', $pb.PbFieldType.OU3,
+        protoName: 'fromUserId')
+    ..a<$core.int>(2, 'toUserId', $pb.PbFieldType.OU3, protoName: 'toUserId')
+    ..hasRequiredFields = false;
+
+  GetPhoneRequest._() : super();
+  factory GetPhoneRequest() => create();
+  factory GetPhoneRequest.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory GetPhoneRequest.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  GetPhoneRequest clone() => GetPhoneRequest()..mergeFromMessage(this);
+  GetPhoneRequest copyWith(void Function(GetPhoneRequest) updates) =>
+      super.copyWith((message) => updates(message as GetPhoneRequest));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static GetPhoneRequest create() => GetPhoneRequest._();
+  GetPhoneRequest createEmptyInstance() => create();
+  static $pb.PbList<GetPhoneRequest> createRepeated() =>
+      $pb.PbList<GetPhoneRequest>();
+  @$core.pragma('dart2js:noInline')
+  static GetPhoneRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetPhoneRequest>(create);
+  static GetPhoneRequest _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get fromUserId => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set fromUserId($core.int v) {
+    $_setUnsignedInt32(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasFromUserId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFromUserId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get toUserId => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set toUserId($core.int v) {
+    $_setUnsignedInt32(1, v);
+  }
+
+  @$pb.TagNumber(2)
+  $core.bool hasToUserId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearToUserId() => clearField(2);
+}
