@@ -33,7 +33,7 @@
         "follow": "关注",
         "comments": "留言",
         "buy": "购买",
-        "contact":"联系"
+        "contact": "联系"
     },
     "login": {
         "login_text": "登录",
@@ -230,7 +230,8 @@
         "hint_enter_number": "请输入物流单号",
         "number_err_msg": "物流单号不能为空",
         "confirm_prompt": "确认收货后不能发起退货，你确定要收货吗？",
-        "not_logistics": "暂无物流跟踪信息"
+        "not_logistics": "暂无物流跟踪信息",
+        "copy_ok": "订单号已经复制"
     },
     "user_invited": {
         "title": "我邀请的"

@@ -211,7 +211,7 @@ class ProductDetailRoute extends StatelessWidget {
                                       Offstage(
                                           offstage: provider.hasPhone(),
                                           child: _buildBottomButton(
-                                              provider.translate('product_detail.contact'), 3, provider.hasPhone(), provider.onPhone, context)),
+                                              provider.translate('product_detail.contact'), 3, !(provider.hasPhone()), provider.onPhone, context)),
                                       // _buildBottomButton('留言', 0, false, (){}),
                                       Spacer(),
                                       CustomButton(
@@ -264,7 +264,7 @@ class ProductDetailProvider extends BaseProvider {
 
   bool hasPhone() {
     final user = this.getUser();
-    return user != null;
+    return user == null;
   }
 
   favorite() async {
@@ -327,11 +327,13 @@ class ProductDetailProvider extends BaseProvider {
   onPhone() async {
     final user = this.getUser();
     if (user == null) return;
-    showLoading();
+    // showLoading();
     final res = await api.getUserPhone(user.userid, _product.seller.userid);
-    closeLoading();
+    // closeLoading();
     if (res.code == 0) {
       await launch("tel:${res.msg}");
+    } else {
+      this.showToast(getErrorMessage(res.msg));
     }
   }
 

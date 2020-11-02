@@ -60,7 +60,7 @@ class DataApi {
     _lastTokenTime = tStr == null ? DateTime.now() : DateTime.parse(tStr);
     final diff = DateTime.now().difference(_lastTokenTime);
     if (force == false && diff.inHours < 2 && token != "0") {
-      print("token 0:" + token);
+      Global.console("token 0:" + token);
       return token;
     }
     final request = RefreshTokenRequest();
@@ -80,7 +80,7 @@ class DataApi {
       Global.saveProfile();
     }
     //print(res);
-    print("token 1:" + token);
+    Global.console("token 1:" + token);
     return token;
   }
 

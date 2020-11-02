@@ -249,7 +249,7 @@ class UserProfileProvider extends BaseProvider {
   }
 
   logout() async {
-    final um = Provider.of<UserModel>(context, listen: false);
+    final um = this.getUserInfo();
     um.logout();
     api.cleanInfo();
     _homeProvider.setPage(0);
@@ -257,7 +257,7 @@ class UserProfileProvider extends BaseProvider {
   }
 
   copy() {
-    final user = Provider.of<UserModel>(context).user;
+    final user = this.getUser();
     Clipboard.setData(ClipboardData(text: user.eosid));
     showToast(translate('user_profile.copy'));
   }

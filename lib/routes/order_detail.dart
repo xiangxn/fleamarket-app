@@ -15,6 +15,7 @@ import 'package:bitsflea/widgets/pay_confirm.dart';
 import 'package:bitsflea/widgets/price_text.dart';
 import 'package:eosdart/eosdart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:url_launcher/url_launcher.dart';
@@ -188,7 +189,7 @@ class OrderDetailRoute extends StatelessWidget {
                                     if (snapshot.connectionState == ConnectionState.done) {
                                       return Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        children: _buildLogistics(provider, snapshot.data == null ? null : snapshot.data['data']),
+                                        children: _buildLogistics(provider, snapshot.data == null ? null : snapshot.data['list']),
                                       );
                                     }
                                     return loading;
@@ -314,7 +315,7 @@ class OrderDetailRoute extends StatelessWidget {
                       Expanded(
                         // width: MediaQuery.of(context).size.width - 165,
                         child: Text(
-                          "${value['context']}",
+                          "${value['status']}",
                           style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, height: 1.28),
                           maxLines: 3,
                           textAlign: TextAlign.justify,
@@ -392,7 +393,7 @@ class OrderDetailRoute extends StatelessWidget {
                       Expanded(
                         // width: MediaQuery.of(context).size.width - 50,
                         child: Text(
-                          "${value['context']}",
+                          "${value['status']}",
                           style: TextStyle(fontSize: 15.0, height: 1.28, color: Color(0xFF999999)),
                           maxLines: 3,
                           textAlign: TextAlign.justify,
@@ -447,11 +448,20 @@ class OrderDetailProvider extends BaseProvider {
   onPhone() async {
     final user = this.getUser();
     if (user == null) return;
-    showLoading();
+    // showLoading();
     final res = await api.getUserPhone(user.userid, _order.seller.userid);
-    closeLoading();
+    // closeLoading();
     if (res.code == 0) {
       await launch("tel:${res.msg}");
+    } else {
+      this.showToast(getErrorMessage(res.msg));
+    }
+  }
+
+  copyLogistics() {
+    if (_order.shipNum != null && _order.shipNum.isNotEmpty) {
+      Clipboard.setData(ClipboardData(text: _order.shipNum));
+      showToast(translate('order_detail.copy_ok'));
     }
   }
 
@@ -466,16 +476,18 @@ class OrderDetailProvider extends BaseProvider {
         return null;
       } else {
         data = jsonDecode(res.msg);
-        if (_order.status == OrderStatus.completed) {
-          Global.setCache(logisticsKey, res.msg);
-        } else {
-          Global.setCache(logisticsKey, res.msg, dt: DateTime.now());
+        if (data['status'] == "0") {
+          if (_order.status == OrderStatus.completed) {
+            Global.setCache(logisticsKey, res.msg);
+          } else {
+            Global.setCache(logisticsKey, res.msg, dt: DateTime.now());
+          }
         }
       }
     } else {
       data = jsonDecode(cache);
     }
-    return data['showapi_res_body'];
+    return data['result'];
   }
 
   bool isExpired() {
