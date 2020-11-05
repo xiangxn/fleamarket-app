@@ -21,6 +21,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 import 'photos_selector.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PublishRoute extends StatelessWidget {
   final Product product;
@@ -68,11 +69,11 @@ class PublishRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("publish build........");
     return BaseRoute<PublishProvider>(
       listen: true,
       provider: PublishProvider(context, product),
       builder: (_, provider, loading) {
+        Global.console("publish build........");
         final style = Provider.of<ThemeModel>(context, listen: false).theme;
         return Scaffold(
             key: provider.scaffoldKey,
@@ -141,14 +142,52 @@ class PublishRoute extends StatelessWidget {
                                       onTap: provider.showNumberPad),
                                   LineButtonItem(
                                       text: provider.translate('publish.type'),
-                                      prefixIcon: Icons.local_mall,
+                                      prefixIcon: FontAwesomeIcons.buffer,
                                       subText: provider.category.view,
                                       onTap: provider.showTypeSelector),
                                   LineButtonItem(
                                       text: provider.translate('publish.address'),
                                       prefixIcon: Icons.location_on,
+                                      // prefixIconSize: 26,
+                                      prefixPadding: 9,
                                       subText: provider.location,
                                       onTap: provider.showAddressSelector),
+                                  Material(
+                                      color: Colors.white,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(right: 12),
+                                              child: Icon(Icons.new_releases, size: 22, color: style.primarySwatch),
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Text(provider.translate("publish.is_new")),
+                                            ),
+                                            Switch(value: provider.isNew, onChanged: provider.setIsNew),
+                                          ],
+                                        ),
+                                      )),
+                                  Material(
+                                      color: Colors.white,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(right: 12),
+                                              child: Icon(Icons.verified, size: 22, color: style.primarySwatch),
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Text(provider.translate("publish.is_returns")),
+                                            ),
+                                            Switch(value: provider.isReturn, onChanged: provider.setIsReturn),
+                                          ],
+                                        ),
+                                      )),
                                 ],
                               ),
                               Offstage(
@@ -208,12 +247,16 @@ class PublishProvider extends BaseProvider {
   List<dynamic> _photos = [];
   int _maxCount = 8;
   bool _isUpdate = false;
+  bool _isNew = false;
+  bool _isReturn = true;
 
   PublishProvider(BuildContext context, Product product) : super(context) {
     _product = product ?? Product();
     _init();
   }
 
+  bool get isNew => _isNew;
+  bool get isReturn => _isReturn;
   get scaffoldKey => _scaffoldKey;
   get titleFocus => _titleFocus;
   get describeFocus => _describeFocus;
@@ -288,6 +331,8 @@ class PublishProvider extends BaseProvider {
       _pricingAmount = _getAmount(_product.price);
       _freightAmount = _getAmount(_product.postage);
       _symbol = _getSymbol(_product.price);
+      _isNew = _product.isNew;
+      _isReturn = _product.isReturns;
     } else {
       _pricingAmount = 0;
       _freightAmount = 0;
@@ -428,6 +473,8 @@ class PublishProvider extends BaseProvider {
     _product.postage = '${this.freightAmount} ${this._symbol}';
     _product.position = this._location;
     _product.status = ProductStatus.publish;
+    _product.isReturns = this.isReturn;
+    _product.isNew = this.isNew;
     if (_product.title.isEmpty) {
       showToast(translate('message.goods_title_empty'));
     } else if (_product.title.length > this.titleLimit) {
@@ -458,8 +505,8 @@ class PublishProvider extends BaseProvider {
         "photos": [],
         "category": _category.cid,
         "status": _product.status,
-        "is_new": true,
-        "is_returns": false,
+        "is_new": _product.isNew,
+        "is_returns": _product.isReturns,
         "reviewer": 0,
         "sale_method": 0,
         "price": _product.price,
@@ -496,6 +543,16 @@ class PublishProvider extends BaseProvider {
         showToast(getErrorMessage(res.msg));
       }
     }
+  }
+
+  setIsNew(v) {
+    this._isNew = v;
+    notifyListeners();
+  }
+
+  setIsReturn(v) {
+    this._isReturn = v;
+    notifyListeners();
   }
 
   @override

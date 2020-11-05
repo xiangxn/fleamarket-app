@@ -582,4 +582,9 @@ class DataApi {
     request.toUserId = toUserId;
     return await _client.getPhone(request, options: CallOptions(metadata: {'token': token}));
   }
+
+  Future<BaseReply> applyReturns(EOSPrivateKey actKey, int buyerUid, String buyerEosId, String orderId, String reasons) async {
+    Map data = {'buyer_uid': buyerUid, 'buyer_eosid': buyerEosId, 'order_id': orderId, 'reasons': reasons};
+    return await _putAction(actKey, buyerEosId, "returns", data);
+  }
 }

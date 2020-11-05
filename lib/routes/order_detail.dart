@@ -10,7 +10,7 @@ import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:bitsflea/widgets/ext_network_image.dart';
-import 'package:bitsflea/widgets/input_shipment_number.dart';
+import 'package:bitsflea/widgets/input_single_string.dart';
 import 'package:bitsflea/widgets/pay_confirm.dart';
 import 'package:bitsflea/widgets/price_text.dart';
 import 'package:eosdart/eosdart.dart';
@@ -129,8 +129,18 @@ class OrderDetailRoute extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 16),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
+                                  Offstage(
+                                    offstage: provider.isShowReturn(),
+                                    child: GestureDetector(
+                                        onTap: () => provider.onReturn(),
+                                        child: Text(
+                                            provider.order.status == OrderStatus.returning
+                                                ? provider.translate("order_detail.btn_return_show")
+                                                : provider.translate("order_detail.btn_return"),
+                                            style: TextStyle(color: Colors.red, decoration: TextDecoration.underline))),
+                                  ),
                                   PriceText(
                                       label: provider.translate('order_detail.total_price'),
                                       priceBold: true,
@@ -174,28 +184,39 @@ class OrderDetailRoute extends StatelessWidget {
                           margin: EdgeInsets.only(top: 8),
                           color: Colors.white,
                           padding: EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(provider.translate("order_detail.logistics_info")),
-                                  Padding(padding: EdgeInsets.only(left: 10), child: Text("${provider.order.shipNum}"))
-                                ],
-                              ),
-                              FutureBuilder<dynamic>(
-                                  future: provider.getLogistics(),
-                                  builder: (BuildContext ctx, AsyncSnapshot<dynamic> snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.done) {
-                                      return Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: _buildLogistics(provider, snapshot.data == null ? null : snapshot.data['list']),
-                                      );
-                                    }
-                                    return loading;
-                                  })
-                            ],
-                          )),
+                          child: FutureBuilder<dynamic>(
+                              future: provider.getLogistics(),
+                              builder: (BuildContext ctx, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done) {
+                                  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                    Row(
+                                      children: [
+                                        Text(provider.translate("order_detail.logistics_info")),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: GestureDetector(
+                                              onTap: () => provider.copyLogistics(), child: Text("${provider.order.shipNum} (${snapshot.data['expName']})")),
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: _buildLogistics(provider, snapshot.data == null ? null : snapshot.data['list']),
+                                    ),
+                                  ]);
+                                }
+                                return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                  Row(
+                                    children: [
+                                      Text(provider.translate("order_detail.logistics_info")),
+                                      Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: GestureDetector(onTap: () => provider.copyLogistics(), child: Text("${provider.order.shipNum}")))
+                                    ],
+                                  ),
+                                  Column(mainAxisSize: MainAxisSize.min, children: [loading]),
+                                ]);
+                              })),
                     ],
                   ),
                 ),
@@ -477,7 +498,8 @@ class OrderDetailProvider extends BaseProvider {
       } else {
         data = jsonDecode(res.msg);
         if (data['status'] == "0") {
-          if (_order.status == OrderStatus.completed) {
+          // if (_order.status == OrderStatus.completed) {
+          if (data['result']['issign'] == "1") {
             Global.setCache(logisticsKey, res.msg);
           } else {
             Global.setCache(logisticsKey, res.msg, dt: DateTime.now());
@@ -560,7 +582,7 @@ class OrderDetailProvider extends BaseProvider {
 
   Future<void> _shipment() async {
     final um = this.getUserInfo();
-    String number = await showModalBottomSheet(context: context, builder: (_) => InputShipmentNumber());
+    String number = await showModalBottomSheet(context: context, builder: (_) => InputSingleString());
     if (number != null && number.isNotEmpty) {
       showLoading();
       final res = await api.shipment(um.keys[1], um.user.userid, um.user.eosid, _order.orderid, number);
@@ -601,7 +623,7 @@ class OrderDetailProvider extends BaseProvider {
               payInfo: payInfo,
               order: _order,
             ));
-    print("isPay: $isPay");
+    // print("isPay: $isPay");
     if (isPay) {
       _order.status = OrderStatus.pendingShipment;
       notifyListeners();
@@ -615,5 +637,33 @@ class OrderDetailProvider extends BaseProvider {
       return ra;
     }
     return null;
+  }
+
+  Future<void> onReturn() async {
+    this.confirm(this.translate("order_detail.msg_return"), callback: (isdo) async {
+      if (isdo == false) return;
+      String reasons = await showModalBottomSheet(
+          context: context,
+          builder: (_) =>
+              InputSingleString(hintText: this.translate("order_detail.hint_reasons"), errorMessage: this.translate("order_detail.msg_reasons_err")));
+      showLoading();
+      final um = this.getUserInfo();
+      final res = await api.applyReturns(um.keys[1], um.user.userid, um.user.eosid, order.orderid, reasons);
+      closeLoading();
+      if (res.code == 0) {
+        this.showToast(this.translate("ordder_detail.msg_apply_returns_ok"));
+        _order.status = OrderStatus.returning;
+        notifyListeners();
+      } else {
+        this.showToast(getErrorMessage(res.msg));
+      }
+    });
+  }
+
+  bool isShowReturn() {
+    if (order.productInfo.isReturns) {
+      return !(order.status == OrderStatus.pendingReceipt || order.status == OrderStatus.returning);
+    }
+    return true;
   }
 }

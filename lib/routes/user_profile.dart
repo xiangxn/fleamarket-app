@@ -100,7 +100,7 @@ class UserProfilePage extends StatelessWidget {
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: provider.copy,
+                                      onTap: () => provider.copy(),
                                       child: RichText(
                                         text: TextSpan(
                                             text: provider.translate('user_profile.recommended'),
