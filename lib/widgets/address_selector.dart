@@ -6,7 +6,7 @@ import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/widgets/line_button_item.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as sysper;
 import 'package:provider/provider.dart';
 
 import 'line_button_group.dart';
@@ -105,11 +105,14 @@ class AddressSelectorProvider extends BaseProvider implements WidgetsBindingObse
     if (!busy) {
       String adcode = _locationData.locationAdcode;
       if (adcode == null) {
-        Map<PermissionGroup, PermissionStatus> status = await PermissionHandler().requestPermissions([PermissionGroup.locationWhenInUse]);
-        if (status[PermissionGroup.locationWhenInUse] != PermissionStatus.granted) {
+        // Map<PermissionGroup, PermissionStatus> status = await PermissionHandler().requestPermissions([PermissionGroup.locationWhenInUse]);
+        // if (status[PermissionGroup.locationWhenInUse] != PermissionStatus.granted) {
+        Map<sysper.Permission, sysper.PermissionStatus> status = await [sysper.Permission.locationWhenInUse].request();
+        if (status[sysper.Permission.locationWhenInUse] != sysper.PermissionStatus.granted) {
           bool res = await confirm(translate('permission.location'));
           if (res) {
-            bool canOpen = await PermissionHandler().openAppSettings();
+            // bool canOpen = await PermissionHandler().openAppSettings();
+            await sysper.openAppSettings();
           }
         }
       } else {

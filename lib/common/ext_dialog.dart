@@ -33,7 +33,7 @@ class ExtDialog {
       double width = 350,
       bool barrierDismissible = true,
       bool autoDismissible = false,
-      WidgetBuilder builder,
+      // WidgetBuilder builder,
       Color bgColor}) async {
     bool res;
     if (!isShow) {

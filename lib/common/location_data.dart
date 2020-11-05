@@ -1,12 +1,11 @@
-import 'dart:convert';
+import 'constant.dart';
+import 'data_api.dart';
 
+import 'dart:convert';
 import 'package:amap_location/amap_location.dart';
 import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/models/district.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-import 'constant.dart';
-import 'data_api.dart';
+import 'package:permission_handler/permission_handler.dart' as sysper;
 
 class Address {
   String code;
@@ -74,8 +73,10 @@ class LocationData {
   }
 
   updateLocation() async {
-    Map<PermissionGroup, PermissionStatus> permission = await PermissionHandler().requestPermissions([PermissionGroup.locationWhenInUse]);
-    if (permission[PermissionGroup.locationWhenInUse] == PermissionStatus.granted) {
+    // Map<PermissionGroup, PermissionStatus> permission = await PermissionHandler().requestPermissions([PermissionGroup.locationWhenInUse]);
+    // if (permission[PermissionGroup.locationWhenInUse] == PermissionStatus.granted) {
+    Map<sysper.Permission, sysper.PermissionStatus> permission = await [sysper.Permission.locationWhenInUse].request();
+    if (permission[sysper.Permission.locationWhenInUse] == sysper.PermissionStatus.granted) {
       await AMapLocationClient.startup(AMapLocationOption(desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters));
       AMapLocation address = await AMapLocationClient.getLocation(true);
       _adcode = address?.adcode;

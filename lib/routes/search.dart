@@ -1,5 +1,4 @@
 import 'package:bitsflea/common/constant.dart';
-import 'package:bitsflea/common/data_api.dart';
 import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';

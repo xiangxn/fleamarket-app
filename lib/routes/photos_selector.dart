@@ -11,7 +11,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as sysper;
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -273,12 +273,13 @@ class PhotosSelectPageProvider extends BaseProvider implements TickerProvider {
   }
 
   Future<bool> checkPermission() async {
-    Map<PermissionGroup, PermissionStatus> status = await PermissionHandler().requestPermissions([PermissionGroup.photos, PermissionGroup.camera]);
-
-    if (status[PermissionGroup.photos] != PermissionStatus.granted || status[PermissionGroup.camera] != PermissionStatus.granted) {
+    // Map<PermissionGroup, PermissionStatus> status = await PermissionHandler().requestPermissions([PermissionGroup.photos, PermissionGroup.camera]);
+    // if (status[PermissionGroup.photos] != PermissionStatus.granted || status[PermissionGroup.camera] != PermissionStatus.granted) {
+    Map<sysper.Permission, sysper.PermissionStatus> status = await [sysper.Permission.photos, sysper.Permission.camera].request();
+    if (status[sysper.Permission.photos] != sysper.PermissionStatus.granted || status[sysper.Permission.camera] != sysper.PermissionStatus.granted) {
       bool res = await confirm(translate('permission.album_camera'));
       if (res) {
-        PermissionHandler().openAppSettings();
+        sysper.openAppSettings();
       } else {
         pop();
       }

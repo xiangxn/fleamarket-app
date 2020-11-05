@@ -59,7 +59,8 @@ class TextFormInput extends StatelessWidget {
       child: TextFormField(
           key: spKey,
           autofocus: false,
-          autovalidate: autoValidate ?? false,
+          // autovalidate: autoValidate ?? false,
+          autovalidateMode: autoValidate == null ? AutovalidateMode.disabled : AutovalidateMode.always,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           obscureText: obscure ?? false,

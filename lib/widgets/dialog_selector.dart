@@ -1,4 +1,3 @@
-import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/states/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
