@@ -298,10 +298,11 @@ const ProductAudit$json = const {
 const Order$json = const {
   '1': 'Order',
   '2': const [
-    const {'1': 'orderid', '3': 1, '4': 1, '5': 9, '10': 'orderid'},
+    const {'1': 'oid', '3': 1, '4': 1, '5': 4, '10': 'oid'},
+    const {'1': 'orderid', '3': 2, '4': 1, '5': 9, '10': 'orderid'},
     const {
       '1': 'productInfo',
-      '3': 2,
+      '3': 3,
       '4': 1,
       '5': 11,
       '6': '.bitsflea.Product',
@@ -309,7 +310,7 @@ const Order$json = const {
     },
     const {
       '1': 'seller',
-      '3': 3,
+      '3': 4,
       '4': 1,
       '5': 11,
       '6': '.bitsflea.User',
@@ -317,33 +318,33 @@ const Order$json = const {
     },
     const {
       '1': 'buyer',
-      '3': 4,
+      '3': 5,
       '4': 1,
       '5': 11,
       '6': '.bitsflea.User',
       '10': 'buyer'
     },
-    const {'1': 'status', '3': 5, '4': 1, '5': 13, '10': 'status'},
-    const {'1': 'price', '3': 6, '4': 1, '5': 9, '10': 'price'},
-    const {'1': 'postage', '3': 7, '4': 1, '5': 9, '10': 'postage'},
-    const {'1': 'payAddr', '3': 8, '4': 1, '5': 9, '10': 'payAddr'},
-    const {'1': 'shipNum', '3': 9, '4': 1, '5': 9, '10': 'shipNum'},
-    const {'1': 'createTime', '3': 10, '4': 1, '5': 9, '10': 'createTime'},
-    const {'1': 'payTime', '3': 11, '4': 1, '5': 9, '10': 'payTime'},
-    const {'1': 'payOutTime', '3': 12, '4': 1, '5': 9, '10': 'payOutTime'},
-    const {'1': 'shipTime', '3': 13, '4': 1, '5': 9, '10': 'shipTime'},
-    const {'1': 'shipOutTime', '3': 14, '4': 1, '5': 9, '10': 'shipOutTime'},
-    const {'1': 'receiptTime', '3': 15, '4': 1, '5': 9, '10': 'receiptTime'},
+    const {'1': 'status', '3': 6, '4': 1, '5': 13, '10': 'status'},
+    const {'1': 'price', '3': 7, '4': 1, '5': 9, '10': 'price'},
+    const {'1': 'postage', '3': 8, '4': 1, '5': 9, '10': 'postage'},
+    const {'1': 'payAddr', '3': 9, '4': 1, '5': 9, '10': 'payAddr'},
+    const {'1': 'shipNum', '3': 10, '4': 1, '5': 9, '10': 'shipNum'},
+    const {'1': 'createTime', '3': 11, '4': 1, '5': 9, '10': 'createTime'},
+    const {'1': 'payTime', '3': 12, '4': 1, '5': 9, '10': 'payTime'},
+    const {'1': 'payOutTime', '3': 13, '4': 1, '5': 9, '10': 'payOutTime'},
+    const {'1': 'shipTime', '3': 14, '4': 1, '5': 9, '10': 'shipTime'},
+    const {'1': 'shipOutTime', '3': 15, '4': 1, '5': 9, '10': 'shipOutTime'},
+    const {'1': 'receiptTime', '3': 16, '4': 1, '5': 9, '10': 'receiptTime'},
     const {
       '1': 'receiptOutTime',
-      '3': 16,
+      '3': 17,
       '4': 1,
       '5': 9,
       '10': 'receiptOutTime'
     },
-    const {'1': 'endTime', '3': 17, '4': 1, '5': 9, '10': 'endTime'},
-    const {'1': 'delayedCount', '3': 18, '4': 1, '5': 13, '10': 'delayedCount'},
-    const {'1': 'toAddr', '3': 19, '4': 1, '5': 13, '10': 'toAddr'},
+    const {'1': 'endTime', '3': 18, '4': 1, '5': 9, '10': 'endTime'},
+    const {'1': 'delayedCount', '3': 19, '4': 1, '5': 13, '10': 'delayedCount'},
+    const {'1': 'toAddr', '3': 20, '4': 1, '5': 13, '10': 'toAddr'},
   ],
 };
 
@@ -351,8 +352,22 @@ const ProReturn$json = const {
   '1': 'ProReturn',
   '2': const [
     const {'1': 'prid', '3': 1, '4': 1, '5': 13, '10': 'prid'},
-    const {'1': 'order', '3': 2, '4': 1, '5': 9, '10': 'order'},
-    const {'1': 'product', '3': 3, '4': 1, '5': 13, '10': 'product'},
+    const {
+      '1': 'order',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.bitsflea.Order',
+      '10': 'order'
+    },
+    const {
+      '1': 'product',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.bitsflea.Product',
+      '10': 'product'
+    },
     const {'1': 'orderPrice', '3': 4, '4': 1, '5': 9, '10': 'orderPrice'},
     const {'1': 'status', '3': 5, '4': 1, '5': 13, '10': 'status'},
     const {'1': 'reasons', '3': 6, '4': 1, '5': 9, '10': 'reasons'},
@@ -370,6 +385,7 @@ const ProReturn$json = const {
     },
     const {'1': 'endTime', '3': 13, '4': 1, '5': 9, '10': 'endTime'},
     const {'1': 'delayedCount', '3': 14, '4': 1, '5': 13, '10': 'delayedCount'},
+    const {'1': 'toAddr', '3': 15, '4': 1, '5': 13, '10': 'toAddr'},
   ],
 };
 

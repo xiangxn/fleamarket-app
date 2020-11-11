@@ -68,7 +68,7 @@ class DataApi {
     request.token = token;
     request.time = ((new DateTime.now().millisecondsSinceEpoch) / 1000).floor();
     request.sign = authKey.signString(request.phone + request.token + request.time.toString()).toString();
-    final res = await _client.refreshToken(request);
+    final res = await _client.refreshToken(request).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     // print("token_request:$request");
     // print("token_result:$res");
     if (res.code == 0) {
@@ -129,7 +129,7 @@ class DataApi {
     if (phoneEncrypt != null) request.phoneEncrypt = phoneEncrypt;
     //final res = await _client.register(request, options: CallOptions(metadata: {'token': token}));
     try {
-      return await _client.register(request);
+      return await _client.register(request).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     } on GrpcError catch (e) {
       var reply = BaseReply();
       reply.code = e.code;
@@ -144,7 +144,7 @@ class DataApi {
     request.phone = phone;
     request.codeType = codeType;
     //final res = await _client.sendSmsCode(request, options: CallOptions(metadata: {'token': token}));
-    final res = await _client.sendSmsCode(request);
+    final res = await _client.sendSmsCode(request).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     if (res.code == 0) return true;
     return false;
   }
@@ -156,7 +156,7 @@ class DataApi {
     var request = FollowRequest();
     request.user = user;
     request.follower = follower;
-    final res = await _client.follow(request, options: CallOptions(metadata: {'token': token}));
+    final res = await _client.follow(request, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     // print("res: $res");
     if (res.code == 0) return true;
     return false;
@@ -167,7 +167,7 @@ class DataApi {
     var request = FollowRequest();
     request.user = user;
     request.follower = follower;
-    final res = await _client.unFollow(request, options: CallOptions(metadata: {'token': token}));
+    final res = await _client.unFollow(request, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     if (res.code == 0) return true;
     return false;
   }
@@ -200,7 +200,7 @@ class DataApi {
     var request = SetDefaultAddrRequest();
     request.rid = id;
     request.userid = userid;
-    final res = await _client.setDefaultAddr(request, options: CallOptions(metadata: {'token': token}));
+    final res = await _client.setDefaultAddr(request, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     return res.code == 0;
   }
 
@@ -211,19 +211,19 @@ class DataApi {
 
   Future<bool> addRecAddr(AddressRequest addr) async {
     final token = await getToken();
-    final res = await _client.address(addr, options: CallOptions(metadata: {'token': token}));
+    final res = await _client.address(addr, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     return res.code == 0;
   }
 
   Future<bool> updateRecAddr(AddressRequest addr) async {
     final token = await getToken();
-    final res = await _client.updateAddress(addr, options: CallOptions(metadata: {'token': token}));
+    final res = await _client.updateAddress(addr, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     return res.code == 0;
   }
 
   Future<bool> delRecAddr(AddressRequest addr) async {
     final token = await getToken();
-    final res = await _client.delAddress(addr, options: CallOptions(metadata: {'token': token}));
+    final res = await _client.delAddress(addr, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     print("res:$res");
     return res.code == 0;
   }
@@ -241,14 +241,14 @@ class DataApi {
     FileRequest request = FileRequest();
     request.file = file;
     request.name = "head.jpg";
-    return _client.upload(request, options: CallOptions(metadata: {'token': token}));
+    return _client.upload(request, options: CallOptions(metadata: {'token': token})).timeout(Duration(minutes: 5));
   }
 
   Future<BaseReply> _search(String query) async {
     //final token = await getToken();
     try {
       //return await _client.search(SearchRequest()..query = query, options: CallOptions(metadata: {'token': token}));
-      return await _client.search(SearchRequest()..query = query);
+      return await _client.search(SearchRequest()..query = query).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     } on GrpcError catch (e) {
       var reply = BaseReply();
       reply.code = e.code;
@@ -310,9 +310,9 @@ class DataApi {
     FavoriteRequest request = FavoriteRequest();
     request.user = userid;
     request.product = productId;
-    print("req: $request");
+    // print("req: $request");
     try {
-      final result = await _client.favorite(request, options: CallOptions(metadata: {'token': token}));
+      final result = await _client.favorite(request, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
       print("res: $result");
       return result.code == 0;
     } on GrpcError catch (e) {
@@ -327,7 +327,7 @@ class DataApi {
     request.user = userid;
     request.product = productId;
     try {
-      final result = await _client.unFavorite(request, options: CallOptions(metadata: {'token': token}));
+      final result = await _client.unFavorite(request, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
       return result.code == 0;
     } on GrpcError catch (e) {
       print(e.message);
@@ -382,9 +382,9 @@ class DataApi {
   Future<BaseReply> fetchBuysByUser(int userid, int pageNo, int pageSize) async {
     String query = "{orderByBuyer(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
+    query += "oid,orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,toAddr,";
-    query += "productInfo{productId,title,photos,price,postage}";
+    query += "productInfo{productId,title,photos,price,postage,isReturns}";
     query += "}}}";
     return await _search(query);
   }
@@ -392,9 +392,9 @@ class DataApi {
   Future<BaseReply> fetchSellerByUser(int userid, int pageNo, int pageSize) async {
     String query = "{orderBySeller(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
+    query += "oid,orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,toAddr,";
-    query += "productInfo{productId,title,photos,price,postage}";
+    query += "productInfo{productId,title,photos,price,postage,isReturns}";
     query += "}}}";
     return await _search(query);
   }
@@ -403,8 +403,8 @@ class DataApi {
 
   Future<List<Holding>> getUserBalances(String eosid) async {
     EOSClient client = EOSClient(URL_EOS_API, "v1");
-    var res = await client.getCurrencyBalance(MAIN_NET_CONTRACT_NAME, eosid);
-    final res2 = await client.getCurrencyBalance(CONTRACT_NAME, eosid);
+    var res = await client.getCurrencyBalance(MAIN_NET_CONTRACT_NAME, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
+    final res2 = await client.getCurrencyBalance(CONTRACT_NAME, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     res.addAll(res2);
     return res;
   }
@@ -414,7 +414,7 @@ class DataApi {
       contract = symbol == MAIN_NET_ASSET_SYMBOL ? MAIN_NET_CONTRACT_NAME : CONTRACT_NAME;
     }
     EOSClient client = EOSClient(URL_EOS_API, "v1");
-    final list = await client.getCurrencyBalance(contract, eosId, symbol);
+    final list = await client.getCurrencyBalance(contract, eosId, symbol).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     if (list.length > 0) return list[0];
     return Holding.fromJson("0 $symbol");
   }
@@ -438,7 +438,7 @@ class DataApi {
 
   Future<List<Map<String, dynamic>>> getCoins() async {
     EOSClient client = EOSClient(URL_EOS_API, "v1");
-    return await client.getTableRows(CONTRACT_NAME, CONTRACT_NAME, "coins");
+    return await client.getTableRows(CONTRACT_NAME, CONTRACT_NAME, "coins").timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
   }
 
   Future<BaseReply> getCoinAddrs(int userid) async {
@@ -481,7 +481,7 @@ class DataApi {
         ..data = data
     ];
     Transaction transaction = Transaction()..actions = actions;
-    final serTrxArgs = await client.createTransaction(transaction);
+    final serTrxArgs = await client.createTransaction(transaction).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     // print("serTrxArgs:$serTrxArgs");
     final trx = {
       'signatures': serTrxArgs.signatures,
@@ -492,7 +492,7 @@ class DataApi {
     tr.trx = jsonEncode(trx);
     // print("trx:$tr");
     try {
-      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token}));
+      final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
       Global.console("result:$result");
       return result;
     } on GrpcError catch (e) {
@@ -518,7 +518,7 @@ class DataApi {
     } else {
       data = {'buyer_uid': userId, 'buyer_eosid': eosId, 'pid': productId, 'order_id': orderId, 'to_addr': toAddr};
     }
-    Global.console("placeorder: $data");
+    // Global.console("placeorder: $data");
     List<Authorization> auth = [
       Authorization()
         ..actor = CONTRACT_NAME
@@ -538,7 +538,7 @@ class DataApi {
     pir.amount = amount;
     pir.symbol = symbol;
     pir.mainPay = mainPay;
-    return _client.createPayInfo(pir, options: CallOptions(metadata: {'token': token}));
+    return _client.createPayInfo(pir, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
   }
 
   Future<BaseReply> transfer(EOSPrivateKey actKey, String from, String to, Holding asset, String memo, {String contract = CONTRACT_NAME}) async {
@@ -572,7 +572,7 @@ class DataApi {
     request.com = com;
     request.number = number;
     request.userId = $fixnum.Int64.parseInt(userId.toString());
-    return await _client.logisticsInfo(request, options: CallOptions(metadata: {'token': token}));
+    return await _client.logisticsInfo(request, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
   }
 
   Future<BaseReply> getUserPhone(int fromUserId, int toUserId) async {
@@ -580,11 +580,28 @@ class DataApi {
     GetPhoneRequest request = GetPhoneRequest();
     request.fromUserId = fromUserId;
     request.toUserId = toUserId;
-    return await _client.getPhone(request, options: CallOptions(metadata: {'token': token}));
+    return await _client.getPhone(request, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
   }
 
-  Future<BaseReply> applyReturns(EOSPrivateKey actKey, int buyerUid, String buyerEosId, String orderId, String reasons) async {
-    Map data = {'buyer_uid': buyerUid, 'buyer_eosid': buyerEosId, 'order_id': orderId, 'reasons': reasons};
+  Future<BaseReply> applyReturns(EOSPrivateKey actKey, int buyerUid, String buyerEosId, String orderId, String reasons, [int toAddr = 0]) async {
+    Map data = {'buyer_uid': buyerUid, 'buyer_eosid': buyerEosId, 'order_id': orderId, 'reasons': reasons, 'to_addr': toAddr};
     return await _putAction(actKey, buyerEosId, "returns", data);
+  }
+
+  Future<BaseReply> getReturns($fixnum.Int64 oid) async {
+    String query = "{returnsByOrder(order:$oid){prid,order{orderid},product{productId,title,status},status,reasons,createTime,shipNum,shipTime,shipOutTime,";
+    query += "receiptTime,receiptOutTime,endTime,delayedCount,toAddr";
+    query += "}}";
+    return await _search(query);
+  }
+
+  Future<BaseReply> reShipment(EOSPrivateKey actKey, int buyerUserId, String buyerEosId, String orderId, String number) async {
+    Map data = {'buyer_uid': buyerUserId, 'buyer_eosid': buyerEosId, 'order_id': orderId, 'number': number};
+    return await _putAction(actKey, buyerEosId, "reshipment", data);
+  }
+
+  Future<BaseReply> reConReceipt(EOSPrivateKey actKey, int sellerUid, String sellerEosid, String orderId) async {
+    Map data = {'seller_uid': sellerUid, 'seller_eosid': sellerEosid, 'order_id': orderId};
+    return await _putAction(actKey, sellerEosid, "reconreceipt", data);
   }
 }

@@ -36,6 +36,15 @@ T convertEdge<T extends GeneratedMessage>(Any data, String key, T typeObj) {
   return null;
 }
 
+T convertObj<T extends GeneratedMessage>(Any data, String key, T typeObj) {
+  var val = StringValue();
+  data.unpackInto(val);
+  if (val.value == null || val.value == "null" || val.value.isEmpty) return null;
+  final json = jsonDecode(val.value);
+  typeObj.mergeFromProto3Json(json[key]);
+  return typeObj;
+}
+
 DataPage<T> convertPageList<T extends GeneratedMessage>(Any data, String key, T type, {String key2}) {
   var val = StringValue();
   data.unpackInto(val);
@@ -115,6 +124,24 @@ String getIPFSUrl(String path) {
   return path.startsWith("http://") || path.startsWith("https://") ? path : URL_IPFS_GATEWAY + path;
 }
 
+Widget buildReturnStatus(BaseProvider provider, ProReturn pr) {
+  if (pr == null) return Text("");
+  Color color = Colors.black;
+  switch (pr.status) {
+    case ReturnStatus.pendingShipment:
+    case ReturnStatus.pendingReceipt:
+      color = Colors.red;
+      break;
+    case ReturnStatus.arbitration:
+      color = Colors.orange[800];
+      break;
+    default:
+      color = Colors.grey;
+      break;
+  }
+  return Text(provider.translate('returns_status.${pr.status}'), style: TextStyle(color: color, fontSize: 13));
+}
+
 Widget buildOrderStatus(BaseProvider provider, Order order) {
   // status = Random.secure().nextInt(4);
   Color color = Colors.black;
@@ -132,7 +159,6 @@ Widget buildOrderStatus(BaseProvider provider, Order order) {
 
   switch (status) {
     case OrderStatus.pendingPayment:
-      color = Colors.orange[800];
       color = Colors.green;
       break;
     case OrderStatus.pendingConfirm:
@@ -153,4 +179,179 @@ Widget buildOrderStatus(BaseProvider provider, Order order) {
   }
 
   return Text(provider.translate('order_type.$status'), style: TextStyle(color: color, fontSize: 13));
+}
+
+Widget buildShipNumber(String shipNum, Map data) {
+  if (data == null) {
+    return shipNum == null ? Text("") : Text("$shipNum");
+  } else {
+    return Text("$shipNum (${data['expName']})");
+  }
+}
+
+List<Widget> buildLogistics(BaseProvider provider, List<dynamic> data) {
+  List<Widget> logisticsList = new List<Widget>();
+  if (data != null && data.length > 0) {
+    int i = 1;
+    for (int n = 0; n < data.length; ++n, ++i)
+      logisticsList.add(i == data.length ? buildLogisticsItem(provider.context, data[n], i, true) : buildLogisticsItem(provider.context, data[n], i, false));
+  } else {
+    logisticsList.add(Center(child: Text(provider.translate("order_detail.not_logistics"))));
+  }
+  return logisticsList;
+}
+
+Widget buildLogisticsItem(BuildContext context, Map value, int i, bool flag) {
+  double height = 1;
+  if (flag) height = 0;
+  return i == 1
+      ? Container(
+          // width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(top: 0.0, left: 0.0, bottom: 0.0), //容器外填充
+          padding: EdgeInsets.only(top: 15.0, bottom: 0, left: 0, right: 0), //容器内填充
+          child: Card(
+            margin: EdgeInsets.only(left: 0.0, right: 0),
+            elevation: 0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      width: 90,
+                      child: Text(
+                        "${value['time']}",
+                        style: TextStyle(fontSize: 15.0, height: 1.28, color: Color(0xFF999999)),
+                        maxLines: 2,
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 26.0, left: 6.5, right: 6.5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.adjust,
+                            size: 12,
+                            color: Colors.red,
+                          ),
+                          SizedBox(
+                            width: 1,
+                            height: 28,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(color: Color(0xFFCCCCCC)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      // width: MediaQuery.of(context).size.width - 165,
+                      child: Text(
+                        "${value['status']}",
+                        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, height: 1.28),
+                        maxLines: 3,
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ],
+                ),
+                //垂直分割线
+                Padding(
+                  //左边添加像素补白
+                  padding: const EdgeInsets.only(left: 91.5),
+                  child: SizedBox(
+                    width: 1,
+                    height: height,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(color: Color(0xFFCCCCCC)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      : Container(
+          // width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(top: 0.0, left: 0.0, bottom: 0.0), //容器外填充
+          padding: EdgeInsets.only(top: 0, bottom: 0), //容器内填充
+          child: Card(
+            margin: EdgeInsets.only(left: 0.0, right: 0),
+            elevation: 0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      width: 90,
+                      child: Text(
+                        "${value['time']}",
+                        style: TextStyle(fontSize: 15.0, height: 1.28, color: Color(0xFF999999)),
+                        maxLines: 2,
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                    Padding(
+                      padding: height == 0 ? EdgeInsets.only(bottom: 32, left: 10.0, right: 10.5) : EdgeInsets.only(bottom: 0, left: 10.0, right: 10.5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 1,
+                            height: 32,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(color: Color(0xFFCCCCCC)),
+                            ),
+                          ),
+                          Icon(
+                            Icons.adjust,
+                            size: 5,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 1,
+                            height: height == 0 ? 0 : 32,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(color: Color(0xFFCCCCCC)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      // width: MediaQuery.of(context).size.width - 50,
+                      child: Text(
+                        "${value['status']}",
+                        style: TextStyle(fontSize: 15.0, height: 1.28, color: Color(0xFF999999)),
+                        maxLines: 3,
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ],
+                ),
+                //垂直分割线
+                Padding(
+                  //左边添加像素补白
+                  padding: const EdgeInsets.only(left: 91.5),
+                  child: SizedBox(
+                    width: 1,
+                    height: height,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(color: Color(0xFFCCCCCC)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
 }

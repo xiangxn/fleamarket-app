@@ -4,7 +4,6 @@ import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/routes/home.dart';
 import 'package:bitsflea/states/base.dart';
-import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:bitsflea/widgets/custom_refresh_indicator.dart';
@@ -36,185 +35,179 @@ class UserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseRoute<UserProfileProvider>(
-      listen: true,
-      provider: UserProfileProvider(context, homeProvider),
-      builder: (_, provider, __) {
-        return Selector<UserProfileProvider, User>(
-          selector: (_, provider) => provider.currentUser,
-          builder: (_, user, __) {
-            print("user profile build*************");
-            final style = Provider.of<ThemeModel>(context, listen: false).theme;
-            return CustomRefreshIndicator(
-                onRefresh: provider.refreshUser,
-                child: SingleChildScrollView(
-                  controller: provider.controller,
-                  physics: ClampingScrollPhysics(),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 0),
-                        color: style.backgroundColor,
-                        child: Row(
-                          children: <Widget>[
-                            GestureDetector(
-                              child: ExtCircleAvatar(user?.head, 80, strokeWidth: 0),
-                              onTap: provider.toEdit,
-                            ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(left: 10),
-                                alignment: Alignment.centerLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      user?.nickname ?? '-',
-                                      style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.bold, fontSize: 15),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 8),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Icon(
-                                            user?.isReviewer ?? false ? FontAwesomeIcons.userTie : FontAwesomeIcons.solidUser,
-                                            color: Colors.grey[700],
-                                            size: 16,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 10),
-                                            child: Text(
-                                                user?.isReviewer ?? false
-                                                    ? provider.translate('user_profile.user_reviewer')
-                                                    : provider.translate('user_profile.user_normal'),
-                                                style: TextStyle(color: Colors.grey[900])),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 20),
-                                            child: Text(
-                                                provider.translate("combo_text.user_credit", translationParams: {"amount": user?.creditValue.toString()}),
-                                                style: TextStyle(color: Colors.orange)),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => provider.copy(),
-                                      child: RichText(
-                                        text: TextSpan(
-                                            text: provider.translate('user_profile.recommended'),
-                                            style: TextStyle(color: Colors.grey[700]),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: user?.eosid ?? '0',
-                                                style: TextStyle(color: Colors.black),
-                                              )
-                                            ]),
-                                      ),
-                                    ),
-                                  ],
+    return BaseWidget2<UserProfileProvider, User>(
+      model: UserProfileProvider(context, homeProvider),
+      getSmallModel: (provider) => provider.currentUser,
+      builder: (_, provider, user, __) {
+        print("user profile build*************");
+        final style = provider.getStyle();
+        return CustomRefreshIndicator(
+            onRefresh: () => provider.refreshUser(),
+            child: SingleChildScrollView(
+              controller: provider.controller,
+              physics: ClampingScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 0),
+                    color: style.backgroundColor,
+                    child: Row(
+                      children: <Widget>[
+                        GestureDetector(
+                          child: ExtCircleAvatar(user?.head, 80, strokeWidth: 0),
+                          onTap: provider.toEdit,
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 10),
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  user?.nickname ?? '-',
+                                  style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.bold, fontSize: 15),
                                 ),
-                              ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        user?.isReviewer ?? false ? FontAwesomeIcons.userTie : FontAwesomeIcons.solidUser,
+                                        color: Colors.grey[700],
+                                        size: 16,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: Text(
+                                            user?.isReviewer ?? false
+                                                ? provider.translate('user_profile.user_reviewer')
+                                                : provider.translate('user_profile.user_normal'),
+                                            style: TextStyle(color: Colors.grey[900])),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 20),
+                                        child: Text(provider.translate("combo_text.user_credit", translationParams: {"amount": user?.creditValue.toString()}),
+                                            style: TextStyle(color: Colors.orange)),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => provider.copy(),
+                                  child: RichText(
+                                    text: TextSpan(
+                                        text: provider.translate('user_profile.recommended'),
+                                        style: TextStyle(color: Colors.grey[700]),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: user?.eosid ?? '0',
+                                            style: TextStyle(color: Colors.black),
+                                          )
+                                        ]),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              height: 80,
-                              width: 30,
-                              child: IconButton(
-                                icon: Icon(FontAwesomeIcons.userEdit, size: 20, color: Colors.grey[700]),
-                                onPressed: provider.toEdit,
-                              ),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        margin: EdgeInsets.only(bottom: 10, top: 20),
-                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
-                          _buildChunk(provider.translate('user_profile.favorite'), user?.favoriteTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FAVORITE)),
-                          _buildChunk(provider.translate('user_profile.follow'), user?.followTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FOLLOW)),
-                          _buildChunk(provider.translate('user_profile.fans'), user?.fansTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FANS)),
-                        ]),
-                      ),
-                      LineButtonGroup(children: [
-                        LineButtonItem(
-                            text: provider.translate('user_profile.mine_publish'),
-                            subText: (user?.postsTotal ?? 0).toString(),
-                            prefixIcon: Icons.shop,
-                            onTap: () => provider.pushNamed(ROUTE_USER_PUBLISH)),
-                        LineButtonItem(
-                          text: provider.translate('user_profile.mine_buy'),
-                          subText: (user?.buyTotal ?? 0).toString(),
-                          prefixIcon: Icons.archive,
-                          onTap: () => provider.pushNamed(ROUTE_USER_BUY),
-                        ),
-                        LineButtonItem(
-                          text: provider.translate('user_profile.mine_sell'),
-                          subText: (user?.sellTotal ?? 0).toString(),
-                          prefixIcon: Icons.unarchive,
-                          onTap: () => provider.pushNamed(ROUTE_USER_SELL),
-                        ),
-                        LineButtonItem(
-                          text: provider.translate('user_profile.mine_recommended'),
-                          subText: (user?.referralTotal ?? 0).toString(),
-                          prefixIcon: Icons.account_box,
-                          onTap: () => provider.pushNamed(ROUTE_USER_INVITED),
-                        ),
-                      ]),
-                      LineButtonGroup(margin: EdgeInsets.only(top: 10), children: [
-                        LineButtonItem(
-                            text: provider.translate('user_profile.mine_balances'),
-                            prefixIcon: Icons.monetization_on,
-                            onTap: () => provider.pushNamed(ROUTE_USER_BALANCES)),
-                        LineButtonItem(
-                            text: provider.translate('user_profile.mine_keys'), prefixIcon: Icons.vpn_key, onTap: () => provider.pushNamed(ROUTE_USER_KEYS)),
-                        LineButtonItem(
-                          text: provider.translate('user_profile.mine_address'),
-                          prefixIcon: Icons.location_on,
-                          onTap: () => provider.pushNamed(ROUTE_USER_ADDRESS, arguments: false),
-                        ),
-                        LineButtonItem(
-                          text: provider.translate('user_profile.mine_withdrawal'),
-                          prefixIcon: Icons.call_to_action,
-                          onTap: () => provider.pushNamed(ROUTE_USER_WITHDRAWADDR),
-                        ),
-                      ]),
-                      LineButtonGroup(
-                        margin: EdgeInsets.only(top: 10),
-                        children: <Widget>[
-                          LineButtonItem(
-                            text: provider.translate('user_profile.govern'),
-                            prefixIcon: FontAwesomeIcons.balanceScale,
-                            prefixIconSize: 18,
-                            prefixPadding: 18,
-                            onTap: () => provider.pushNamed(ROUTE_GOVERN),
-                          )
-                        ],
-                      ),
-                      LineButtonGroup(
-                        margin: EdgeInsets.only(top: 10),
-                        children: [
-                          LineButtonItem(text: provider.translate('setting.title'), prefixIcon: Icons.settings, onTap: () => provider.pushNamed(ROUTE_SETTING))
-                        ],
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10, 10, 10, 30),
-                        width: double.infinity,
-                        child: CustomButton(
-                          text: provider.translate('user_profile.logout'),
-                          color: Colors.orange,
-                          onTap: provider.logout,
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                        ),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          height: 80,
+                          width: 30,
+                          child: IconButton(
+                            icon: Icon(FontAwesomeIcons.userEdit, size: 20, color: Colors.grey[700]),
+                            onPressed: provider.toEdit,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    margin: EdgeInsets.only(bottom: 10, top: 20),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
+                      _buildChunk(provider.translate('user_profile.favorite'), user?.favoriteTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FAVORITE)),
+                      _buildChunk(provider.translate('user_profile.follow'), user?.followTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FOLLOW)),
+                      _buildChunk(provider.translate('user_profile.fans'), user?.fansTotal ?? 0, () => provider.pushNamed(ROUTE_USER_FANS)),
+                    ]),
+                  ),
+                  LineButtonGroup(children: [
+                    LineButtonItem(
+                        text: provider.translate('user_profile.mine_publish'),
+                        subText: (user?.postsTotal ?? 0).toString(),
+                        prefixIcon: Icons.shop,
+                        onTap: () => provider.pushNamed(ROUTE_USER_PUBLISH)),
+                    LineButtonItem(
+                      text: provider.translate('user_profile.mine_buy'),
+                      subText: (user?.buyTotal ?? 0).toString(),
+                      prefixIcon: Icons.archive,
+                      onTap: () => provider.pushNamed(ROUTE_USER_BUY),
+                    ),
+                    LineButtonItem(
+                      text: provider.translate('user_profile.mine_sell'),
+                      subText: (user?.sellTotal ?? 0).toString(),
+                      prefixIcon: Icons.unarchive,
+                      onTap: () => provider.pushNamed(ROUTE_USER_SELL),
+                    ),
+                    LineButtonItem(
+                      text: provider.translate('user_profile.mine_recommended'),
+                      subText: (user?.referralTotal ?? 0).toString(),
+                      prefixIcon: Icons.account_box,
+                      onTap: () => provider.pushNamed(ROUTE_USER_INVITED),
+                    ),
+                  ]),
+                  LineButtonGroup(margin: EdgeInsets.only(top: 10), children: [
+                    LineButtonItem(
+                        text: provider.translate('user_profile.mine_balances'),
+                        prefixIcon: Icons.monetization_on,
+                        onTap: () => provider.pushNamed(ROUTE_USER_BALANCES)),
+                    LineButtonItem(
+                        text: provider.translate('user_profile.mine_keys'), prefixIcon: Icons.vpn_key, onTap: () => provider.pushNamed(ROUTE_USER_KEYS)),
+                    LineButtonItem(
+                      text: provider.translate('user_profile.mine_address'),
+                      prefixIcon: Icons.location_on,
+                      onTap: () => provider.pushNamed(ROUTE_USER_ADDRESS, arguments: false),
+                    ),
+                    LineButtonItem(
+                      text: provider.translate('user_profile.mine_withdrawal'),
+                      prefixIcon: Icons.call_to_action,
+                      onTap: () => provider.pushNamed(ROUTE_USER_WITHDRAWADDR),
+                    ),
+                  ]),
+                  LineButtonGroup(
+                    margin: EdgeInsets.only(top: 10),
+                    children: <Widget>[
+                      LineButtonItem(
+                        text: provider.translate('user_profile.govern'),
+                        prefixIcon: FontAwesomeIcons.balanceScale,
+                        prefixIconSize: 18,
+                        prefixPadding: 18,
+                        onTap: () => provider.pushNamed(ROUTE_GOVERN),
                       )
                     ],
                   ),
-                ));
-          },
-        );
+                  LineButtonGroup(
+                    margin: EdgeInsets.only(top: 10),
+                    children: [
+                      LineButtonItem(text: provider.translate('setting.title'), prefixIcon: Icons.settings, onTap: () => provider.pushNamed(ROUTE_SETTING))
+                    ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(10, 10, 10, 30),
+                    width: double.infinity,
+                    child: CustomButton(
+                      text: provider.translate('user_profile.logout'),
+                      color: Colors.orange,
+                      onTap: provider.logout,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                    ),
+                  )
+                ],
+              ),
+            ));
       },
     );
   }

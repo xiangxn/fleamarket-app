@@ -2,15 +2,17 @@
 const CONTRACT_NAME = "bitsfleatest";
 const GRPC_HOST = 'api.bitsflea.com';
 //const String GRPC_HOST = '127.0.0.1';
-const URL_EOS_API = 'https://api-bostest.blockzone.net';
+//const URL_EOS_API = 'https://bostest.eosn.io';
+const URL_EOS_API = 'https://bostest.bitsflea.com';
 //const String URL_EOS_API = 'http://127.0.0.1:8888';
-const URL_IPFS_GATEWAY = "http://source.bitsflea.com:10001/ipfs/";
-const DEFAULT_HEAD = 'http://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';
+const URL_IPFS_GATEWAY = "https://source.bitsflea.com:10001/ipfs/";
+const DEFAULT_HEAD = 'https://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';
 
 //主网配置
 const MAIN_NET_CONTRACT_NAME = "eosio.token";
 const MAIN_NET_ASSET_SYMBOL = "BOS";
 const ADDR_USDT_ETH_ERC20 = "0xdac17f958d2ee523a2206206994597c13d831ec7";
+const CHAIN_REQUEST_TIMEOUT = 180;
 
 /// 短信重发延时
 const int TIMER_RESET = 60;
@@ -53,6 +55,7 @@ const ROUTE_ORDER_DETAIL = 'orderDetail';
 const ROUTE_LOGISTICS = 'logistics';
 const ROUTE_ABOUT = 'about';
 const ROUTE_SETTING = "setting";
+const ROUTE_RETURNS_DETAIL = 'returnsDetail';
 
 //Store
 const STORE_SEARCH_HISTORY = "searchHistory";
@@ -112,4 +115,21 @@ class OrderStatus {
 
   ///退货中
   static const returning = 800;
+}
+
+class ReturnStatus {
+  ///待发货
+  static const pendingShipment = 0;
+
+  ///待收货
+  static const pendingReceipt = 100;
+
+  ///已完成
+  static const completed = 200;
+
+  ///已取消
+  static const cancelled = 300;
+
+  ///仲裁中
+  static const arbitration = 400;
 }

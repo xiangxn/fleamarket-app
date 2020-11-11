@@ -33,7 +33,11 @@
         "follow": "关注",
         "comments": "留言",
         "buy": "购买",
-        "contact": "联系"
+        "contact": "联系",
+        "is_new": "是否全新:  {value}",
+        "is_returns": "是否可退:  {value}",
+        "true": "是",
+        "false": "否"
     },
     "login": {
         "login_text": "登录",
@@ -174,7 +178,8 @@
         "postage": "运费:  {price}",
         "seller": "卖家:  {name}",
         "buyer": "买家:  {name}",
-        "order_no": "订单号:  {oid}"
+        "order_no": "订单号:  {oid}",
+        "product_title": "商品:  {title}"
     },
     "user_card": {
         "follow": "关注",
@@ -236,10 +241,23 @@
         "copy_ok": "订单号已经复制",
         "btn_return": "退货",
         "btn_return_show": "查看退货",
-        "msg_return": "发起退货前请尽快联系卖家",
+        "msg_return": "如果需要请尽快联系卖家获得收货地址",
         "hint_reasons": "请输入退货理由",
         "msg_reasons_err": "退货理由不能为空",
-        "msg_apply_returns_ok": "你已经成功发起退货，请尽快联系卖家后发出商品"
+        "msg_apply_returns_ok": "你已经成功发起退货，请尽快联系卖家后发出商品",
+        "none": "无"
+    },
+    "returns_detail": {
+        "title": "退货信息",
+        "status": "状态:  ",
+        "reasons":"退货原因:  {reasons}"
+    },
+    "returns_status": {
+        "0": "待发货",
+        "100": "待收货",
+        "200": "已完成",
+        "300": "已取消",
+        "400": "仲裁中"
     },
     "user_invited": {
         "title": "我邀请的"

@@ -20,6 +20,7 @@ import 'routes/order_detail.dart';
 import 'routes/product_review_detail.dart';
 import 'routes/product_review_list.dart';
 import 'routes/publish.dart';
+import 'routes/returns_detail.dart';
 import 'routes/reviewer_list.dart';
 import 'routes/search.dart';
 import 'routes/settings.dart';
@@ -162,6 +163,8 @@ class MyApp extends StatelessWidget {
                       return CreateOrderRoute(product: settings.arguments);
                     case ROUTE_USER_ADDRESS:
                       return UserAddressRoute(isSelecter: settings.arguments);
+                    case ROUTE_RETURNS_DETAIL:
+                      return ReturnsDetailRoute(order: settings.arguments);
                     default:
                       return Scaffold(
                         appBar: AppBar(),

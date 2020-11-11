@@ -128,8 +128,26 @@ class ProductDetailRoute extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      PriceText(label: provider.translate('product_detail.price'), price: provider.product.price, priceBold: true),
-                                      PriceText(label: provider.translate('product_detail.postage'), price: provider.product.postage, priceBold: true),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          PriceText(label: provider.translate('product_detail.price'), price: provider.product.price, priceBold: true),
+                                          Text(
+                                              provider.translate("product_detail.is_new",
+                                                  translationParams: {'value': provider.translate("product_detail.${provider.product.isNew}")}),
+                                              style: TextStyle(fontSize: 12))
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          PriceText(label: provider.translate('product_detail.postage'), price: provider.product.postage, priceBold: true),
+                                          Text(
+                                              provider.translate("product_detail.is_returns",
+                                                  translationParams: {'value': provider.translate("product_detail.${provider.product.isReturns}")}),
+                                              style: TextStyle(fontSize: 12)),
+                                        ],
+                                      ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 8),
                                         child: Text(provider.product.title,

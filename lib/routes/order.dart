@@ -140,6 +140,10 @@ class CreateOrderProvider extends BaseProvider {
   ReceiptAddress get address => _address;
 
   initAddress() async {
+    if (isLocalRefresh) {
+      isLocalRefresh = false;
+      return;
+    }
     final user = this.getUser();
     var process = api.getDefaultAddr(user.userid);
     final res = await processing(process, loading: false);
@@ -160,13 +164,16 @@ class CreateOrderProvider extends BaseProvider {
       final postage = Holding.fromJson(_product.postage);
       final user = Provider.of<UserModel>(context, listen: false).user;
       //获取主网余额
+      // print("获取余额...");
       final balance = await api.getUserBalance(user.eosid, price.currency);
+      // print("获取余额完成...");
       final total = price.amount + postage.amount;
       bool mainPay = balance.amount >= total;
       //生成支付信息
       PayInfo payInfo = PayInfo();
       payInfo.payMode = mainPay ? 0 : 1;
       final res = await api.createPayInfo(um.user.userid, _product.productId, total, price.currency, mainPay);
+      // print("创建支付信息...");
       if (res.code == 0) {
         res.data.unpackInto(payInfo);
       } else {
@@ -175,13 +182,14 @@ class CreateOrderProvider extends BaseProvider {
         return;
       }
       final cRes = await api.placeorder(um.keys[1], um.user.userid, um.user.eosid, _product.productId, payInfo.orderid, _address.rid);
+      // print("执行下单...");
       if (cRes.code != 0) {
         closeLoading();
         showToast(this.translate("order.create_order_err"));
         return;
       }
       closeLoading();
-      Global.console("pay info: $payInfo");
+      Global.console("pay info: { $payInfo }");
       //打开支付UI
       Order order = Order();
       order.orderid = payInfo.orderid;
@@ -204,6 +212,7 @@ class CreateOrderProvider extends BaseProvider {
     final address = await this.pushNamed(ROUTE_USER_ADDRESS, arguments: true);
     if (address != null) {
       _address = address;
+      isLocalRefresh = true;
       notifyListeners();
     }
   }

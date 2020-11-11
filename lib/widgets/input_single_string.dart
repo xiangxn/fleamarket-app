@@ -25,7 +25,7 @@ class InputSingleString extends StatelessWidget {
             autocorrect: false,
             enableSuggestions: false,
             onSubmitted: model.onSubmit,
-            maxLines: this.maxLines == null ? 1 : this.maxLines,
+            maxLines: this.maxLines ?? 1,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(left: 8),

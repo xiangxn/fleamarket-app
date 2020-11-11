@@ -46,32 +46,33 @@ class _ProductList extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     print("product_list build ******** ");
-    // print("widget.productPage: ${widget.productPage}");
-    return BaseRoute<ProductListProvider>(
-        listen: true,
-        provider: ProductListProvider(context, widget.productPage, onGetData: widget.onGetData),
-        builder: (_, provider, __) {
-          // print("length: ${provider.productPage.data.length}");
-          return CustomRefreshIndicator(
-            onRefresh: () => provider.onRefresh(categoryid: widget.category, isRefresh: true),
-            onLoad: () => provider.onLoad(widget.category),
-            hasMore: () => provider.productPage.hasMore(),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6),
-              child: StaggeredGridView.countBuilder(
-                controller: widget.controller,
-                // physics: ClampingScrollPhysics(),
-                itemCount: provider.productPage.data?.length ?? 0,
-                staggeredTileBuilder: (inx) => StaggeredTile.fit(2),
-                crossAxisCount: 4,
-                mainAxisSpacing: 6, // 垂直间距
-                crossAxisSpacing: 6, // 水平间距
-                itemBuilder: (context, i) {
-                  // print("provider.productPage: ${provider.productPage}");
-                  return Selector<ProductListProvider, Product>(
-                    selector: (_, __) => provider.productPage.data[i],
-                    builder: (_, product, __) {
-                      // print("item builder $i");
+    return BaseWidget<ProductListProvider>(
+      model: ProductListProvider(context, widget.productPage, onGetData: widget.onGetData),
+      builder: (ctx, provider, child) {
+        return CustomRefreshIndicator(
+          onRefresh: () => provider.onRefresh(categoryid: widget.category, isRefresh: true),
+          onLoad: () => provider.onLoad(widget.category),
+          hasMore: () => provider.productPage.hasMore(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: StaggeredGridView.countBuilder(
+              controller: widget.controller,
+              // physics: ClampingScrollPhysics(),
+              itemCount: provider.productPage.data?.length ?? 0,
+              staggeredTileBuilder: (inx) => StaggeredTile.fit(2),
+              crossAxisCount: 4,
+              mainAxisSpacing: 6, // 垂直间距
+              crossAxisSpacing: 6, // 水平间距
+              itemBuilder: (context, i) {
+                if (i >= provider.productPage.data.length) return child;
+                return BaseWidget2<ProductListProvider, Product>(
+                    model: provider,
+                    getSmallModel: (model) {
+                      if (i >= model.productPage.data.length) return null;
+                      return model.productPage.data[i];
+                    },
+                    builder: (ctx, model, product, child) {
+                      if (product == null) return child;
                       return Card(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                           ExtNetworkImage(
@@ -127,13 +128,13 @@ class _ProductList extends State<ProductList> {
                           ),
                         ]),
                       );
-                    },
-                  );
-                },
-              ),
+                    });
+              },
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
 

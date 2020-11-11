@@ -1843,27 +1843,29 @@ class ProductAudit extends $pb.GeneratedMessage {
 class Order extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Order',
       package: const $pb.PackageName('bitsflea'), createEmptyInstance: create)
-    ..aOS(1, 'orderid')
-    ..aOM<Product>(2, 'productInfo',
+    ..a<$fixnum.Int64>(1, 'oid', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOS(2, 'orderid')
+    ..aOM<Product>(3, 'productInfo',
         protoName: 'productInfo', subBuilder: Product.create)
-    ..aOM<User>(3, 'seller', subBuilder: User.create)
-    ..aOM<User>(4, 'buyer', subBuilder: User.create)
-    ..a<$core.int>(5, 'status', $pb.PbFieldType.OU3)
-    ..aOS(6, 'price')
-    ..aOS(7, 'postage')
-    ..aOS(8, 'payAddr', protoName: 'payAddr')
-    ..aOS(9, 'shipNum', protoName: 'shipNum')
-    ..aOS(10, 'createTime', protoName: 'createTime')
-    ..aOS(11, 'payTime', protoName: 'payTime')
-    ..aOS(12, 'payOutTime', protoName: 'payOutTime')
-    ..aOS(13, 'shipTime', protoName: 'shipTime')
-    ..aOS(14, 'shipOutTime', protoName: 'shipOutTime')
-    ..aOS(15, 'receiptTime', protoName: 'receiptTime')
-    ..aOS(16, 'receiptOutTime', protoName: 'receiptOutTime')
-    ..aOS(17, 'endTime', protoName: 'endTime')
-    ..a<$core.int>(18, 'delayedCount', $pb.PbFieldType.OU3,
+    ..aOM<User>(4, 'seller', subBuilder: User.create)
+    ..aOM<User>(5, 'buyer', subBuilder: User.create)
+    ..a<$core.int>(6, 'status', $pb.PbFieldType.OU3)
+    ..aOS(7, 'price')
+    ..aOS(8, 'postage')
+    ..aOS(9, 'payAddr', protoName: 'payAddr')
+    ..aOS(10, 'shipNum', protoName: 'shipNum')
+    ..aOS(11, 'createTime', protoName: 'createTime')
+    ..aOS(12, 'payTime', protoName: 'payTime')
+    ..aOS(13, 'payOutTime', protoName: 'payOutTime')
+    ..aOS(14, 'shipTime', protoName: 'shipTime')
+    ..aOS(15, 'shipOutTime', protoName: 'shipOutTime')
+    ..aOS(16, 'receiptTime', protoName: 'receiptTime')
+    ..aOS(17, 'receiptOutTime', protoName: 'receiptOutTime')
+    ..aOS(18, 'endTime', protoName: 'endTime')
+    ..a<$core.int>(19, 'delayedCount', $pb.PbFieldType.OU3,
         protoName: 'delayedCount')
-    ..a<$core.int>(19, 'toAddr', $pb.PbFieldType.OU3, protoName: 'toAddr')
+    ..a<$core.int>(20, 'toAddr', $pb.PbFieldType.OU3, protoName: 'toAddr')
     ..hasRequiredFields = false;
 
   Order._() : super();
@@ -1888,246 +1890,258 @@ class Order extends $pb.GeneratedMessage {
   static Order _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get orderid => $_getSZ(0);
+  $fixnum.Int64 get oid => $_getI64(0);
   @$pb.TagNumber(1)
+  set oid($fixnum.Int64 v) {
+    $_setInt64(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasOid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOid() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get orderid => $_getSZ(1);
+  @$pb.TagNumber(2)
   set orderid($core.String v) {
-    $_setString(0, v);
+    $_setString(1, v);
   }
 
-  @$pb.TagNumber(1)
-  $core.bool hasOrderid() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearOrderid() => clearField(1);
+  @$pb.TagNumber(2)
+  $core.bool hasOrderid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOrderid() => clearField(2);
 
-  @$pb.TagNumber(2)
-  Product get productInfo => $_getN(1);
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  Product get productInfo => $_getN(2);
+  @$pb.TagNumber(3)
   set productInfo(Product v) {
-    setField(2, v);
-  }
-
-  @$pb.TagNumber(2)
-  $core.bool hasProductInfo() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearProductInfo() => clearField(2);
-  @$pb.TagNumber(2)
-  Product ensureProductInfo() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  User get seller => $_getN(2);
-  @$pb.TagNumber(3)
-  set seller(User v) {
     setField(3, v);
   }
 
   @$pb.TagNumber(3)
-  $core.bool hasSeller() => $_has(2);
+  $core.bool hasProductInfo() => $_has(2);
   @$pb.TagNumber(3)
-  void clearSeller() => clearField(3);
+  void clearProductInfo() => clearField(3);
   @$pb.TagNumber(3)
-  User ensureSeller() => $_ensure(2);
+  Product ensureProductInfo() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  User get buyer => $_getN(3);
+  User get seller => $_getN(3);
   @$pb.TagNumber(4)
-  set buyer(User v) {
+  set seller(User v) {
     setField(4, v);
   }
 
   @$pb.TagNumber(4)
-  $core.bool hasBuyer() => $_has(3);
+  $core.bool hasSeller() => $_has(3);
   @$pb.TagNumber(4)
-  void clearBuyer() => clearField(4);
+  void clearSeller() => clearField(4);
   @$pb.TagNumber(4)
-  User ensureBuyer() => $_ensure(3);
+  User ensureSeller() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $core.int get status => $_getIZ(4);
+  User get buyer => $_getN(4);
   @$pb.TagNumber(5)
+  set buyer(User v) {
+    setField(5, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasBuyer() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearBuyer() => clearField(5);
+  @$pb.TagNumber(5)
+  User ensureBuyer() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $core.int get status => $_getIZ(5);
+  @$pb.TagNumber(6)
   set status($core.int v) {
-    $_setUnsignedInt32(4, v);
+    $_setUnsignedInt32(5, v);
   }
 
-  @$pb.TagNumber(5)
-  $core.bool hasStatus() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearStatus() => clearField(5);
+  @$pb.TagNumber(6)
+  $core.bool hasStatus() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearStatus() => clearField(6);
 
-  @$pb.TagNumber(6)
-  $core.String get price => $_getSZ(5);
-  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  $core.String get price => $_getSZ(6);
+  @$pb.TagNumber(7)
   set price($core.String v) {
-    $_setString(5, v);
-  }
-
-  @$pb.TagNumber(6)
-  $core.bool hasPrice() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearPrice() => clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.String get postage => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set postage($core.String v) {
     $_setString(6, v);
   }
 
   @$pb.TagNumber(7)
-  $core.bool hasPostage() => $_has(6);
+  $core.bool hasPrice() => $_has(6);
   @$pb.TagNumber(7)
-  void clearPostage() => clearField(7);
+  void clearPrice() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.String get payAddr => $_getSZ(7);
+  $core.String get postage => $_getSZ(7);
   @$pb.TagNumber(8)
-  set payAddr($core.String v) {
+  set postage($core.String v) {
     $_setString(7, v);
   }
 
   @$pb.TagNumber(8)
-  $core.bool hasPayAddr() => $_has(7);
+  $core.bool hasPostage() => $_has(7);
   @$pb.TagNumber(8)
-  void clearPayAddr() => clearField(8);
+  void clearPostage() => clearField(8);
 
   @$pb.TagNumber(9)
-  $core.String get shipNum => $_getSZ(8);
+  $core.String get payAddr => $_getSZ(8);
   @$pb.TagNumber(9)
-  set shipNum($core.String v) {
+  set payAddr($core.String v) {
     $_setString(8, v);
   }
 
   @$pb.TagNumber(9)
-  $core.bool hasShipNum() => $_has(8);
+  $core.bool hasPayAddr() => $_has(8);
   @$pb.TagNumber(9)
-  void clearShipNum() => clearField(9);
+  void clearPayAddr() => clearField(9);
 
   @$pb.TagNumber(10)
-  $core.String get createTime => $_getSZ(9);
+  $core.String get shipNum => $_getSZ(9);
   @$pb.TagNumber(10)
-  set createTime($core.String v) {
+  set shipNum($core.String v) {
     $_setString(9, v);
   }
 
   @$pb.TagNumber(10)
-  $core.bool hasCreateTime() => $_has(9);
+  $core.bool hasShipNum() => $_has(9);
   @$pb.TagNumber(10)
-  void clearCreateTime() => clearField(10);
+  void clearShipNum() => clearField(10);
 
   @$pb.TagNumber(11)
-  $core.String get payTime => $_getSZ(10);
+  $core.String get createTime => $_getSZ(10);
   @$pb.TagNumber(11)
-  set payTime($core.String v) {
+  set createTime($core.String v) {
     $_setString(10, v);
   }
 
   @$pb.TagNumber(11)
-  $core.bool hasPayTime() => $_has(10);
+  $core.bool hasCreateTime() => $_has(10);
   @$pb.TagNumber(11)
-  void clearPayTime() => clearField(11);
+  void clearCreateTime() => clearField(11);
 
   @$pb.TagNumber(12)
-  $core.String get payOutTime => $_getSZ(11);
+  $core.String get payTime => $_getSZ(11);
   @$pb.TagNumber(12)
-  set payOutTime($core.String v) {
+  set payTime($core.String v) {
     $_setString(11, v);
   }
 
   @$pb.TagNumber(12)
-  $core.bool hasPayOutTime() => $_has(11);
+  $core.bool hasPayTime() => $_has(11);
   @$pb.TagNumber(12)
-  void clearPayOutTime() => clearField(12);
+  void clearPayTime() => clearField(12);
 
   @$pb.TagNumber(13)
-  $core.String get shipTime => $_getSZ(12);
+  $core.String get payOutTime => $_getSZ(12);
   @$pb.TagNumber(13)
-  set shipTime($core.String v) {
+  set payOutTime($core.String v) {
     $_setString(12, v);
   }
 
   @$pb.TagNumber(13)
-  $core.bool hasShipTime() => $_has(12);
+  $core.bool hasPayOutTime() => $_has(12);
   @$pb.TagNumber(13)
-  void clearShipTime() => clearField(13);
+  void clearPayOutTime() => clearField(13);
 
   @$pb.TagNumber(14)
-  $core.String get shipOutTime => $_getSZ(13);
+  $core.String get shipTime => $_getSZ(13);
   @$pb.TagNumber(14)
-  set shipOutTime($core.String v) {
+  set shipTime($core.String v) {
     $_setString(13, v);
   }
 
   @$pb.TagNumber(14)
-  $core.bool hasShipOutTime() => $_has(13);
+  $core.bool hasShipTime() => $_has(13);
   @$pb.TagNumber(14)
-  void clearShipOutTime() => clearField(14);
+  void clearShipTime() => clearField(14);
 
   @$pb.TagNumber(15)
-  $core.String get receiptTime => $_getSZ(14);
+  $core.String get shipOutTime => $_getSZ(14);
   @$pb.TagNumber(15)
-  set receiptTime($core.String v) {
+  set shipOutTime($core.String v) {
     $_setString(14, v);
   }
 
   @$pb.TagNumber(15)
-  $core.bool hasReceiptTime() => $_has(14);
+  $core.bool hasShipOutTime() => $_has(14);
   @$pb.TagNumber(15)
-  void clearReceiptTime() => clearField(15);
+  void clearShipOutTime() => clearField(15);
 
   @$pb.TagNumber(16)
-  $core.String get receiptOutTime => $_getSZ(15);
+  $core.String get receiptTime => $_getSZ(15);
   @$pb.TagNumber(16)
-  set receiptOutTime($core.String v) {
+  set receiptTime($core.String v) {
     $_setString(15, v);
   }
 
   @$pb.TagNumber(16)
-  $core.bool hasReceiptOutTime() => $_has(15);
+  $core.bool hasReceiptTime() => $_has(15);
   @$pb.TagNumber(16)
-  void clearReceiptOutTime() => clearField(16);
+  void clearReceiptTime() => clearField(16);
 
   @$pb.TagNumber(17)
-  $core.String get endTime => $_getSZ(16);
+  $core.String get receiptOutTime => $_getSZ(16);
   @$pb.TagNumber(17)
-  set endTime($core.String v) {
+  set receiptOutTime($core.String v) {
     $_setString(16, v);
   }
 
   @$pb.TagNumber(17)
-  $core.bool hasEndTime() => $_has(16);
+  $core.bool hasReceiptOutTime() => $_has(16);
   @$pb.TagNumber(17)
-  void clearEndTime() => clearField(17);
+  void clearReceiptOutTime() => clearField(17);
 
   @$pb.TagNumber(18)
-  $core.int get delayedCount => $_getIZ(17);
+  $core.String get endTime => $_getSZ(17);
   @$pb.TagNumber(18)
-  set delayedCount($core.int v) {
-    $_setUnsignedInt32(17, v);
+  set endTime($core.String v) {
+    $_setString(17, v);
   }
 
   @$pb.TagNumber(18)
-  $core.bool hasDelayedCount() => $_has(17);
+  $core.bool hasEndTime() => $_has(17);
   @$pb.TagNumber(18)
-  void clearDelayedCount() => clearField(18);
+  void clearEndTime() => clearField(18);
 
   @$pb.TagNumber(19)
-  $core.int get toAddr => $_getIZ(18);
+  $core.int get delayedCount => $_getIZ(18);
   @$pb.TagNumber(19)
-  set toAddr($core.int v) {
+  set delayedCount($core.int v) {
     $_setUnsignedInt32(18, v);
   }
 
   @$pb.TagNumber(19)
-  $core.bool hasToAddr() => $_has(18);
+  $core.bool hasDelayedCount() => $_has(18);
   @$pb.TagNumber(19)
-  void clearToAddr() => clearField(19);
+  void clearDelayedCount() => clearField(19);
+
+  @$pb.TagNumber(20)
+  $core.int get toAddr => $_getIZ(19);
+  @$pb.TagNumber(20)
+  set toAddr($core.int v) {
+    $_setUnsignedInt32(19, v);
+  }
+
+  @$pb.TagNumber(20)
+  $core.bool hasToAddr() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearToAddr() => clearField(20);
 }
 
 class ProReturn extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('ProReturn',
       package: const $pb.PackageName('bitsflea'), createEmptyInstance: create)
     ..a<$core.int>(1, 'prid', $pb.PbFieldType.OU3)
-    ..aOS(2, 'order')
-    ..a<$core.int>(3, 'product', $pb.PbFieldType.OU3)
+    ..aOM<Order>(2, 'order', subBuilder: Order.create)
+    ..aOM<Product>(3, 'product', subBuilder: Product.create)
     ..aOS(4, 'orderPrice', protoName: 'orderPrice')
     ..a<$core.int>(5, 'status', $pb.PbFieldType.OU3)
     ..aOS(6, 'reasons')
@@ -2140,6 +2154,7 @@ class ProReturn extends $pb.GeneratedMessage {
     ..aOS(13, 'endTime', protoName: 'endTime')
     ..a<$core.int>(14, 'delayedCount', $pb.PbFieldType.OU3,
         protoName: 'delayedCount')
+    ..a<$core.int>(15, 'toAddr', $pb.PbFieldType.OU3, protoName: 'toAddr')
     ..hasRequiredFields = false;
 
   ProReturn._() : super();
@@ -2176,28 +2191,32 @@ class ProReturn extends $pb.GeneratedMessage {
   void clearPrid() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get order => $_getSZ(1);
+  Order get order => $_getN(1);
   @$pb.TagNumber(2)
-  set order($core.String v) {
-    $_setString(1, v);
+  set order(Order v) {
+    setField(2, v);
   }
 
   @$pb.TagNumber(2)
   $core.bool hasOrder() => $_has(1);
   @$pb.TagNumber(2)
   void clearOrder() => clearField(2);
+  @$pb.TagNumber(2)
+  Order ensureOrder() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $core.int get product => $_getIZ(2);
+  Product get product => $_getN(2);
   @$pb.TagNumber(3)
-  set product($core.int v) {
-    $_setUnsignedInt32(2, v);
+  set product(Product v) {
+    setField(3, v);
   }
 
   @$pb.TagNumber(3)
   $core.bool hasProduct() => $_has(2);
   @$pb.TagNumber(3)
   void clearProduct() => clearField(3);
+  @$pb.TagNumber(3)
+  Product ensureProduct() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $core.String get orderPrice => $_getSZ(3);
@@ -2330,6 +2349,18 @@ class ProReturn extends $pb.GeneratedMessage {
   $core.bool hasDelayedCount() => $_has(13);
   @$pb.TagNumber(14)
   void clearDelayedCount() => clearField(14);
+
+  @$pb.TagNumber(15)
+  $core.int get toAddr => $_getIZ(14);
+  @$pb.TagNumber(15)
+  set toAddr($core.int v) {
+    $_setUnsignedInt32(14, v);
+  }
+
+  @$pb.TagNumber(15)
+  $core.bool hasToAddr() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearToAddr() => clearField(15);
 }
 
 class Arbitration extends $pb.GeneratedMessage {

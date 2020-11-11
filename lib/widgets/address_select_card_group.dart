@@ -30,7 +30,7 @@ class AddressSelectCardGroup extends StatelessWidget {
               physics: ClampingScrollPhysics(),
               itemCount: addressList.length,
               itemBuilder: (_, i) {
-                return AddressSelectCard(address: addressList[i], onTap: () => Navigator.of(context).pop(addressList[i]));
+                return AddressSelectCard(address: addressList[i], onTap: () => provider.pop(addressList[i]));
               }),
         );
       },

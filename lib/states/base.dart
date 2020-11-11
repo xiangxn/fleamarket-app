@@ -16,6 +16,7 @@ class BaseProvider extends ChangeNotifier {
   final BuildContext context;
   bool _busy = false;
   DataApi _api;
+  bool isLocalRefresh = false;
 
   BaseProvider(this.context) {
     _api = DataApi();
@@ -61,7 +62,7 @@ class BaseProvider extends ChangeNotifier {
   }
 
   alert(String msg, {String title, Function callback}) {
-    ExtDialog.alert(context, msg, title).then((val) => callback ?? null);
+    ExtDialog.alert(context, msg, title).then((val) => callback == null ? val : callback());
   }
 
   confirm(String msg, {String title, Function callback}) {

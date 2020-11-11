@@ -132,6 +132,15 @@ class ChineseCupertinoLocalizations implements CupertinoLocalizations {
     assert(tabCount >= 1);
     return '标签 $tabIndex of $tabCount';
   }
+
+  @override
+  List<String> get timerPickerHourLabels => const ["时", "时"];
+
+  @override
+  List<String> get timerPickerMinuteLabels => const ["分"];
+
+  @override
+  List<String> get timerPickerSecondLabels => const ["秒"];
 }
 
 class _ChineseDelegate extends LocalizationsDelegate<CupertinoLocalizations> {
