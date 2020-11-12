@@ -16,7 +16,7 @@ class HomeRoute extends StatelessWidget {
       model: HomeProvider(context),
       getSmallModel: (provider) => provider.pageIndex,
       builder: (_, provider, pageIndex, __) {
-        print("pageIndex: $pageIndex");
+        // print("pageIndex: $pageIndex");
         final theme = provider.getStyle();
         return Scaffold(
           appBar: PreferredSize(

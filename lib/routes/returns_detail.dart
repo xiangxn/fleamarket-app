@@ -145,15 +145,16 @@ class ReturnsDetailRoute extends StatelessWidget {
   }
 
   Widget _buildBtn(ReturnsDetailProvider provider) {
-    String key = "300";
+    String key = OrderStatus.pendingShipment.toString();
     if (provider.returnInfo != null) {
       final user = provider.getUser();
-      if (user.userid == provider.returnInfo.order.buyer.userid) {
-        key = "300";
+      if (user.userid == provider.order.buyer.userid) {
+        key = OrderStatus.pendingShipment.toString();
       } else {
-        key = "400";
+        key = OrderStatus.pendingReceipt.toString();
       }
     }
+    // print("key: $key ${provider.order}");
     return Offstage(
         offstage: provider.isShowBtn(),
         child: CustomButton(
@@ -178,9 +179,15 @@ class ReturnsDetailProvider extends BaseProvider {
 
   ProReturn get returnInfo => _returnInfo;
 
+  Order get order => _order;
+
   String get logisticsKey => "logistics${_order.orderid}_return";
 
   Future<void> initProReturn() async {
+    if (isLocalRefresh) {
+      isLocalRefresh = false;
+      return;
+    }
     final res = await this.api.getReturns(_order.oid);
     if (res.code == 0) {
       _returnInfo = convertObj(res.data, "returnsByOrder", ProReturn());
@@ -246,6 +253,7 @@ class ReturnsDetailProvider extends BaseProvider {
         this.showToast(this.translate("message.successful_operation"));
         _returnInfo.status = ReturnStatus.pendingReceipt;
         _returnInfo.shipNum = number;
+        this.isLocalRefresh = true;
         notifyListeners();
       } else {
         this.showToast(getErrorMessage(res.msg));
@@ -261,6 +269,7 @@ class ReturnsDetailProvider extends BaseProvider {
     if (res.code == 0) {
       this.showToast(this.translate("message.successful_operation"));
       _returnInfo.status = ReturnStatus.completed;
+      this.isLocalRefresh = true;
       notifyListeners();
     } else {
       this.showToast(getErrorMessage(res.msg));

@@ -46,9 +46,10 @@ class _ProductList extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     print("product_list build ******** ");
-    return BaseWidget<ProductListProvider>(
+    return BaseWidget2<ProductListProvider, DataPage<Product>>(
       model: ProductListProvider(context, widget.productPage, onGetData: widget.onGetData),
-      builder: (ctx, provider, child) {
+      getSmallModel: (provider) => provider.productPage,
+      builder: (ctx, provider, page, child) {
         return CustomRefreshIndicator(
           onRefresh: () => provider.onRefresh(categoryid: widget.category, isRefresh: true),
           onLoad: () => provider.onLoad(widget.category),
@@ -57,78 +58,65 @@ class _ProductList extends State<ProductList> {
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: StaggeredGridView.countBuilder(
               controller: widget.controller,
-              // physics: ClampingScrollPhysics(),
               itemCount: provider.productPage.data?.length ?? 0,
               staggeredTileBuilder: (inx) => StaggeredTile.fit(2),
               crossAxisCount: 4,
               mainAxisSpacing: 6, // 垂直间距
               crossAxisSpacing: 6, // 水平间距
               itemBuilder: (context, i) {
-                if (i >= provider.productPage.data.length) return child;
-                return BaseWidget2<ProductListProvider, Product>(
-                    model: provider,
-                    getSmallModel: (model) {
-                      if (i >= model.productPage.data.length) return null;
-                      return model.productPage.data[i];
-                    },
-                    builder: (ctx, model, product, child) {
-                      if (product == null) return child;
-                      return Card(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                          ExtNetworkImage(
-                            '$URL_IPFS_GATEWAY${product.photos[0]}',
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
-                            onTap: () => provider.toDetail(i),
+                final product = page.data[i];
+                return Card(
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                    ExtNetworkImage(
+                      '$URL_IPFS_GATEWAY${product.photos[0]}',
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+                      onTap: () => provider.toDetail(i),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      child: Text(product.title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 2),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(product.price.split(' ')[1], style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold)),
+                          Text(formatPrice(product.price.split(' ')[0]),
+                              style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 1),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+                        ExtCircleAvatar(product.seller.head, 20, strokeWidth: 0),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 6, right: 2),
+                            child: Text(product.seller.nickname,
+                                textAlign: TextAlign.left,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 12, color: Colors.grey[800])),
                           ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                            child:
-                                Text(product.title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, maxLines: 2),
+                        ),
+                        InkWell(
+                          child: Row(
+                            children: <Widget>[
+                              Text(product.collections.toString(), style: TextStyle(fontSize: 12)),
+                              SizedBox(width: 4),
+                              _buildFavoriteIcon(product)
+                            ],
                           ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(product.price.split(' ')[1], style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold)),
-                                Text(formatPrice(product.price.split(' ')[0]),
-                                    style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.bold),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-                              ExtCircleAvatar(product.seller.head, 20, strokeWidth: 0),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 6, right: 2),
-                                  child: Text(product.seller.nickname,
-                                      textAlign: TextAlign.left,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 12, color: Colors.grey[800])),
-                                ),
-                              ),
-                              InkWell(
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(product.collections.toString(), style: TextStyle(fontSize: 12)),
-                                    SizedBox(width: 4),
-                                    _buildFavoriteIcon(product)
-                                  ],
-                                ),
-                                //onTap: () => provider.favorite(productPage.data, i),
-                                onTap: () => provider.favorite(i),
-                              )
-                            ]),
-                          ),
-                        ]),
-                      );
-                    });
+                          //onTap: () => provider.favorite(productPage.data, i),
+                          onTap: () => provider.favorite(i),
+                        )
+                      ]),
+                    ),
+                  ]),
+                );
               },
             ),
           ),
@@ -170,7 +158,7 @@ class ProductListProvider extends BaseProvider {
   favorite(int index) async {
     Product data = _productPage.data[index].clone();
     if (checkLogin() && !busy) {
-      final um = Provider.of<UserModel>(context, listen: false);
+      final um = this.getUserInfo();
       setBusy();
       var process;
       bool isf = false;

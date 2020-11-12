@@ -370,7 +370,12 @@ class ProductDetailProvider extends BaseProvider {
   }
 
   createOrder() {
-    pushNamed(ROUTE_CREATE_ORDER, arguments: _product);
+    final user = this.getUser();
+    if (user == null) {
+      pushNamed(ROUTE_LOGIN);
+    } else {
+      pushNamed(ROUTE_CREATE_ORDER, arguments: _product);
+    }
   }
 
   // Future<bool> onBack() {

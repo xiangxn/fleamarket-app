@@ -243,7 +243,8 @@ class OrderDetailRoute extends StatelessWidget {
                               text: _buildButtonText(provider, provider.order.status),
                             )),
                         Offstage(
-                            offstage: !(provider.order.status == OrderStatus.pendingPayment || provider.order.status == OrderStatus.cancelled),
+                            // offstage: !(provider.order.status == OrderStatus.pendingPayment || provider.order.status == OrderStatus.cancelled),
+                            offstage: !(provider.order.status == OrderStatus.pendingPayment),
                             child: CustomButton(
                               onTap: provider.onCancel,
                               color: Colors.red,
@@ -419,6 +420,7 @@ class OrderDetailProvider extends BaseProvider {
       if (res.code == 0) {
         this.showToast(this.translate("message.successful_operation"));
         _order.status = OrderStatus.pendingReceipt;
+        _order.shipNum = number;
         notifyListeners();
       } else {
         this.showToast(getErrorMessage(res.msg));
@@ -518,6 +520,7 @@ class OrderDetailProvider extends BaseProvider {
       if (order.status == OrderStatus.returning) return false;
       return true;
     }
+    
     if (order.productInfo.isReturns) {
       return !(order.status == OrderStatus.pendingReceipt || order.status == OrderStatus.returning);
     }

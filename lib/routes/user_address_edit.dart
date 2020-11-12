@@ -171,8 +171,8 @@ class UserAddressEditProvider extends BaseProvider {
 
   submit() async {
     FocusScope.of(context).requestFocus(FocusNode());
-    final user = Provider.of<UserModel>(context, listen: false).user;
-    print(user);
+    final user = this.getUser();
+    // print(user);
     var res = false;
     AddressRequest address = AddressRequest();
     if (validate()) {
