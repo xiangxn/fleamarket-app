@@ -393,7 +393,10 @@ class OrderDetailProvider extends BaseProvider {
   }
 
   Future<void> _receipt() async {
-    final confirm = await this.confirm(translate("order_detail.confirm_prompt"));
+    bool confirm = true;
+    if (_order.productInfo.isReturns) {
+      confirm = await this.confirm(translate("order_detail.confirm_prompt"));
+    }
     if (confirm) {
       final um = this.getUserInfo();
       showLoading();
@@ -520,7 +523,7 @@ class OrderDetailProvider extends BaseProvider {
       if (order.status == OrderStatus.returning) return false;
       return true;
     }
-    
+
     if (order.productInfo.isReturns) {
       return !(order.status == OrderStatus.pendingReceipt || order.status == OrderStatus.returning);
     }
