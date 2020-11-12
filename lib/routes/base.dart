@@ -74,13 +74,16 @@ class BaseWidget2<T extends ChangeNotifier, S> extends StatefulWidget {
 
   final S Function(T) getSmallModel;
 
-  BaseWidget2({Key key, @required this.builder, @required this.model, @required this.getSmallModel, this.child})
+  final bool Function(S prev, S next) shouldRebuild;
+
+  BaseWidget2({Key key, @required this.builder, @required this.model, @required this.getSmallModel, this.child, this.shouldRebuild})
       : assert(builder != null),
         assert(model != null),
         assert(getSmallModel != null),
         super(key: key);
 
-  bool shouldRebuild(S prev, S next) {
+  bool shouldRe(S prev, S next) {
+    if (this.shouldRebuild != null) return this.shouldRebuild(prev, next);
     return prev.hashCode != next.hashCode;
   }
 
@@ -102,7 +105,7 @@ class _BaseWidgetState2<T extends ChangeNotifier, S> extends State<BaseWidget2<T
     return ChangeNotifierProvider<T>.value(
       value: model,
       child: Selector<T, S>(
-        shouldRebuild: (prev, next) => this.widget.shouldRebuild(prev, next),
+        shouldRebuild: (prev, next) => this.widget.shouldRe(prev, next),
         selector: (BuildContext context, T model) => this.widget.getSmallModel(model),
         builder: (BuildContext context, S sModel, Widget child) {
           return this.widget.builder(context, this.model, sModel, child);

@@ -251,8 +251,10 @@ class ReturnsDetailProvider extends BaseProvider {
       closeLoading();
       if (res.code == 0) {
         this.showToast(this.translate("message.successful_operation"));
-        _returnInfo.status = ReturnStatus.pendingReceipt;
-        _returnInfo.shipNum = number;
+        var info = _returnInfo.clone();
+        info.status = ReturnStatus.pendingReceipt;
+        info.shipNum = number;
+        _returnInfo = info;
         this.isLocalRefresh = true;
         notifyListeners();
       } else {
@@ -268,7 +270,9 @@ class ReturnsDetailProvider extends BaseProvider {
     closeLoading();
     if (res.code == 0) {
       this.showToast(this.translate("message.successful_operation"));
-      _returnInfo.status = ReturnStatus.completed;
+      var info = _returnInfo.clone();
+      info.status = ReturnStatus.completed;
+      _returnInfo = info;
       this.isLocalRefresh = true;
       notifyListeners();
     } else {
