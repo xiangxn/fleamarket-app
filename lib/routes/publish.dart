@@ -477,18 +477,25 @@ class PublishProvider extends BaseProvider {
     _product.isNew = this.isNew;
     if (_product.title.isEmpty) {
       showToast(translate('message.goods_title_empty'));
+      return;
     } else if (_product.title.length > this.titleLimit) {
       showToast(translate('message.goods_title_limit'));
+      return;
     } else if (_product.description.isEmpty) {
       showToast(translate('message.goods_desc_empty'));
+      return;
     } else if (_product.description.length > this.descLimit) {
       showToast(translate('message.goods_desc_limit'));
+      return;
     } else if (this._photos.length == 0) {
       showToast(translate('message.goods_photos_empty'));
+      return;
     } else if (this._pricingAmount == 0) {
       showToast(translate('message.goods_price_empty'));
+      return;
     } else if (_product.position == null || _product.position.isEmpty) {
       showToast(translate('message.goods_location_empty'));
+      return;
     }
     bool isDo = true;
     if (this._isUpdate) {
