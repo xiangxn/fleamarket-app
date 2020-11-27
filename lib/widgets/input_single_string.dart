@@ -8,11 +8,12 @@ class InputSingleString extends StatelessWidget {
   final String hintText;
   final int maxLines;
   final String errorMessage;
-  InputSingleString({Key key, this.hintText, this.maxLines, this.errorMessage}) : super(key: key);
+  final bool canEmpty;
+  InputSingleString({Key key, this.hintText, this.maxLines, this.errorMessage, this.canEmpty}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return BaseRoute<InputSingleStringProvider>(
-      provider: InputSingleStringProvider(context, errorMessage: this.errorMessage),
+      provider: InputSingleStringProvider(context, errorMessage: this.errorMessage, canEmpty: this.canEmpty),
       builder: (_, model, __) {
         return AnimatedPadding(
           padding: MediaQuery.of(context).viewInsets,
@@ -45,9 +46,11 @@ class InputSingleString extends StatelessWidget {
 }
 
 class InputSingleStringProvider extends BaseProvider {
-  InputSingleStringProvider(BuildContext context, {String errorMessage}) : super(context) {
+  InputSingleStringProvider(BuildContext context, {String errorMessage, bool canEmpty = false}) : super(context) {
     this._errorMessage = errorMessage ?? translate('order_detail.number_err_msg');
+    this._canEmpty = canEmpty;
   }
+  bool _canEmpty;
   String _errorMessage;
   TextEditingController _controller = TextEditingController();
   FocusNode _focusNode = FocusNode();
@@ -58,7 +61,7 @@ class InputSingleStringProvider extends BaseProvider {
   void onSubmit([String str]) async {
     str ??= _controller.text;
     FocusScope.of(context).requestFocus(_focusNode);
-    if (str.isEmpty) {
+    if (!_canEmpty && str.isEmpty) {
       this.showToast(_errorMessage);
     } else {
       this.pop(str);

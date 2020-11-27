@@ -415,18 +415,20 @@ class OrderDetailProvider extends BaseProvider {
 
   Future<void> _shipment() async {
     final um = this.getUserInfo();
-    String number = await showModalBottomSheet(context: context, builder: (_) => InputSingleString());
-    if (number != null && number.isNotEmpty) {
-      showLoading();
-      final res = await api.shipment(um.keys[1], um.user.userid, um.user.eosid, _order.orderid, number);
-      closeLoading();
-      if (res.code == 0) {
-        this.showToast(this.translate("message.successful_operation"));
-        _order.status = OrderStatus.pendingReceipt;
-        _order.shipNum = number;
-        notifyListeners();
-      } else {
-        this.showToast(getErrorMessage(res.msg));
+    String number = await showModalBottomSheet(context: context, builder: (_) => InputSingleString(canEmpty: true));
+    if (number != null) {
+      if (number.isNotEmpty || _order.productInfo.category.cid == 7) {
+        showLoading();
+        final res = await api.shipment(um.keys[1], um.user.userid, um.user.eosid, _order.orderid, number);
+        closeLoading();
+        if (res.code == 0) {
+          this.showToast(this.translate("message.successful_operation"));
+          _order.status = OrderStatus.pendingReceipt;
+          _order.shipNum = number;
+          notifyListeners();
+        } else {
+          this.showToast(getErrorMessage(res.msg));
+        }
       }
     }
   }
@@ -458,7 +460,7 @@ class OrderDetailProvider extends BaseProvider {
               order: _order,
             ));
     // print("isPay: $isPay");
-    if (isPay) {
+    if (isPay != null && isPay) {
       _order.status = OrderStatus.pendingShipment;
       notifyListeners();
     }

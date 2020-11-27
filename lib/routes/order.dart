@@ -153,7 +153,7 @@ class CreateOrderProvider extends BaseProvider {
   }
 
   submit() async {
-    if (_address == null) {
+    if (_product.category.cid != 7 && _address == null) {
       this.showToast(translate('message.order_no_address'));
     } else {
       // String password = await showModalBottomSheet(context: context, builder: (_) => ConfirmPassword());
@@ -181,7 +181,7 @@ class CreateOrderProvider extends BaseProvider {
         showToast(this.translate("order.create_pay_info_err"));
         return;
       }
-      final cRes = await api.placeorder(um.keys[1], um.user.userid, um.user.eosid, _product.productId, payInfo.orderid, _address.rid);
+      final cRes = await api.placeorder(um.keys[1], um.user.userid, um.user.eosid, _product.productId, payInfo.orderid, _address == null ? 0 : _address.rid);
       // print("执行下单...");
       if (cRes.code != 0) {
         closeLoading();

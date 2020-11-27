@@ -278,7 +278,7 @@ class DataApi {
   Future<BaseReply> fetchProductList(int categoryId, int pageNo, int pageSize, {int userid = 0}) async {
     String query = "{productByCid(categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
     if (userid > 0) query = "{productByCid(userid:$userid,categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
-    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{userid,head,nickname},photos}}}";
+    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{userid,head,nickname},photos,category{cid}}}}";
     return await _search(query);
   }
 
@@ -384,7 +384,7 @@ class DataApi {
     query += "{pageNo,pageSize,totalCount,list{";
     query += "oid,orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,toAddr,";
-    query += "productInfo{productId,title,photos,price,postage,isReturns}";
+    query += "productInfo{productId,title,photos,price,postage,isReturns,category{cid}}";
     query += "}}}";
     return await _search(query);
   }
@@ -394,7 +394,7 @@ class DataApi {
     query += "{pageNo,pageSize,totalCount,list{";
     query += "oid,orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,toAddr,";
-    query += "productInfo{productId,title,photos,price,postage,isReturns}";
+    query += "productInfo{productId,title,photos,price,postage,isReturns,category{cid}}";
     query += "}}}";
     return await _search(query);
   }
