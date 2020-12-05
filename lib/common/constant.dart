@@ -1,9 +1,9 @@
 //data
-const CONTRACT_NAME = "bitsfleatest";
+const CONTRACT_NAME = "bitsfleamain";
 const GRPC_HOST = 'api.bitsflea.com';
 //const String GRPC_HOST = '127.0.0.1';
 //const URL_EOS_API = 'https://bostest.eosn.io';
-const URL_EOS_API = 'https://bostest.bitsflea.com';
+const URL_EOS_API = 'https://bosapi.bitsflea.com';
 //const String URL_EOS_API = 'http://127.0.0.1:8888';
 const URL_IPFS_GATEWAY = "https://source.bitsflea.com:10001/ipfs/";
 const DEFAULT_HEAD = 'https://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';

@@ -119,7 +119,8 @@ class UserEditProvider extends BaseProvider {
     final result = await api.setProfile(keys[1], user.eosid, head: headHash, nickname: nn);
     closeLoading();
     if (result) {
-      if (headHash != null) user.head = URL_IPFS_GATEWAY + headHash;
+      // if (headHash != null) user.head = URL_IPFS_GATEWAY + headHash;
+      if (headHash != null) user.head = headHash;
       if (nickname != null) user.nickname = nickname;
     }
     return result;

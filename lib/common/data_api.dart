@@ -423,7 +423,7 @@ class DataApi {
     List<Authorization> auth = [
       Authorization()
         ..actor = CONTRACT_NAME
-        ..permission = 'active',
+        ..permission = 'execute',
       Authorization()
         ..actor = eosid
         ..permission = 'active'
@@ -522,11 +522,12 @@ class DataApi {
     List<Authorization> auth = [
       Authorization()
         ..actor = CONTRACT_NAME
-        ..permission = 'active',
+        ..permission = 'execute',
       Authorization()
         ..actor = eosId
         ..permission = 'active'
     ];
+    print("data: $data");
     return await _putAction(actKey, eosId, "placeorder", data, sign: 1, authList: auth);
   }
 

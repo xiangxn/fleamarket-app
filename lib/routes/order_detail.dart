@@ -163,11 +163,12 @@ class OrderDetailRoute extends StatelessWidget {
                                     String addr =
                                         "${snapshot.data.province}${snapshot.data.city}${snapshot.data.district} ${snapshot.data.address}(${snapshot.data.postcode})";
                                     String name = "${snapshot.data.name} ${snapshot.data.phone}";
-                                    return Padding(
-                                        padding: EdgeInsets.only(left: 10),
-                                        child: Column(
-                                          children: [Text(addr), Text(name)],
-                                        ));
+                                    return Expanded(
+                                        child: Padding(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: Column(
+                                              children: [Text(addr, maxLines: 3), Text(name)],
+                                            )));
                                   }
                                   return Text("");
                                 }
