@@ -46,10 +46,10 @@ class _ProductList extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     print("product_list build ******** ");
-    return BaseWidget2<ProductListProvider, DataPage<Product>>(
+    return BaseWidget<ProductListProvider>(
       model: ProductListProvider(context, widget.productPage, onGetData: widget.onGetData),
-      getSmallModel: (provider) => provider.productPage,
-      builder: (ctx, provider, page, child) {
+      builder: (ctx, provider, child) {
+        final page = provider.productPage;
         return CustomRefreshIndicator(
           onRefresh: () => provider.onRefresh(categoryid: widget.category, isRefresh: true),
           onLoad: () => provider.onLoad(widget.category),

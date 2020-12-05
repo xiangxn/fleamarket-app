@@ -129,6 +129,8 @@ class ProductProvider extends BaseProvider implements TickerProvider {
         _map[categoryid] = data;
         return data;
       } else {
+        page.totalCount = 0;
+        page.totalPage = 0;
         return page;
       }
     }

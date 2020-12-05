@@ -35,10 +35,10 @@ class UserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget2<UserProfileProvider, User>(
+    return BaseWidget<UserProfileProvider>(
       model: UserProfileProvider(context, homeProvider),
-      getSmallModel: (provider) => provider.currentUser,
-      builder: (_, provider, user, __) {
+      builder: (_, provider, __) {
+        final user = provider.currentUser;
         print("user profile build*************");
         final style = provider.getStyle();
         return CustomRefreshIndicator(

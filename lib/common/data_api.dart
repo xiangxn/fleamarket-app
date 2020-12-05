@@ -527,7 +527,6 @@ class DataApi {
         ..actor = eosId
         ..permission = 'active'
     ];
-    print("data: $data");
     return await _putAction(actKey, eosId, "placeorder", data, sign: 1, authList: auth);
   }
 
