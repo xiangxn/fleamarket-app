@@ -149,7 +149,7 @@
         "password_empty": "请输入密码",
         "password_error": "密码错误",
         "request_error": "请求发生异常，请稍候再试",
-        "hint_password": "请输入密码以支付",
+        "hint_password": "请输入密码",
         "successful_operation": "操作成功"
     },
     "controller": {

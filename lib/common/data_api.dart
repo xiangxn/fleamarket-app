@@ -604,4 +604,9 @@ class DataApi {
     Map data = {'seller_uid': sellerUid, 'seller_eosid': sellerEosid, 'order_id': orderId};
     return await _putAction(actKey, sellerEosid, "reconreceipt", data);
   }
+
+  Future<BaseReply> getWithdrawAddr(int userId) async {
+    String query = "{withdrawAddr(userid:$userId){oaid,coinType,addr}}";
+    return await _search(query);
+  }
 }

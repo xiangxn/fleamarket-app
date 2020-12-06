@@ -65,7 +65,8 @@ const STORE_VCODE_TIMER = 'vcodeTimer';
 
 //其他
 // const Map COIN_PRECISION = {"BOS": 4, "ETH": 8, "FMP": 4, "EOS": 4, "BTS": 5, "CNY": 4, "NULS": 8, "USDT": 8};
-const Map COIN_PRECISION = {"FMP": 4, "BOS": 4, "EOS": 4, "NULS": 8, "USDT": 8};
+const Map COIN_PRECISION = {"FMP": 4, "BOS": 4, "EOS": 4, "NULS": 8, "BTS": 5, "USDT": 8};
+const COIN_WITHDRAWABLE = ["EOS", "NULS", "USDT", "BTS"];
 const CITY_LV = 'city';
 const CACHE_DISTRICT = 'cacheDisrict';
 const COUNTRY_LV = 'country';

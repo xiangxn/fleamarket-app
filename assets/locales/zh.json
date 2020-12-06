@@ -149,7 +149,7 @@
         "password_empty": "请输入密码",
         "password_error": "密码错误",
         "request_error": "请求发生异常，请稍候再试",
-        "hint_password": "请输入密码以支付",
+        "hint_password": "请输入密码",
         "successful_operation": "操作成功"
     },
     "controller": {
@@ -250,7 +250,7 @@
     "returns_detail": {
         "title": "退货信息",
         "status": "状态:  ",
-        "reasons":"退货原因:  {reasons}"
+        "reasons": "退货原因:  {reasons}"
     },
     "returns_status": {
         "0": "待发货",
@@ -263,7 +263,13 @@
         "title": "我邀请的"
     },
     "user_balances": {
-        "title": "我的资产"
+        "title": "我的资产",
+        "msg_no_withdraw": "此资产不能提现!",
+        "msg_no_empty": "输入的数额不能为空!",
+        "hint_input": "输入提现金额 <= {amount} {symbol}",
+        "msg_input_amount": "请输入合适的数额!",
+        "msg_withdraw_ok": "提现成功，请稍后前往钱包查看!",
+        "msg_no_bind_addr": "请检查是否绑定[{symbol}]了提现地址！"
     },
     "user_keys": {
         "title": "我的密钥",

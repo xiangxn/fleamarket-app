@@ -9,7 +9,8 @@ class InputSingleString extends StatelessWidget {
   final int maxLines;
   final String errorMessage;
   final bool canEmpty;
-  InputSingleString({Key key, this.hintText, this.maxLines, this.errorMessage, this.canEmpty}) : super(key: key);
+  final TextInputType keyboardType;
+  InputSingleString({Key key, this.hintText, this.maxLines, this.errorMessage, this.canEmpty, this.keyboardType}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return BaseRoute<InputSingleStringProvider>(
@@ -19,6 +20,7 @@ class InputSingleString extends StatelessWidget {
           padding: MediaQuery.of(context).viewInsets,
           duration: Duration(milliseconds: 100),
           child: TextField(
+            keyboardType: this.keyboardType ?? TextInputType.text,
             textInputAction: TextInputAction.done,
             controller: model.controller,
             focusNode: model.focusNode,
@@ -48,7 +50,7 @@ class InputSingleString extends StatelessWidget {
 class InputSingleStringProvider extends BaseProvider {
   InputSingleStringProvider(BuildContext context, {String errorMessage, bool canEmpty = false}) : super(context) {
     this._errorMessage = errorMessage ?? translate('order_detail.number_err_msg');
-    this._canEmpty = canEmpty;
+    this._canEmpty = canEmpty ?? false;
   }
   bool _canEmpty;
   String _errorMessage;
