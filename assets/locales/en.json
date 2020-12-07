@@ -250,7 +250,7 @@
     "returns_detail": {
         "title": "退货信息",
         "status": "状态:  ",
-        "reasons":"退货原因:  {reasons}"
+        "reasons": "退货原因:  {reasons}"
     },
     "returns_status": {
         "0": "待发货",
@@ -263,7 +263,13 @@
         "title": "我邀请的"
     },
     "user_balances": {
-        "title": "我的资产"
+        "title": "我的资产",
+        "msg_no_withdraw": "此资产不能提现!",
+        "msg_no_empty": "输入的数额不能为空!",
+        "hint_input": "输入提现金额 <= {amount} {symbol}",
+        "msg_input_amount": "请输入合适的数额!",
+        "msg_withdraw_ok": "提现成功，请稍后前往钱包查看!",
+        "msg_no_bind_addr": "请检查是否绑定[{symbol}]了提现地址！"
     },
     "user_keys": {
         "title": "我的密钥",
@@ -275,7 +281,9 @@
         "title": "提现地址",
         "edit_title": "编辑提现地址",
         "hint": "请输入或粘贴提现地址",
-        "set_error": "设置地址失败，请稍后再试"
+        "hint2": "请输入或粘贴提现地址(目前只支持EOS上的USDT)",
+        "set_error": "设置地址失败，请稍后再试",
+        "msg_not_empty": "提现地址不能为空"
     },
     "user_address": {
         "title": "收货地址",

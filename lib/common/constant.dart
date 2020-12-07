@@ -10,6 +10,7 @@ const DEFAULT_HEAD = 'https://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4Pcskkf
 
 //主网配置
 const MAIN_NET_CONTRACT_NAME = "eosio.token";
+const MAIN_NET_BOSIBC_NAME = "bosibc.io";
 const MAIN_NET_ASSET_SYMBOL = "BOS";
 const ADDR_USDT_ETH_ERC20 = "0xdac17f958d2ee523a2206206994597c13d831ec7";
 const CHAIN_REQUEST_TIMEOUT = 180;
@@ -66,7 +67,8 @@ const STORE_VCODE_TIMER = 'vcodeTimer';
 //其他
 // const Map COIN_PRECISION = {"BOS": 4, "ETH": 8, "FMP": 4, "EOS": 4, "BTS": 5, "CNY": 4, "NULS": 8, "USDT": 8};
 const Map COIN_PRECISION = {"FMP": 4, "BOS": 4, "EOS": 4, "NULS": 8, "BTS": 5, "USDT": 8};
-const COIN_WITHDRAWABLE = ["EOS", "NULS", "USDT", "BTS"];
+const COIN_WITHDRAWABLE = ["EOS", "NULS", "USDT", "BTS"]; //可提现资产
+const COIN_CROSS_CHAIN = ["EOS", "USDT"]; //跨链资产
 const CITY_LV = 'city';
 const CACHE_DISTRICT = 'cacheDisrict';
 const COUNTRY_LV = 'country';

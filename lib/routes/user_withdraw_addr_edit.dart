@@ -11,6 +11,13 @@ class UserEditWithdrawAddrRoute extends StatelessWidget {
   UserEditWithdrawAddrRoute({Key key, @required this.coin}) : super(key: key);
   final OtherAddr coin;
 
+  String _getHint(UserEditWithdrawAddrProvider provider) {
+    if (coin.coinType.split(",")[1] == "USDT") {
+      return provider.translate('user_withdraw_addr.hint2');
+    }
+    return provider.translate('user_withdraw_addr.hint');
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseRoute<UserEditWithdrawAddrProvider>(
@@ -48,10 +55,7 @@ class UserEditWithdrawAddrRoute extends StatelessWidget {
                           autocorrect: false,
                           maxLines: 8,
                           decoration: InputDecoration(
-                              isDense: true,
-                              hintText: provider.translate('user_withdraw_addr.hint'),
-                              contentPadding: EdgeInsets.symmetric(vertical: 0),
-                              border: InputBorder.none),
+                              isDense: true, hintText: _getHint(provider), contentPadding: EdgeInsets.symmetric(vertical: 0), border: InputBorder.none),
                         ),
                         Positioned(
                           right: 0,
@@ -95,6 +99,10 @@ class UserEditWithdrawAddrProvider extends BaseProvider {
   submit() async {
     final um = Provider.of<UserModel>(context, listen: false);
     _coin.addr = _controller.text;
+    if (_coin.addr == null || _coin.addr.isEmpty) {
+      this.showToast(translate("user_withdraw_addr.msg_not_empty"));
+      return;
+    }
     showLoading();
     final res = await api.setCoinAddr(um.keys[1], um.user.eosid, um.user.userid, _coin);
     closeLoading();

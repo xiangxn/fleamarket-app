@@ -238,6 +238,7 @@ class PublishProvider extends BaseProvider {
   TextEditingController _describeController = TextEditingController();
   List<Category> _categories;
   Category _category;
+  List<String> _symbols = ['CNY'];
   Product _product;
   String _location;
 
@@ -295,6 +296,17 @@ class PublishProvider extends BaseProvider {
     return res;
   }
 
+  List<String> get symbols => _symbols;
+
+  Future<void> fetchCoins() async {
+    final coins = await api.getCoins();
+    _symbols.clear();
+    coins.forEach((e) {
+      if (e["sym"] == "4,CNY" && TAG_SHOW_CNY == false) return;
+      _symbols.add(e["sym"].split(",")[1]);
+    });
+  }
+
   _checkPrice(String price) {
     assert(price != null);
     assert(price.length > 1);
@@ -322,6 +334,7 @@ class PublishProvider extends BaseProvider {
   _init() async {
     setBusy();
     await fetchCategories();
+    await fetchCoins();
     if (_product.productId != 0) {
       _isUpdate = true;
       final result = await api.fetchProductInfo(_product.productId);
@@ -369,6 +382,7 @@ class PublishProvider extends BaseProvider {
               pricingAmount: _pricingAmount,
               freightAmount: _freightAmount,
               symbol: _symbol,
+              symbolList: _symbols,
             ));
     if (prices != null) {
       _pricingAmount = prices['pricingAmount'] ?? 0;

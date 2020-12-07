@@ -92,8 +92,15 @@ class UserBalancesProvider extends BaseProvider {
             final data = convertList(result.data, "withdrawAddr", OtherAddr());
             final otherAddr = data.firstWhere((element) => element.coinType.split(",")[1] == asset.currency, orElse: () => null);
             if (otherAddr != null) {
-              final toAsset = Holding.fromJson("$amount ${asset.currency}");//TODO:处理跨链
-              final payResult = await api.transfer(um.keys[1], um.user.eosid, CONTRACT_NAME, toAsset, "w:");
+              final toAsset = Holding.fromJson("$amount ${asset.currency}");
+              BaseReply payResult;
+              bool isIBC = COIN_CROSS_CHAIN.any((element) => element == asset.currency);
+              if (isIBC) {
+                payResult = await api.transfer(um.keys[1], um.user.eosid, MAIN_NET_BOSIBC_NAME, toAsset, "${otherAddr.addr}@eos withdraw coin",
+                    contract: MAIN_NET_BOSIBC_NAME);
+              } else {
+                payResult = await api.transfer(um.keys[1], um.user.eosid, CONTRACT_NAME, toAsset, "w:");
+              }
               closeLoading();
               if (payResult.code == 0) {
                 this.showToast(this.translate("user_balances.msg_withdraw_ok"));
@@ -101,11 +108,11 @@ class UserBalancesProvider extends BaseProvider {
               } else {
                 this.showToast(getErrorMessage(payResult.msg));
               }
+              return;
             }
-          } else {
-            closeLoading();
-            this.showToast(this.translate("user_balances.msg_no_bind_addr", translationParams: {'symbol': asset.currency}));
           }
+          closeLoading();
+          this.showToast(this.translate("user_balances.msg_no_bind_addr", translationParams: {'symbol': asset.currency}));
         }
       }
     }

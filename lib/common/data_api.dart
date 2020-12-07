@@ -405,7 +405,9 @@ class DataApi {
     EOSClient client = EOSClient(URL_EOS_API, "v1");
     var res = await client.getCurrencyBalance(MAIN_NET_CONTRACT_NAME, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     final res2 = await client.getCurrencyBalance(CONTRACT_NAME, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
+    final res3 = await client.getCurrencyBalance(MAIN_NET_BOSIBC_NAME, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     res.addAll(res2);
+    res.addAll(res3);
     return res;
   }
 

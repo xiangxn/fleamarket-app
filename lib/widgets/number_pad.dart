@@ -9,13 +9,14 @@ class NumberPad extends StatelessWidget {
   final double pricingAmount;
   final double freightAmount;
   final String symbol;
+  final List<String> symbolList;
 
-  NumberPad({Key key, this.pricingAmount, this.freightAmount, this.symbol}) : super(key: key);
+  NumberPad({Key key, this.pricingAmount, this.freightAmount, this.symbol, this.symbolList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BaseRoute<NumberPadProvider>(
-      provider: NumberPadProvider(context, this.pricingAmount, this.freightAmount, this.symbol),
+      provider: NumberPadProvider(context, this.pricingAmount, this.freightAmount, this.symbol, this.symbolList),
       builder: (_, provider, __) {
         return Column(mainAxisSize: MainAxisSize.min, children: [
           /// inputs
@@ -111,6 +112,7 @@ class NumberPad extends StatelessWidget {
 
 class NumberPadProvider extends BaseProvider {
   String _symbol;
+  List<String> _symbolList;
   FocusNode _pricingFocus = FocusNode();
   FocusNode _freightFocus = FocusNode();
   TextEditingController _pricingController = TextEditingController();
@@ -120,12 +122,13 @@ class NumberPadProvider extends BaseProvider {
   List<dynamic> _btns;
 
   String get symbol => _symbol;
-  List<dynamic> get symbols => COIN_PRECISION.keys.toList();
+  List<dynamic> get symbols => _symbolList;
   List<dynamic> get inputs => _inputs;
   List<dynamic> get chars => _chars;
   List<dynamic> get btns => _btns;
-  NumberPadProvider(BuildContext context, double pricingAmount, double freightAmount, String symbol) : super(context) {
-    _symbol = symbol ?? COIN_PRECISION.keys.first;
+  NumberPadProvider(BuildContext context, double pricingAmount, double freightAmount, String symbol, List<String> symbolList) : super(context) {
+    _symbolList = symbolList ?? COIN_PRECISION.keys.toList();
+    _symbol = symbol ?? _symbolList[0];
     _inputs = [
       {'text': translate('number_pad.pricing'), 'hint': translate('number_pad.pricing_hint'), 'controller': _pricingController, 'focus': _pricingFocus},
       {'text': translate('number_pad.freight'), 'hint': translate('number_pad.freight_hint'), 'controller': _freightController, 'focus': _freightFocus},
