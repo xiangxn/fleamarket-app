@@ -66,7 +66,7 @@ class _ProductList extends State<ProductList> {
               itemBuilder: (context, i) {
                 final product = page.data[i];
                 return Card(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
                     ExtNetworkImage(
                       '$URL_IPFS_GATEWAY${product.photos[0]}',
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
