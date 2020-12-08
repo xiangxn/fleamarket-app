@@ -227,7 +227,8 @@ class PayConfirmProvider extends BaseProvider {
     payInfo.payMode = this.isBalance ? 0 : 1;
     final balance = payInfo.amount;
     showLoading();
-    final res = await api.createPayInfo(payInfo.userId.toInt(), payInfo.productId, payInfo.amount, payInfo.symbol, payInfo.payMode == 0);
+    final res =
+        await api.createPayInfo(payInfo.userId.toInt(), payInfo.productId, payInfo.amount, payInfo.symbol, payInfo.payMode == 0, orderId: payInfo.orderid);
     closeLoading();
     if (res.code == 0) {
       res.data.unpackInto(payInfo);
@@ -274,6 +275,9 @@ class PayConfirmProvider extends BaseProvider {
       case "USDT":
       case "EOS":
         contract = MAIN_NET_BOSIBC_NAME;
+        break;
+      case MAIN_NET_ASSET_SYMBOL:
+        contract = MAIN_NET_CONTRACT_NAME;
         break;
       default:
         contract = CONTRACT_NAME;
@@ -349,7 +353,7 @@ class PayConfirmProvider extends BaseProvider {
     if (isOk == false) {
       this.showToast(translate("pay_confirm.launch_tp_err", translationParams: {'wallet': this.selectedPayMode}));
     } else {
-      this.pop(true);
+      this.showToast(this.translate("pay_confirm.msg_already_pay")).then((value) => this.pop(false));
     }
   }
 
@@ -357,11 +361,16 @@ class PayConfirmProvider extends BaseProvider {
     TokenPocket tp = TokenPocket();
     tp.blockchain = this._getChain(_payInfo.symbol);
     tp.contract = this._getContract(_payInfo.symbol);
-    tp.to = _payInfo.payAddr;
+    if (tp.contract == MAIN_NET_BOSIBC_NAME) {
+      tp.to = MAIN_NET_BOSIBC_NAME;
+      tp.memo = "${_payInfo.payAddr}@bos p:${_payInfo.orderid}";
+    } else {
+      tp.to = _payInfo.payAddr;
+      tp.memo = "p:${_payInfo.orderid}";
+    }
     tp.amount = _payInfo.amount;
     tp.symbol = _payInfo.symbol;
     tp.precision = COIN_PRECISION[_payInfo.symbol];
-    tp.memo = "p:${_payInfo.orderid}";
     tp.expired = (DateTime.now().add(Duration(minutes: 5)).millisecondsSinceEpoch / 1000).toString();
     tp.desc = translate("pay_confirm.confirm_title");
     String param = jsonEncode(tp);
@@ -371,7 +380,7 @@ class PayConfirmProvider extends BaseProvider {
     if (isOk == false) {
       this.showToast(translate("pay_confirm.launch_tp_err", translationParams: {'wallet': this.selectedPayMode}));
     } else {
-      this.pop(true);
+      this.showToast(this.translate("pay_confirm.msg_already_pay")).then((value) => this.pop(false));
     }
   }
 }

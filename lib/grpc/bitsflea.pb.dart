@@ -2985,6 +2985,7 @@ class PayInfoRequest extends $pb.GeneratedMessage {
     ..a<$core.double>(3, 'amount', $pb.PbFieldType.OD)
     ..aOS(4, 'symbol')
     ..aOB(5, 'mainPay', protoName: 'mainPay')
+    ..aOS(6, 'orderid')
     ..hasRequiredFields = false;
 
   PayInfoRequest._() : super();
@@ -3068,6 +3069,18 @@ class PayInfoRequest extends $pb.GeneratedMessage {
   $core.bool hasMainPay() => $_has(4);
   @$pb.TagNumber(5)
   void clearMainPay() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get orderid => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set orderid($core.String v) {
+    $_setString(5, v);
+  }
+
+  @$pb.TagNumber(6)
+  $core.bool hasOrderid() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearOrderid() => clearField(6);
 }
 
 class LogisticsRequest extends $pb.GeneratedMessage {

@@ -532,7 +532,7 @@ class DataApi {
     return await _putAction(actKey, eosId, "placeorder", data, sign: 1, authList: auth);
   }
 
-  Future<BaseReply> createPayInfo(int userId, int productId, double amount, String symbol, bool mainPay) async {
+  Future<BaseReply> createPayInfo(int userId, int productId, double amount, String symbol, bool mainPay, {String orderId = ""}) async {
     final token = await getToken();
     PayInfoRequest pir = PayInfoRequest();
     pir.userId = $fixnum.Int64.parseInt(userId.toString());
@@ -540,6 +540,7 @@ class DataApi {
     pir.amount = amount;
     pir.symbol = symbol;
     pir.mainPay = mainPay;
+    pir.orderid = orderId;
     return _client.createPayInfo(pir, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
   }
 

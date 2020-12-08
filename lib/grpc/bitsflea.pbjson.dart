@@ -466,6 +466,7 @@ const PayInfoRequest$json = const {
     const {'1': 'amount', '3': 3, '4': 1, '5': 1, '10': 'amount'},
     const {'1': 'symbol', '3': 4, '4': 1, '5': 9, '10': 'symbol'},
     const {'1': 'mainPay', '3': 5, '4': 1, '5': 8, '10': 'mainPay'},
+    const {'1': 'orderid', '3': 6, '4': 1, '5': 9, '10': 'orderid'},
   ],
 };
 
