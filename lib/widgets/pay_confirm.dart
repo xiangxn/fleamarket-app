@@ -107,7 +107,7 @@ class PayConfirm extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                          padding: EdgeInsets.only(top: 100),
+                          padding: EdgeInsets.only(top: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
