@@ -450,6 +450,7 @@ class OrderDetailProvider extends BaseProvider {
     payInfo.payAddr = (_order.payAddr == null || _order.payAddr == "") ? CONTRACT_NAME : _order.payAddr;
     payInfo.userId = $fixnum.Int64.parseInt(um.user.userid.toString());
     payInfo.productId = _order.productInfo.productId;
+    payInfo.balance = balance.amount;
     //打开支付UI
     // Widget screen = PayConfirm(mainPay: mainPay, payInfo: payInfo);
     // final result = await this.showDialog(screen);

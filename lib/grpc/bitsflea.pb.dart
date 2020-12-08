@@ -2855,6 +2855,7 @@ class PayInfo extends $pb.GeneratedMessage {
         protoName: 'userId', defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$core.int>(6, 'productId', $pb.PbFieldType.OU3, protoName: 'productId')
     ..a<$core.int>(7, 'payMode', $pb.PbFieldType.OU3, protoName: 'payMode')
+    ..a<$core.double>(8, 'balance', $pb.PbFieldType.OD)
     ..hasRequiredFields = false;
 
   PayInfo._() : super();
@@ -2961,6 +2962,18 @@ class PayInfo extends $pb.GeneratedMessage {
   $core.bool hasPayMode() => $_has(6);
   @$pb.TagNumber(7)
   void clearPayMode() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.double get balance => $_getN(7);
+  @$pb.TagNumber(8)
+  set balance($core.double v) {
+    $_setDouble(7, v);
+  }
+
+  @$pb.TagNumber(8)
+  $core.bool hasBalance() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearBalance() => clearField(8);
 }
 
 class PayInfoRequest extends $pb.GeneratedMessage {

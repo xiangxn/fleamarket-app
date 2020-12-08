@@ -176,6 +176,7 @@ class CreateOrderProvider extends BaseProvider {
       // print("创建支付信息...");
       if (res.code == 0) {
         res.data.unpackInto(payInfo);
+        payInfo.balance = balance.amount;
       } else {
         closeLoading();
         showToast(this.translate("order.create_pay_info_err"));
@@ -195,6 +196,8 @@ class CreateOrderProvider extends BaseProvider {
       order.orderid = payInfo.orderid;
       order.productInfo = _product;
       order.seller = _product.seller;
+      order.postage = _product.postage;
+      order.price = _product.price;
       // Widget screen = PayConfirm(payInfo: payInfo, order: order);
       // final result = await this.showDialog(screen);
       final isPay = await showModalBottomSheet<bool>(
