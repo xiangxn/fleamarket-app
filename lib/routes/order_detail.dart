@@ -220,7 +220,7 @@ class OrderDetailRoute extends StatelessWidget {
                 ),
                 Positioned(
                     left: 0,
-                    bottom: 0,
+                    bottom: 10,
                     right: 0,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
