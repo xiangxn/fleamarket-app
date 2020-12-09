@@ -90,7 +90,7 @@ class PayConfirm extends StatelessWidget {
                                   child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                     Text(model.translate("pay_confirm.label_pay_addr"), style: TextStyle(color: Colors.grey[700])),
                                     Expanded(
-                                      child: Text(model.payInfo.payAddr, overflow: TextOverflow.ellipsis, maxLines: 1),
+                                      child: Text(model.getManualPayAddr(), overflow: TextOverflow.ellipsis, maxLines: 1),
                                     ),
                                     Icon(Icons.copy, size: 16)
                                   ]),
@@ -102,7 +102,7 @@ class PayConfirm extends StatelessWidget {
                                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                   Text(model.translate("pay_confirm.label_pay_memo"), style: TextStyle(color: Colors.grey[700])),
                                   Expanded(
-                                    child: Text("p:${model.payInfo.orderid}", overflow: TextOverflow.ellipsis, maxLines: 1),
+                                    child: Text(model.getManualPayMemo(), overflow: TextOverflow.ellipsis, maxLines: 1),
                                   ),
                                   Icon(Icons.copy, size: 16)
                                 ]),
@@ -225,6 +225,20 @@ class PayConfirmProvider extends BaseProvider {
         break;
     }
     _availablePayModes.add(this.translate("pay_confirm.2"));
+  }
+
+  String getManualPayAddr() {
+    if (this._isIBCTransfer(payInfo.symbol)) {
+      return MAIN_NET_BOSIBC_NAME;
+    }
+    return payInfo.payAddr;
+  }
+
+  String getManualPayMemo() {
+    if (this._isIBCTransfer(payInfo.symbol)) {
+      return "${payInfo.payAddr}@bos p:${payInfo.orderid}";
+    }
+    return "p:${payInfo.orderid}";
   }
 
   Future<void> onSelected(String payMode) async {
