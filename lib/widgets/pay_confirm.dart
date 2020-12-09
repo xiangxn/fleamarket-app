@@ -364,11 +364,24 @@ class PayConfirmProvider extends BaseProvider {
     }
   }
 
+  bool _isIBCTransfer(String symbol) {
+    bool flag = false;
+    switch (symbol) {
+      case "USDT":
+      case "EOS":
+        flag = true;
+        break;
+      default:
+        break;
+    }
+    return flag;
+  }
+
   Future<void> _doTokenPocket() async {
     TokenPocket tp = TokenPocket();
     tp.blockchain = this._getChain(_payInfo.symbol);
     tp.contract = this._getContract(_payInfo.symbol);
-    if (tp.contract == MAIN_NET_BOSIBC_NAME) {
+    if (this._isIBCTransfer(_payInfo.symbol)) {
       tp.to = MAIN_NET_BOSIBC_NAME;
       tp.memo = "${_payInfo.payAddr}@bos p:${_payInfo.orderid}";
     } else {
