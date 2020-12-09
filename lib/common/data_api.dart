@@ -495,7 +495,7 @@ class DataApi {
     // print("trx:$tr");
     try {
       final result = await _client.transaction(tr, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
-      Global.console("result:$result");
+      Global.console("result: $result");
       return result;
     } on GrpcError catch (e) {
       Global.console(e.message);

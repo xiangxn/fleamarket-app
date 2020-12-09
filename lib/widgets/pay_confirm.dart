@@ -58,7 +58,12 @@ class PayConfirm extends StatelessWidget {
                           padding: EdgeInsets.all(16),
                           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                             Text(model.translate('pay_confirm.order_info'), style: TextStyle(color: Colors.grey[700])),
-                            Text("${model.order.productInfo.title} (${model.order.seller.nickname})")
+                            Expanded(
+                                child: Text(
+                              "${model.order.productInfo.title}",
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                            Text("(${model.order.seller.nickname})")
                           ])),
                       Divider(height: 1.0, indent: 0.0, color: Colors.grey),
                       Padding(
@@ -273,8 +278,10 @@ class PayConfirmProvider extends BaseProvider {
     String contract = CONTRACT_NAME;
     switch (symbol) {
       case "USDT":
-      case "EOS":
         contract = MAIN_NET_BOSIBC_NAME;
+        break;
+      case "EOS":
+        contract = MAIN_NET_EOS_CONTRACT_NAME;
         break;
       case MAIN_NET_ASSET_SYMBOL:
         contract = MAIN_NET_CONTRACT_NAME;

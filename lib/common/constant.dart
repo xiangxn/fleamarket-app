@@ -10,6 +10,7 @@ const DEFAULT_HEAD = 'https://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4Pcskkf
 
 //主网配置
 const MAIN_NET_CONTRACT_NAME = "eosio.token";
+const MAIN_NET_EOS_CONTRACT_NAME = "eosio.token";
 const MAIN_NET_BOSIBC_NAME = "bosibc.io";
 const MAIN_NET_ASSET_SYMBOL = "BOS";
 const ADDR_USDT_ETH_ERC20 = "0xdac17f958d2ee523a2206206994597c13d831ec7";

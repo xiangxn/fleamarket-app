@@ -172,6 +172,7 @@ class CreateOrderProvider extends BaseProvider {
       //生成支付信息
       PayInfo payInfo = PayInfo();
       payInfo.payMode = mainPay ? 0 : 1;
+      // payInfo.payAddr = CONTRACT_NAME;
       final res = await api.createPayInfo(um.user.userid, _product.productId, total, price.currency, mainPay);
       // print("创建支付信息...");
       if (res.code == 0) {
@@ -182,7 +183,8 @@ class CreateOrderProvider extends BaseProvider {
         showToast(this.translate("order.create_pay_info_err"));
         return;
       }
-      final cRes = await api.placeorder(um.keys[1], um.user.userid, um.user.eosid, _product.productId, payInfo.orderid, _address == null ? 0 : _address.rid);
+      final cRes = await api.placeorder(um.keys[1], um.user.userid, um.user.eosid, _product.productId, payInfo.orderid, _address == null ? 0 : _address.rid,
+          payAddr: payInfo.payAddr);
       // print("执行下单...");
       if (cRes.code != 0) {
         closeLoading();
@@ -198,8 +200,6 @@ class CreateOrderProvider extends BaseProvider {
       order.seller = _product.seller;
       order.postage = _product.postage;
       order.price = _product.price;
-      // Widget screen = PayConfirm(payInfo: payInfo, order: order);
-      // final result = await this.showDialog(screen);
       final isPay = await showModalBottomSheet<bool>(
           context: context,
           builder: (_) => PayConfirm(

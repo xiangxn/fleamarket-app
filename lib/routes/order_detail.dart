@@ -226,7 +226,7 @@ class OrderDetailRoute extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Offstage(
-                            offstage: provider.isExpired(),
+                            offstage: provider.isShowPayBtn,
                             child: CustomButton(
                               onTap: provider.onProc,
                               margin: EdgeInsets.only(left: 8, top: 8, right: 8),
@@ -244,8 +244,7 @@ class OrderDetailRoute extends StatelessWidget {
                               text: _buildButtonText(provider, provider.order.status),
                             )),
                         Offstage(
-                            // offstage: !(provider.order.status == OrderStatus.pendingPayment || provider.order.status == OrderStatus.cancelled),
-                            offstage: !(provider.order.status == OrderStatus.pendingPayment),
+                            offstage: provider.isShowCancelBtn,
                             child: CustomButton(
                               onTap: provider.onCancel,
                               color: Colors.red,
@@ -283,6 +282,19 @@ class OrderDetailProvider extends BaseProvider {
   Order get order => _order;
 
   String get logisticsKey => "logistics${_order.orderid}";
+
+  bool get isShowCancelBtn {
+    if (isSeller()) return true;
+    return !(order.status == OrderStatus.pendingPayment);
+  }
+
+  bool get isShowPayBtn {
+    if (isExpired()) return true;
+    if (order.status == OrderStatus.pendingPayment) {
+      return isSeller();
+    }
+    return false;
+  }
 
   Future<void> onCancel() async {
     final um = this.getUserInfo();
@@ -439,6 +451,7 @@ class OrderDetailProvider extends BaseProvider {
     final price = Holding.fromJson(_order.price);
     final postage = Holding.fromJson(_order.postage);
     showLoading();
+    // 获取主网余额
     final balance = await api.getUserBalance(um.user.eosid, price.currency);
     final total = price.amount + postage.amount;
     final mainPay = balance.amount >= total;
@@ -447,7 +460,7 @@ class OrderDetailProvider extends BaseProvider {
     payInfo.orderid = _order.orderid;
     payInfo.amount = total;
     payInfo.symbol = price.currency;
-    payInfo.payAddr = (_order.payAddr == null || _order.payAddr == "") ? CONTRACT_NAME : _order.payAddr;
+    payInfo.payAddr = (_order.payAddr == null || _order.payAddr.isEmpty) ? CONTRACT_NAME : _order.payAddr;
     payInfo.userId = $fixnum.Int64.parseInt(um.user.userid.toString());
     payInfo.productId = _order.productInfo.productId;
     payInfo.balance = balance.amount;
