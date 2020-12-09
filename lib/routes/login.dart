@@ -318,8 +318,7 @@ class LoginProvider extends BaseProvider implements TickerProvider {
   }
 
   Future<bool> checkRecommended() async {
-    if (_recommended == null || _recommended.length == 0) {
-      //暂不用验证码
+    if (_recommended == null || _recommended.isEmpty) {
       return true;
     } else {
       final res = await api.getUserByEosid(_recommended);
