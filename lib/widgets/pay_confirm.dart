@@ -200,12 +200,12 @@ class PayConfirmProvider extends BaseProvider {
   bool get isBalance => selectedPayMode == this.translate("pay_confirm.0");
 
   void onCopyPayAddr() {
-    Clipboard.setData(ClipboardData(text: payInfo.payAddr));
+    Clipboard.setData(ClipboardData(text: this.getManualPayAddr()));
     this.showToast(translate('pay_confirm.msg_already_copy_addr'));
   }
 
   void onCopyPayMemo() {
-    Clipboard.setData(ClipboardData(text: "p:${payInfo.orderid}"));
+    Clipboard.setData(ClipboardData(text: this.getManualPayMemo()));
     this.showToast(translate('pay_confirm.msg_already_copy_memo'));
   }
 
