@@ -22,15 +22,10 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 28
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+    compileSdkVersion 29
 
     lintOptions {
         disable 'InvalidPackage'
@@ -38,26 +33,48 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.bitsflea"
-        minSdkVersion 16
-        targetSdkVersion 28
+        applicationId "com.bitsflea.app"
+        minSdkVersion 21
+        targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders = [
+            AMAP_KEY : "b5a382fe90140b1f08a8a124d8275def", /// 高德地图key
+        ]
+    }
+
+    dependencies {
+        implementation 'com.amap.api:location:latest.integration'
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias "debug"
+            keyPassword "bitsfleamain"
+            storeFile file("../keystore/debug.keystore")
+            storePassword "bitsfleamain"
+        }
+        release {
+            keyAlias "release"
+            keyPassword "bitsfleamain"
+            storeFile file("../keystore/release.keystore")
+            storePassword "bitsfleamain"
+        }
     }
 
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+        debug {
             signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 flutter {
     source '../..'
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
