@@ -370,7 +370,7 @@ class DataApi {
 
   Future<District> fetchDistricts() async {
     var res = await Dio().get('https://restapi.amap.com/v3/config/district',
-        queryParameters: {'keywords': '100000', 'subdistrict': '3', 'key': '92f35a6155436fa0179a80b27adec436'});
+        queryParameters: {'keywords': '100000', 'subdistrict': '3', 'key': KEY_AMAP});
     if (res.statusCode == 200 && res.data['status'] == '1' && res.data['districts'][0] != null) {
       District district = District.fromJson(res.data['districts'][0]);
       district.lastUpdate = DateTime.now();

@@ -36,40 +36,37 @@ class LocationData {
 
   Address getAddress([String adcode]) {
     adcode ??= _adcode;
-    if (adcode != null && _district != null) {
+    if (adcode != null && adcode.isNotEmpty && _district != null) {
       String privonceCode = adcode.substring(0, 2) + '0000';
       District privonce = _district.districts.firstWhere((d) => d.adcode == privonceCode);
       String cityCode = adcode.substring(0, 4) + '00';
       District city;
-      District district;
+      District dis;
       if (privonce.districts.first.level == CITY_LV) {
         city = privonce.districts.firstWhere((d) => d.adcode == cityCode);
-        district = city.districts.firstWhere((d) => d.adcode == adcode);
+        dis = city.districts.firstWhere((d) => d.adcode == adcode);
       } else {
-        district = privonce.districts.firstWhere((d) => d.adcode == adcode);
+        dis = privonce.districts.firstWhere((d) => d.adcode == adcode);
       }
-      return Address(code: adcode, privonce: privonce, city: city, district: district);
+      return Address(code: adcode, privonce: privonce, city: city, district: dis);
     }
     return null;
   }
 
   fetchDistricts() async {
-    District district;
-
     /// 默认从本地获取
     var districtJson = Global.prefs.getString(CACHE_DISTRICT);
-    if (districtJson != null) {
-      district = District.fromJson(json.decode(districtJson));
+    if (districtJson != null && districtJson.isNotEmpty) {
+      _district = District.fromJson(json.decode(districtJson));
     }
 
     /// 如果缓存里面也没有，或者缓存里面有，但是已经超过24小时未更新则重新请求
-    if (district == null || (district.level == COUNTRY_LV && DateTime.now().difference(district.lastUpdate).inHours > 24)) {
-      district = await _api.fetchDistricts();
-      if (district != null) {
-        Global.prefs.setString(CACHE_DISTRICT, json.encode(district.toJson()));
+    if (_district == null || (_district.level == COUNTRY_LV && DateTime.now().difference(_district.lastUpdate).inHours > 24)) {
+      _district = await _api.fetchDistricts();
+      if (_district != null) {
+        Global.prefs.setString(CACHE_DISTRICT, json.encode(_district.toJson()));
       }
     }
-    _district = district;
   }
 
   updateLocation() async {
@@ -80,7 +77,10 @@ class LocationData {
       await AMapLocationClient.startup(AMapLocationOption(desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters));
       AMapLocation address = await AMapLocationClient.getLocation(true);
       _adcode = address?.adcode;
-      print('update location done $_adcode');
+      if (_adcode != null && _adcode.isNotEmpty) {
+        Global.console('update location done $_adcode');
+      }
+
       // DateTime start = DateTime.now();
       // // 第一种库
       // Location location = await AmapLocation.fetchLocation();

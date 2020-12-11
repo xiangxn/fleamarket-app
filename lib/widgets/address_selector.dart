@@ -90,11 +90,15 @@ class AddressSelectorProvider extends BaseProvider implements WidgetsBindingObse
     initCurLocation();
   }
 
-  initCurLocation() {
-    // await _locationData.updateLocation();
-    // await _locationData.fetchDistricts();
+  initCurLocation() async {
+    if (_locationData.locationAdcode == null || _locationData.locationAdcode.isEmpty) {
+      await _locationData.updateLocation();
+      await _locationData.fetchDistricts();
+    }
+
     _location = _locationData.getAddress()?.toString() ?? translate('address_selector.no_permission');
     _district = _locationData.district;
+    notifyListeners();
   }
 
   animateToTop() {

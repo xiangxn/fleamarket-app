@@ -126,7 +126,7 @@
     "address_selector": {
         "cur_address": "您的位置",
         "change_address": "切换位置",
-        "no_permission": "没有权限获取您当前的位置信息"
+        "no_permission": "暂时未获取到您当前的位置信息"
     },
     "message": {
         "consignee_empty": "收货人不能为空",
