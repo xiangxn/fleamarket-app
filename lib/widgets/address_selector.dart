@@ -87,17 +87,15 @@ class AddressSelectorProvider extends BaseProvider implements WidgetsBindingObse
   AddressSelectorProvider(BuildContext context, LocationData locationData) : super(context) {
     WidgetsBinding.instance.addObserver(this);
     _locationData = locationData;
+    _district = _locationData.district;
     initCurLocation();
   }
 
   initCurLocation() async {
     if (_locationData.locationAdcode == null || _locationData.locationAdcode.isEmpty) {
       await _locationData.updateLocation();
-      await _locationData.fetchDistricts();
     }
-
     _location = _locationData.getAddress()?.toString() ?? translate('address_selector.no_permission');
-    _district = _locationData.district;
     notifyListeners();
   }
 
@@ -125,12 +123,12 @@ class AddressSelectorProvider extends BaseProvider implements WidgetsBindingObse
     }
   }
 
-  selectAddress(District district) {
-    if (district.level == DISTRICT_LV) {
-      pop(_locationData.getAddress(district.adcode));
+  selectAddress(District dis) {
+    if (dis.level == DISTRICT_LV) {
+      pop(_locationData.getAddress(dis.adcode));
     } else {
-      _districtLevel.add(district);
-      _district = district;
+      _districtLevel.add(dis);
+      _district = dis;
       animateToTop();
       notifyListeners();
     }
