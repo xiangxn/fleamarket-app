@@ -399,6 +399,7 @@ class PayConfirmProvider extends BaseProvider {
     String remark = "p:${_payInfo.orderid}";
     remark = Uri.encodeComponent(remark);
     final url = "nabox://nuls.nabox/pay?remark=$remark&amount=${_payInfo.amount}&symbol=${_payInfo.symbol}&toAddress=${_payInfo.payAddr}";
+    Global.console("url: $url");
     bool isOk = false;
     try {
       isOk = await launch(url);
