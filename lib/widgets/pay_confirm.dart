@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
@@ -215,6 +216,7 @@ class PayConfirmProvider extends BaseProvider {
     }
     switch (payInfo.symbol) {
       case "NULS":
+        _availablePayModes.add("Nabox");
         _availablePayModes.add("HebeWallet");
         break;
       case "EOS":
@@ -323,7 +325,11 @@ class PayConfirmProvider extends BaseProvider {
   Future<void> _walletPay() async {
     switch (payInfo.symbol) {
       case "NULS":
-        await _doHebeWallet();
+        if (this.selectedPayMode == "Nabox") {
+          await _doNabox();
+        } else {
+          await _doHebeWallet();
+        }
         break;
       case "EOS":
       case "USDT":
@@ -369,12 +375,45 @@ class PayConfirmProvider extends BaseProvider {
     String model = '{"addr":"${_payInfo.payAddr}","sum":"${_payInfo.amount}","type":"${_payInfo.symbol}","msg":"p:${_payInfo.orderid}"}';
     model = Uri.encodeComponent(model);
     String url = "hebewallet://?model=$model";
-    print("url: $url");
-    bool isOk = await launch(url);
+    Global.console("url: $url");
+    bool isOk = false;
+    try {
+      isOk = await launch(url);
+    } on Exception catch (e) {
+      Global.console(e);
+      isOk = false;
+    }
     if (isOk == false) {
       this.showToast(translate("pay_confirm.launch_tp_err", translationParams: {'wallet': this.selectedPayMode}));
     } else {
-      this.showToast(this.translate("pay_confirm.msg_already_pay")).then((value) => this.pop(false));
+      if (Platform.isAndroid) {
+        this.pop(false);
+      } else {
+        this.showToast(this.translate("pay_confirm.msg_already_pay")).then((value) => this.pop(false));
+      }
+    }
+  }
+
+  Future<void> _doNabox() async {
+    //nabox://nuls.nabox/pay?remark="+“备注”+"&amount="+ “金		额”+"&toAddress="+ “入账地址”
+    String remark = "p:${_payInfo.orderid}";
+    remark = Uri.encodeComponent(remark);
+    final url = "nabox://nuls.nabox/pay?remark=$remark&amount=${_payInfo.amount}&symbol=${_payInfo.symbol}&toAddress=${_payInfo.payAddr}";
+    bool isOk = false;
+    try {
+      isOk = await launch(url);
+    } on Exception catch (e) {
+      Global.console(e);
+      isOk = false;
+    }
+    if (isOk == false) {
+      this.showToast(translate("pay_confirm.launch_tp_err", translationParams: {'wallet': this.selectedPayMode}));
+    } else {
+      if (Platform.isAndroid) {
+        this.pop(false);
+      } else {
+        this.showToast(this.translate("pay_confirm.msg_already_pay")).then((value) => this.pop(false));
+      }
     }
   }
 
