@@ -105,7 +105,10 @@ class UserModel extends ProfileChangeNotifier {
   void removeFollow(int userId) {
     if (_follows.contains(userId) == false) return;
     _follows.remove(userId);
-    user.followTotal -= 1;
+    if (user.followTotal > 0)
+      user.followTotal -= 1;
+    else
+      user.followTotal = 0;
     _saveFollows();
     notifyListeners();
   }

@@ -20,7 +20,7 @@ class ProductReviewDetailRoute extends StatelessWidget {
 
   Widget _buildImg(ProductReviewDetailProvider provider, int inx) {
     String img = provider.product.photos[inx];
-    Widget imgWidget = ExtNetworkImage('$URL_IPFS_GATEWAY$img', borderRadius: BorderRadius.circular(4));
+    Widget imgWidget = ExtNetworkImage(getIPFSUrl(img), borderRadius: BorderRadius.circular(4));
     // Widget child = inx == 0 ? Hero(tag: 'productImg${product.photos[0].hashCode}${product.productId}${product.category.cid}', child: imgWidget) : imgWidget;
     // return Card(margin: EdgeInsets.only(left: 10, bottom: 10, right: 10), child: child);
     return Card(margin: EdgeInsets.only(left: 10, bottom: 10, right: 10), child: imgWidget);

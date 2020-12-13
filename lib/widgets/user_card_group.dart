@@ -67,8 +67,8 @@ class UserCardGroupProvider extends BaseProvider {
 
   DataPage<User> get page => _page;
 
-  Future<void> fetch({bool isRefresh = false, bool load = false}) async {
-    if (load) if (_page.hasMore() == false) return;
+  Future<bool> fetch({bool isRefresh = false, bool load = false}) async {
+    if (load) if (_page.hasMore() == false) return false;
     setBusy();
     if (isRefresh) {
       _page.clean();
@@ -79,6 +79,7 @@ class UserCardGroupProvider extends BaseProvider {
     _page = data;
     setBusy();
     // notifyListeners();
+    return false;
   }
 
   Future<void> updateUser({User obj}) async {

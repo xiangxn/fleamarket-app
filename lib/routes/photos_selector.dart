@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/funs.dart';
 import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
@@ -59,7 +60,7 @@ class PhotosSelectPage extends StatelessWidget {
         },
       );
     }
-    return ExtNetworkImage('$URL_IPFS_GATEWAY$photo');
+    return ExtNetworkImage(getIPFSUrl(photo));
   }
 
   @override

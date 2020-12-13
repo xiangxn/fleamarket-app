@@ -1,4 +1,5 @@
 import 'package:bitsflea/common/funs.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
@@ -6,6 +7,7 @@ import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class ApplyReviewerRoute extends StatelessWidget {
   @override
@@ -32,8 +34,7 @@ class ApplyReviewerRoute extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                        child: SingleChildScrollView(
-                            physics: ClampingScrollPhysics(), child: Text(model.terms, style: TextStyle(color: Colors.grey[800], fontSize: 16))),
+                        child: SingleChildScrollView(physics: ClampingScrollPhysics(), child: Html(data: model.terms)),
                       ),
                     ),
                     Row(
@@ -59,12 +60,14 @@ class ApplyReviewerRoute extends StatelessWidget {
   }
 }
 
+const CACHE_KEY_CONVENTION = "Convention";
+
 class ApplyReviewerProvider extends BaseProvider {
   ApplyReviewerProvider(BuildContext context) : super(context) {
     fetchTerms();
   }
 
-  String _terms;
+  String _terms = "<html></html>";
   bool _isAgree = false;
 
   String get terms => _terms;
@@ -76,8 +79,14 @@ class ApplyReviewerProvider extends BaseProvider {
   }
 
   fetchTerms() async {
-    //TODO: 实现平台条款的读取
-    _terms = "";
+    _terms = Global.getCache(CACHE_KEY_CONVENTION, minutes: 1440);
+    if (_terms == null || _terms.isEmpty) {
+      _terms = await api.getConvention();
+      if (_terms != null && _terms.isNotEmpty) {
+        Global.setCache(CACHE_KEY_CONVENTION, _terms, dt: DateTime.now());
+      }
+    }
+    notifyListeners();
   }
 
   submit() async {

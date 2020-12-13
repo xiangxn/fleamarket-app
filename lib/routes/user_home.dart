@@ -10,13 +10,36 @@ import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
 import 'package:bitsflea/widgets/custom_button.dart';
 import 'package:bitsflea/widgets/ext_circle_avatar.dart';
-import 'package:bitsflea/widgets/extended_nested_scroll_view.dart';
-import 'package:bitsflea/widgets/nested_scroll_view_inner_scroll_position_key_widget.dart';
 import 'package:bitsflea/widgets/user_card_group.dart';
-import 'package:flutter/material.dart' hide NestedScrollView;
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
+class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar child;
+
+  StickyTabBarDelegate({@required this.child});
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Theme.of(context).backgroundColor,
+      child: this.child,
+    );
+  }
+
+  @override
+  double get maxExtent => this.child.preferredSize.height;
+
+  @override
+  double get minExtent => this.child.preferredSize.height;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
+  }
+}
 
 class UserHomeRoute extends StatelessWidget {
   UserHomeRoute({Key key, this.user}) : super(key: key);
@@ -36,100 +59,102 @@ class UserHomeRoute extends StatelessWidget {
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return NestedScrollView(
-                innerScrollPositionKeyBuilder: provider.tabKeyBuilder,
                 headerSliverBuilder: (_, flag) {
                   return <Widget>[
                     SliverAppBar(
-                      expandedHeight: 180, // 经测试 header 和 tabbar高度为90，expandedHeight多出来的为中间内容(可隐藏)高度
-                      pinned: true,
-                      floating: false,
-                      snap: false,
-                      centerTitle: true,
-                      title: Text(provider.curUser.nickname),
-                      backgroundColor: style.headerBackgroundColor,
-                      brightness: Brightness.light,
-                      textTheme: style.headerTextTheme,
-                      iconTheme: style.headerIconTheme,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Stack(
-                          children: <Widget>[
-                            Positioned.fill(
-                                child: Image(
-                              image: NetworkImage(provider.curUser.head),
-                              fit: BoxFit.cover,
-                            )),
-                            Positioned.fill(
-                                child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              child: Container(
-                                color: Colors.white.withOpacity(0.5),
-                              ),
-                            )),
-                            Positioned(
-                                top: 80,
-                                left: 0,
-                                right: 0,
+                        expandedHeight: 180, // 经测试 header 和 tabbar高度为90，expandedHeight多出来的为中间内容(可隐藏)高度
+                        pinned: true,
+                        floating: false,
+                        snap: false,
+                        centerTitle: true,
+                        title: Text(provider.curUser.nickname),
+                        backgroundColor: style.headerBackgroundColor,
+                        brightness: Brightness.light,
+                        textTheme: style.headerTextTheme,
+                        iconTheme: style.headerIconTheme,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: Stack(
+                            children: <Widget>[
+                              Positioned.fill(
+                                  child: Image(
+                                image: NetworkImage(getIPFSUrl(provider.curUser.head)),
+                                fit: BoxFit.cover,
+                              )),
+                              Positioned.fill(
+                                  child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                                 child: Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: Row(
-                                    children: <Widget>[
-                                      ExtCircleAvatar(provider.curUser.head, 60, strokeWidth: 0),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 16),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.only(bottom: 8),
-                                                child: Text(
-                                                  provider.translate('combo_text.user_credit',
-                                                      translationParams: {"amount": "${provider.curUser.creditValue ?? 0}"}),
-                                                  style: TextStyle(fontSize: 13),
-                                                ),
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Icon(
-                                                    provider.curUser.isReviewer == false ? FontAwesomeIcons.solidUser : FontAwesomeIcons.userTie,
-                                                    color: Colors.grey[700],
-                                                    size: 16,
+                                  color: Colors.white.withOpacity(0.5),
+                                ),
+                              )),
+                              Positioned(
+                                  top: 80,
+                                  left: 0,
+                                  right: 0,
+                                  child: Container(
+                                    padding: EdgeInsets.all(16),
+                                    child: Row(
+                                      children: <Widget>[
+                                        ExtCircleAvatar(provider.curUser.head, 60, strokeWidth: 0),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 16),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: EdgeInsets.only(bottom: 8),
+                                                  child: Text(
+                                                    provider.translate('combo_text.user_credit',
+                                                        translationParams: {"amount": "${provider.curUser.creditValue ?? 0}"}),
+                                                    style: TextStyle(fontSize: 13),
                                                   ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left: 10),
-                                                    child: Text(
-                                                        provider.curUser.isReviewer == false
-                                                            ? provider.translate('user_profile.user_normal')
-                                                            : provider.translate('user_profile.user_reviewer'),
-                                                        style: TextStyle(fontSize: 13, color: Colors.grey[900])),
-                                                  )
-                                                ],
-                                              )
-                                            ],
+                                                ),
+                                                Row(
+                                                  children: <Widget>[
+                                                    Icon(
+                                                      provider.curUser.isReviewer == false ? FontAwesomeIcons.solidUser : FontAwesomeIcons.userTie,
+                                                      color: Colors.grey[700],
+                                                      size: 16,
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets.only(left: 10),
+                                                      child: Text(
+                                                          provider.curUser.isReviewer == false
+                                                              ? provider.translate('user_profile.user_normal')
+                                                              : provider.translate('user_profile.user_reviewer'),
+                                                          style: TextStyle(fontSize: 13, color: Colors.grey[900])),
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Selector<UserHomeProvider, bool>(
-                                        selector: (ctx, provider) => provider.hasFollow,
-                                        builder: (ctx, has, _) {
-                                          return CustomButton(
-                                            onTap: () => provider.follow(obj: provider.curUser),
-                                            text: has ? provider.translate('user_card.followed') : provider.translate('user_card.follow'),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ))
-                          ],
-                        ),
+                                        Selector<UserHomeProvider, bool>(
+                                          selector: (ctx, provider) => provider.hasFollow,
+                                          builder: (ctx, has, _) {
+                                            return CustomButton(
+                                              onTap: () => provider.follow(obj: provider.curUser),
+                                              text: has ? provider.translate('user_card.followed') : provider.translate('user_card.follow'),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        )),
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: StickyTabBarDelegate(
+                        child: TabBar(
+                            labelColor: Colors.black,
+                            labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                            controller: provider.controller,
+                            tabs: provider.tabs.map((t) => Tab(text: t)).toList()),
                       ),
-                      bottom: TabBar(
-                          controller: provider.controller,
-                          unselectedLabelColor: Colors.grey[700],
-                          labelColor: Colors.black,
-                          labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                          tabs: provider.tabs.map((t) => Tab(text: t)).toList()),
                     ),
                   ];
                 },
@@ -139,27 +164,21 @@ class UserHomeRoute extends StatelessWidget {
                     child: TabBarView(
                       controller: provider.controller,
                       children: <Widget>[
-                        NestedScrollViewInnerScrollPositionKeyWidget(
-                            provider.tabKeys[0],
-                            FutureBuilder(
-                                future: provider.fetchProductPage(page: DataPage<Product>()),
-                                builder: (ctx, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.done) {
-                                    return ProductList(productPage: snapshot.data, onGetData: provider.fetchProductPage);
-                                  }
-                                  return loading;
-                                })),
-                        NestedScrollViewInnerScrollPositionKeyWidget(
-                            provider.tabKeys[1],
-                            UserCardGroup(
-                              refresh: provider.fetchFollows,
-                            )),
-                        NestedScrollViewInnerScrollPositionKeyWidget(
-                            provider.tabKeys[2],
-                            UserCardGroup(
-                              refresh: provider.fetchFans,
-                              updateUser: provider.follow,
-                            )),
+                        FutureBuilder(
+                            future: provider.fetchProductPage(page: DataPage<Product>()),
+                            builder: (ctx, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done) {
+                                return ProductList(productPage: snapshot.data, onGetData: provider.fetchProductPage);
+                              }
+                              return loading;
+                            }),
+                        UserCardGroup(
+                          refresh: provider.fetchFollows,
+                        ),
+                        UserCardGroup(
+                          refresh: provider.fetchFans,
+                          updateUser: provider.follow,
+                        ),
                       ],
                     )),
               );

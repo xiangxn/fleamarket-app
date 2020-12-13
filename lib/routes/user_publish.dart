@@ -78,7 +78,7 @@ class UserPublishRoute extends StatelessWidget {
                                                   child: SizedBox(
                                                     width: 70,
                                                     height: 70,
-                                                    child: ExtNetworkImage('$URL_IPFS_GATEWAY${product.photos[0]}',
+                                                    child: ExtNetworkImage(getIPFSUrl(product.photos[0]),
                                                         borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4))),
                                                   ),
                                                 ),

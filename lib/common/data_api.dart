@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bitsflea/common/global.dart';
@@ -611,5 +612,16 @@ class DataApi {
   Future<BaseReply> getWithdrawAddr(int userId) async {
     String query = "{withdrawAddr(userid:$userId){oaid,coinType,addr}}";
     return await _search(query);
+  }
+
+  Future<String> getConvention() async {
+    HttpClient http = HttpClient();
+    String result;
+    try {
+      final request = await http.getUrl(Uri.parse("https://www.bitsflea.com/convention.html"));
+      final response = await request.close();
+      result = await response.transform(utf8.decoder).join();
+    } catch (e) {}
+    return result;
   }
 }

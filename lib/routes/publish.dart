@@ -37,7 +37,7 @@ class PublishRoute extends StatelessWidget {
             return CircularProgressIndicator();
           });
     }
-    return ExtNetworkImage('$URL_IPFS_GATEWAY$photo');
+    return ExtNetworkImage(getIPFSUrl(photo));
   }
 
   Widget _buildImgs(PublishProvider provider) {
