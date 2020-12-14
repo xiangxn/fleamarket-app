@@ -405,7 +405,7 @@ class DataApi {
   Future<List<Holding>> getUserBalances(String eosid) async {
     EOSClient client = EOSClient(Global.config.eosAPI, "v1");
     var res = await client.getCurrencyBalance(Global.config.mainContract, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
-    final res2 = await client.getCurrencyBalance(Global.config.mainContract, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
+    final res2 = await client.getCurrencyBalance(Global.config.mainTokenContract, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     final res3 = await client.getCurrencyBalance(Global.config.bosIBCContract, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     res.addAll(res2);
     res.addAll(res3);
@@ -414,7 +414,13 @@ class DataApi {
 
   Future<Holding> getUserBalance(String eosId, String symbol, {String contract}) async {
     if (contract == null) {
-      contract = symbol == Global.config.mainAssetSymbol ? Global.config.mainContract : Global.config.mainContract;
+      if (COIN_CROSS_CHAIN.any((element) => element == symbol)) {
+        contract = Global.config.bosIBCContract;
+      } else if (symbol == Global.config.mainAssetSymbol) {
+        contract = Global.config.mainTokenContract;
+      } else {
+        contract = Global.config.mainContract;
+      }
     }
     EOSClient client = EOSClient(Global.config.eosAPI, "v1");
     final list = await client.getCurrencyBalance(contract, eosId, symbol).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));

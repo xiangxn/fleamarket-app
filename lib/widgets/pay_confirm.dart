@@ -303,7 +303,7 @@ class PayConfirmProvider extends BaseProvider {
         contract = Global.config.mainContract;
         break;
     }
-    if (symbol == Global.config.mainAssetSymbol) contract = Global.config.mainContract;
+    if (symbol == Global.config.mainAssetSymbol) contract = Global.config.mainTokenContract;
     return contract;
   }
 
@@ -346,7 +346,7 @@ class PayConfirmProvider extends BaseProvider {
       String contract;
       if (payInfo.symbol == Global.config.mainAssetSymbol) {
         //eosio.token
-        contract = Global.config.mainContract;
+        contract = Global.config.mainTokenContract;
       } else if (COIN_CROSS_CHAIN.any((element) => element == payInfo.symbol)) {
         //bosibc.io
         contract = Global.config.bosIBCContract;
