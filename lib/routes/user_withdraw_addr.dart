@@ -1,5 +1,6 @@
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
@@ -77,7 +78,7 @@ class UserWithdrawAddrProvider extends BaseProvider {
     final coins = await api.getCoins();
     coins.forEach((e) {
       // String sym = e["sym"].toString().split(",")[1];
-      if (e["sym"] == "4,CNY" && TAG_SHOW_CNY == false) return;
+      if (e["sym"] == "4,CNY" && Global.config.showCNY == false) return;
       if (e["is_out"] == 1) {
         _list[e["sym"]] = null;
       }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amap_location/amap_location.dart';
+import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/models/app_info.dart';
 import 'package:bitsflea/models/profile.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,12 @@ class Global {
   static AppInfo get appInfo => _appInfo;
   static AppInfo _appInfo;
 
+  //配置
+  static Config _config;
+  static Config get config => _config;
+
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
-    await AMapLocationClient.setApiKey(KEY_AMAP);
     _prefs = await SharedPreferences.getInstance();
     var _profile = _prefs.getString("profile");
     if (_profile != null) {
@@ -41,7 +45,24 @@ class Global {
     _appInfo = new AppInfo();
     await _appInfo.init();
 
+    //配置
     DataApi.init();
+    await AMapLocationClient.setApiKey(KEY_AMAP);
+    await _getConfig();
+  }
+
+  static Future<void> _getConfig() async {
+    const CONFIG_KEY = "app_config";
+    String str = getCache(CONFIG_KEY, minutes: 1440);
+    if (str == null || str.isEmpty || str == "{}") {
+      _config = await DataApi().getConfig();
+      str = jsonEncode(_config.toProto3Json());
+      if (str != null) setCache(CONFIG_KEY, str, dt: DateTime.now());
+    } else {
+      _config = Config();
+      _config.mergeFromProto3Json(jsonDecode(str));
+    }
+    console("config: $config");
   }
 
   // 持久化Profile信息

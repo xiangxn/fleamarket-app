@@ -97,6 +97,10 @@ class BitsFleaClient extends $grpc.Client {
           '/bitsflea.BitsFlea/GetPhone',
           ($0.GetPhoneRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
+  static final _$getConfig = $grpc.ClientMethod<$0.SearchRequest, $0.BaseReply>(
+      '/bitsflea.BitsFlea/GetConfig',
+      ($0.SearchRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.BaseReply.fromBuffer(value));
 
   BitsFleaClient($grpc.ClientChannel channel, {$grpc.CallOptions options})
       : super(channel, options: options);
@@ -237,6 +241,13 @@ class BitsFleaClient extends $grpc.Client {
         options: options);
     return $grpc.ResponseFuture(call);
   }
+
+  $grpc.ResponseFuture<$0.BaseReply> getConfig($0.SearchRequest request,
+      {$grpc.CallOptions options}) {
+    final call = $createCall(_$getConfig, $async.Stream.fromIterable([request]),
+        options: options);
+    return $grpc.ResponseFuture(call);
+  }
 }
 
 abstract class BitsFleaServiceBase extends $grpc.Service {
@@ -372,6 +383,13 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.GetPhoneRequest.fromBuffer(value),
         ($0.BaseReply value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SearchRequest, $0.BaseReply>(
+        'GetConfig',
+        getConfig_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.SearchRequest.fromBuffer(value),
+        ($0.BaseReply value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.BaseReply> register_Pre(
@@ -464,6 +482,11 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
     return getPhone(call, await request);
   }
 
+  $async.Future<$0.BaseReply> getConfig_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.SearchRequest> request) async {
+    return getConfig(call, await request);
+  }
+
   $async.Future<$0.BaseReply> register(
       $grpc.ServiceCall call, $0.RegisterRequest request);
   $async.Future<$0.BaseReply> sendSmsCode(
@@ -500,4 +523,6 @@ abstract class BitsFleaServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.LogisticsRequest request);
   $async.Future<$0.BaseReply> getPhone(
       $grpc.ServiceCall call, $0.GetPhoneRequest request);
+  $async.Future<$0.BaseReply> getConfig(
+      $grpc.ServiceCall call, $0.SearchRequest request);
 }

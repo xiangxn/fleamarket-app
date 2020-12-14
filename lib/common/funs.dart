@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/grpc/google/protobuf/any.pb.dart';
 import 'package:bitsflea/grpc/google/protobuf/wrappers.pb.dart';
@@ -121,7 +122,7 @@ String getErrorMessage(String src) {
 }
 
 String getIPFSUrl(String path) {
-  return path.startsWith("http://") || path.startsWith("https://") ? path : URL_IPFS_GATEWAY + path;
+  return path.startsWith("http://") || path.startsWith("https://") ? path : Global.config.ipfsGateway + path;
 }
 
 Widget buildReturnStatus(BaseProvider provider, ProReturn pr) {

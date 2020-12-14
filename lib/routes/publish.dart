@@ -302,7 +302,7 @@ class PublishProvider extends BaseProvider {
     final coins = await api.getCoins();
     _symbols.clear();
     coins.forEach((e) {
-      if (e["sym"] == "4,CNY" && TAG_SHOW_CNY == false) return;
+      if (e["sym"] == "4,CNY" && Global.config.showCNY == false) return;
       _symbols.add(e["sym"].split(",")[1]);
     });
   }

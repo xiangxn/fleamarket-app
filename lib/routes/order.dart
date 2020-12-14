@@ -172,7 +172,7 @@ class CreateOrderProvider extends BaseProvider {
       //生成支付信息
       PayInfo payInfo = PayInfo();
       payInfo.payMode = mainPay ? 0 : 1;
-      // payInfo.payAddr = CONTRACT_NAME;
+      // payInfo.payAddr = Global.config.mainContract;
       final res = await api.createPayInfo(um.user.userid, _product.productId, total, price.currency, mainPay);
       // print("创建支付信息...");
       if (res.code == 0) {

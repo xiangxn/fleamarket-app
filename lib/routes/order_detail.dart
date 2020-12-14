@@ -460,7 +460,7 @@ class OrderDetailProvider extends BaseProvider {
     payInfo.orderid = _order.orderid;
     payInfo.amount = total;
     payInfo.symbol = price.currency;
-    payInfo.payAddr = (_order.payAddr == null || _order.payAddr.isEmpty) ? CONTRACT_NAME : _order.payAddr;
+    payInfo.payAddr = (_order.payAddr == null || _order.payAddr.isEmpty) ? Global.config.mainContract : _order.payAddr;
     payInfo.userId = $fixnum.Int64.parseInt(um.user.userid.toString());
     payInfo.productId = _order.productInfo.productId;
     payInfo.balance = balance.amount;

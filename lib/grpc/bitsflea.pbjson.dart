@@ -486,3 +486,48 @@ const GetPhoneRequest$json = const {
     const {'1': 'toUserId', '3': 2, '4': 1, '5': 13, '10': 'toUserId'},
   ],
 };
+
+const Config$json = const {
+  '1': 'Config',
+  '2': const [
+    const {'1': 'mainContract', '3': 1, '4': 1, '5': 9, '10': 'mainContract'},
+    const {'1': 'eosAPI', '3': 2, '4': 1, '5': 9, '10': 'eosAPI'},
+    const {'1': 'ipfsGateway', '3': 3, '4': 1, '5': 9, '10': 'ipfsGateway'},
+    const {
+      '1': 'mainTokenContract',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '10': 'mainTokenContract'
+    },
+    const {
+      '1': 'eosTokenContract',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '10': 'eosTokenContract'
+    },
+    const {
+      '1': 'bosIBCContract',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '10': 'bosIBCContract'
+    },
+    const {
+      '1': 'mainAssetSymbol',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '10': 'mainAssetSymbol'
+    },
+    const {
+      '1': 'amapDistrictKey',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '10': 'amapDistrictKey'
+    },
+    const {'1': 'showCNY', '3': 9, '4': 1, '5': 8, '10': 'showCNY'},
+  ],
+};

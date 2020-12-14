@@ -231,7 +231,7 @@ class PayConfirmProvider extends BaseProvider {
 
   String getManualPayAddr() {
     if (this._isIBCTransfer(payInfo.symbol)) {
-      return MAIN_NET_BOSIBC_NAME;
+      return Global.config.bosIBCContract;
     }
     return payInfo.payAddr;
   }
@@ -291,21 +291,19 @@ class PayConfirmProvider extends BaseProvider {
   }
 
   String _getContract(String symbol) {
-    String contract = CONTRACT_NAME;
+    String contract = Global.config.mainContract;
     switch (symbol) {
       case "USDT":
-        contract = MAIN_NET_BOSIBC_NAME;
+        contract = Global.config.bosIBCContract;
         break;
       case "EOS":
-        contract = MAIN_NET_EOS_CONTRACT_NAME;
-        break;
-      case MAIN_NET_ASSET_SYMBOL:
-        contract = MAIN_NET_CONTRACT_NAME;
+        contract = Global.config.eosTokenContract;
         break;
       default:
-        contract = CONTRACT_NAME;
+        contract = Global.config.mainContract;
         break;
     }
+    if (symbol == Global.config.mainAssetSymbol) contract = Global.config.mainContract;
     return contract;
   }
 
@@ -346,15 +344,15 @@ class PayConfirmProvider extends BaseProvider {
     // final pwd = await this.showDialog(screen);
     if (pwd != null) {
       String contract;
-      if (payInfo.symbol == MAIN_NET_ASSET_SYMBOL) {
+      if (payInfo.symbol == Global.config.mainAssetSymbol) {
         //eosio.token
-        contract = MAIN_NET_CONTRACT_NAME;
+        contract = Global.config.mainContract;
       } else if (COIN_CROSS_CHAIN.any((element) => element == payInfo.symbol)) {
         //bosibc.io
-        contract = MAIN_NET_BOSIBC_NAME;
+        contract = Global.config.bosIBCContract;
       } else {
         //bitsfleamain
-        contract = CONTRACT_NAME;
+        contract = Global.config.mainContract;
       }
       final um = this.getUserInfo();
       final asset = Holding.fromJson("${payInfo.amount} ${payInfo.symbol}");
@@ -436,7 +434,7 @@ class PayConfirmProvider extends BaseProvider {
     tp.blockchain = this._getChain(_payInfo.symbol);
     tp.contract = this._getContract(_payInfo.symbol);
     if (this._isIBCTransfer(_payInfo.symbol)) {
-      tp.to = MAIN_NET_BOSIBC_NAME;
+      tp.to = Global.config.bosIBCContract;
       tp.memo = "${_payInfo.payAddr}@bos p:${_payInfo.orderid}";
     } else {
       tp.to = _payInfo.payAddr;

@@ -6,7 +6,7 @@ const GRPC_HOST = 'api.bitsflea.com';
 const URL_EOS_API = 'https://bosapi.bitsflea.com';
 //const String URL_EOS_API = 'http://127.0.0.1:8888';
 const URL_IPFS_GATEWAY = "https://source.bitsflea.com:10001/ipfs/";
-const DEFAULT_HEAD = 'https://source.bitsflea.com:10001/ipfs/QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';
+const DEFAULT_HEAD = 'QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';
 
 //主网配置
 const MAIN_NET_CONTRACT_NAME = "eosio.token";
@@ -19,6 +19,7 @@ const CHAIN_REQUEST_TIMEOUT = 180;
 /// 短信重发延时
 const int TIMER_RESET = 60;
 const KEY_AMAP = "92e8c56420d01d5e106deaad56e0505f";
+const KEY_AMAP_DISTRICT = "92f35a6155436fa0179a80b27adec436";
 
 const KEY_NAME_OWNER = 'owner';
 const KEY_NAME_ACTIVE = 'active';

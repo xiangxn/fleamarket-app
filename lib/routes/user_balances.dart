@@ -1,5 +1,6 @@
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
@@ -96,10 +97,10 @@ class UserBalancesProvider extends BaseProvider {
               BaseReply payResult;
               bool isIBC = COIN_CROSS_CHAIN.any((element) => element == asset.currency);
               if (isIBC) {
-                payResult = await api.transfer(um.keys[1], um.user.eosid, MAIN_NET_BOSIBC_NAME, toAsset, "${otherAddr.addr}@eos withdraw coin",
-                    contract: MAIN_NET_BOSIBC_NAME);
+                payResult = await api.transfer(um.keys[1], um.user.eosid, Global.config.bosIBCContract, toAsset, "${otherAddr.addr}@eos withdraw coin",
+                    contract: Global.config.bosIBCContract);
               } else {
-                payResult = await api.transfer(um.keys[1], um.user.eosid, CONTRACT_NAME, toAsset, "w:");
+                payResult = await api.transfer(um.keys[1], um.user.eosid, Global.config.mainContract, toAsset, "w:");
               }
               closeLoading();
               if (payResult.code == 0) {

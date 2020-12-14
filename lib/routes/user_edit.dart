@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/routes/photos_selector.dart';
 import 'package:bitsflea/states/base.dart';
@@ -46,7 +47,7 @@ class UserEditRoute extends StatelessWidget {
                     children: [
                       LineButtonItem(
                         text: provider.translate('user_edit.head'),
-                        suffix: ExtCircleAvatar(user?.head ?? DEFAULT_HEAD, 60, data: provider.photo, strokeWidth: 0),
+                        suffix: ExtCircleAvatar(user?.head ?? Global.config.ipfsGateway + DEFAULT_HEAD, 60, data: provider.photo, strokeWidth: 0),
                         onTap: provider.changeHead,
                       ),
                       LineButtonItem(
@@ -119,7 +120,7 @@ class UserEditProvider extends BaseProvider {
     final result = await api.setProfile(keys[1], user.eosid, head: headHash, nickname: nn);
     closeLoading();
     if (result) {
-      // if (headHash != null) user.head = URL_IPFS_GATEWAY + headHash;
+      // if (headHash != null) user.head = Global.config.ipfsGateway + headHash;
       if (headHash != null) user.head = headHash;
       if (nickname != null) user.nickname = nickname;
     }

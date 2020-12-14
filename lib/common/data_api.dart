@@ -370,8 +370,8 @@ class DataApi {
   }
 
   Future<District> fetchDistricts() async {
-    var res = await Dio().get('https://restapi.amap.com/v3/config/district',
-        queryParameters: {'keywords': '100000', 'subdistrict': '3', 'key': '92f35a6155436fa0179a80b27adec436'});
+    var res = await Dio()
+        .get('https://restapi.amap.com/v3/config/district', queryParameters: {'keywords': '100000', 'subdistrict': '3', 'key': Global.config.amapDistrictKey});
     if (res.statusCode == 200 && res.data['status'] == '1' && res.data['districts'][0] != null) {
       District district = District.fromJson(res.data['districts'][0]);
       district.lastUpdate = DateTime.now();
@@ -403,10 +403,10 @@ class DataApi {
   Future<dynamic> fetchOrder(int orderid) async {}
 
   Future<List<Holding>> getUserBalances(String eosid) async {
-    EOSClient client = EOSClient(URL_EOS_API, "v1");
-    var res = await client.getCurrencyBalance(MAIN_NET_CONTRACT_NAME, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
-    final res2 = await client.getCurrencyBalance(CONTRACT_NAME, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
-    final res3 = await client.getCurrencyBalance(MAIN_NET_BOSIBC_NAME, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
+    EOSClient client = EOSClient(Global.config.eosAPI, "v1");
+    var res = await client.getCurrencyBalance(Global.config.mainContract, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
+    final res2 = await client.getCurrencyBalance(Global.config.mainContract, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
+    final res3 = await client.getCurrencyBalance(Global.config.bosIBCContract, eosid).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     res.addAll(res2);
     res.addAll(res3);
     return res;
@@ -414,9 +414,9 @@ class DataApi {
 
   Future<Holding> getUserBalance(String eosId, String symbol, {String contract}) async {
     if (contract == null) {
-      contract = symbol == MAIN_NET_ASSET_SYMBOL ? MAIN_NET_CONTRACT_NAME : CONTRACT_NAME;
+      contract = symbol == Global.config.mainAssetSymbol ? Global.config.mainContract : Global.config.mainContract;
     }
-    EOSClient client = EOSClient(URL_EOS_API, "v1");
+    EOSClient client = EOSClient(Global.config.eosAPI, "v1");
     final list = await client.getCurrencyBalance(contract, eosId, symbol).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
     if (list.length > 0) return list[0];
     return Holding.fromJson("0 $symbol");
@@ -425,7 +425,7 @@ class DataApi {
   Future<bool> publishProduct(EOSPrivateKey actKey, String eosid, int userId, Map product, [Map productAuction]) async {
     List<Authorization> auth = [
       Authorization()
-        ..actor = CONTRACT_NAME
+        ..actor = Global.config.mainContract
         ..permission = 'execute',
       Authorization()
         ..actor = eosid
@@ -440,8 +440,8 @@ class DataApi {
   }
 
   Future<List<Map<String, dynamic>>> getCoins() async {
-    EOSClient client = EOSClient(URL_EOS_API, "v1");
-    return await client.getTableRows(CONTRACT_NAME, CONTRACT_NAME, "coins").timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
+    EOSClient client = EOSClient(Global.config.eosAPI, "v1");
+    return await client.getTableRows(Global.config.mainContract, Global.config.mainContract, "coins").timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
   }
 
   Future<BaseReply> getCoinAddrs(int userid) async {
@@ -466,11 +466,12 @@ class DataApi {
   }
 
   Future<BaseReply> _putAction(EOSPrivateKey actKey, String authEosid, String actionName, Map data,
-      {String permission = 'active', int sign = 0, List<Authorization> authList, String contract = CONTRACT_NAME}) async {
+      {String permission = 'active', int sign = 0, List<Authorization> authList, String contract}) async {
+    if (contract == null) contract = Global.config.mainContract;
     final token = await getToken();
     TransactionRequest tr = TransactionRequest();
     if (sign == 1) tr.sign = 1;
-    EOSClient client = EOSClient(URL_EOS_API, "v1", privateKeys: [actKey.toString()]);
+    EOSClient client = EOSClient(Global.config.eosAPI, "v1", privateKeys: [actKey.toString()]);
     List<Action> actions = [
       Action()
         ..account = contract
@@ -524,7 +525,7 @@ class DataApi {
     // Global.console("placeorder: $data");
     List<Authorization> auth = [
       Authorization()
-        ..actor = CONTRACT_NAME
+        ..actor = Global.config.mainContract
         ..permission = 'execute',
       Authorization()
         ..actor = eosId
@@ -545,7 +546,7 @@ class DataApi {
     return _client.createPayInfo(pir, options: CallOptions(metadata: {'token': token})).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
   }
 
-  Future<BaseReply> transfer(EOSPrivateKey actKey, String from, String to, Holding asset, String memo, {String contract = CONTRACT_NAME}) async {
+  Future<BaseReply> transfer(EOSPrivateKey actKey, String from, String to, Holding asset, String memo, {String contract}) async {
     Map data = {'from': from, 'to': to, 'quantity': "${asset.amount.toStringAsFixed(COIN_PRECISION[asset.currency])} ${asset.currency}", 'memo': memo};
     return await _putAction(actKey, from, "transfer", data, contract: contract);
   }
@@ -623,5 +624,26 @@ class DataApi {
       result = await response.transform(utf8.decoder).join();
     } catch (e) {}
     return result;
+  }
+
+  Future<Config> getConfig() async {
+    Config config = Config();
+    try {
+      BaseReply br = await _client.getConfig(SearchRequest()).timeout(Duration(seconds: CHAIN_REQUEST_TIMEOUT));
+      if (br.code == 0) {
+        br.data.unpackInto(config);
+      }
+    } on GrpcError catch (e) {
+      config.mainContract = CONTRACT_NAME;
+      config.eosAPI = URL_EOS_API;
+      config.ipfsGateway = URL_IPFS_GATEWAY;
+      config.mainTokenContract = MAIN_NET_CONTRACT_NAME;
+      config.eosTokenContract = MAIN_NET_EOS_CONTRACT_NAME;
+      config.bosIBCContract = MAIN_NET_BOSIBC_NAME;
+      config.mainAssetSymbol = MAIN_NET_ASSET_SYMBOL;
+      config.amapDistrictKey = KEY_AMAP_DISTRICT;
+      config.showCNY = TAG_SHOW_CNY;
+    }
+    return config;
   }
 }

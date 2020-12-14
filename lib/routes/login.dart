@@ -249,7 +249,7 @@ class LoginProvider extends BaseProvider implements TickerProvider {
         return false;
       }
       if (keys[2].toEOSPublicKey().toString() == user.authKey) {
-        // user.head = URL_IPFS_GATEWAY + user.head;
+        // user.head = Global.config.ipfsGateway + user.head;
         um.keys = keys;
         um.user = user;
         //获取收藏数据

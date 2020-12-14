@@ -233,7 +233,7 @@ class UserProfileProvider extends BaseProvider {
       if (res.code == 0) {
         User user = convertEdge<User>(res.data, "users", User());
         if (user == null) return false;
-        // user.head = URL_IPFS_GATEWAY + user.head;
+        // user.head = Global.config.ipfsGateway + user.head;
         um.user = user;
         notifyListeners();
       }

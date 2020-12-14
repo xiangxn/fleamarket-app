@@ -3205,3 +3205,147 @@ class GetPhoneRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearToUserId() => clearField(2);
 }
+
+class Config extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Config',
+      package: const $pb.PackageName('bitsflea'), createEmptyInstance: create)
+    ..aOS(1, 'mainContract', protoName: 'mainContract')
+    ..aOS(2, 'eosAPI', protoName: 'eosAPI')
+    ..aOS(3, 'ipfsGateway', protoName: 'ipfsGateway')
+    ..aOS(4, 'mainTokenContract', protoName: 'mainTokenContract')
+    ..aOS(5, 'eosTokenContract', protoName: 'eosTokenContract')
+    ..aOS(6, 'bosIBCContract', protoName: 'bosIBCContract')
+    ..aOS(7, 'mainAssetSymbol', protoName: 'mainAssetSymbol')
+    ..aOS(8, 'amapDistrictKey', protoName: 'amapDistrictKey')
+    ..aOB(9, 'showCNY', protoName: 'showCNY')
+    ..hasRequiredFields = false;
+
+  Config._() : super();
+  factory Config() => create();
+  factory Config.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Config.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  Config clone() => Config()..mergeFromMessage(this);
+  Config copyWith(void Function(Config) updates) =>
+      super.copyWith((message) => updates(message as Config));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Config create() => Config._();
+  Config createEmptyInstance() => create();
+  static $pb.PbList<Config> createRepeated() => $pb.PbList<Config>();
+  @$core.pragma('dart2js:noInline')
+  static Config getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Config>(create);
+  static Config _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get mainContract => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set mainContract($core.String v) {
+    $_setString(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasMainContract() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMainContract() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get eosAPI => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set eosAPI($core.String v) {
+    $_setString(1, v);
+  }
+
+  @$pb.TagNumber(2)
+  $core.bool hasEosAPI() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEosAPI() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get ipfsGateway => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set ipfsGateway($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasIpfsGateway() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearIpfsGateway() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get mainTokenContract => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set mainTokenContract($core.String v) {
+    $_setString(3, v);
+  }
+
+  @$pb.TagNumber(4)
+  $core.bool hasMainTokenContract() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMainTokenContract() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get eosTokenContract => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set eosTokenContract($core.String v) {
+    $_setString(4, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasEosTokenContract() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearEosTokenContract() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get bosIBCContract => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set bosIBCContract($core.String v) {
+    $_setString(5, v);
+  }
+
+  @$pb.TagNumber(6)
+  $core.bool hasBosIBCContract() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearBosIBCContract() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get mainAssetSymbol => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set mainAssetSymbol($core.String v) {
+    $_setString(6, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasMainAssetSymbol() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearMainAssetSymbol() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get amapDistrictKey => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set amapDistrictKey($core.String v) {
+    $_setString(7, v);
+  }
+
+  @$pb.TagNumber(8)
+  $core.bool hasAmapDistrictKey() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearAmapDistrictKey() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.bool get showCNY => $_getBF(8);
+  @$pb.TagNumber(9)
+  set showCNY($core.bool v) {
+    $_setBool(8, v);
+  }
+
+  @$pb.TagNumber(9)
+  $core.bool hasShowCNY() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearShowCNY() => clearField(9);
+}
