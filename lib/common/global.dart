@@ -48,10 +48,10 @@ class Global {
     //配置
     DataApi.init();
     await AMapLocationClient.setApiKey(KEY_AMAP);
-    await _getConfig();
+    await getConfig();
   }
 
-  static Future<void> _getConfig() async {
+  static Future<void> getConfig() async {
     String str = getCache(CONFIG_KEY, minutes: 1440);
     if (str == null || str.isEmpty || str == "{}") {
       _config = await DataApi().getConfig();
