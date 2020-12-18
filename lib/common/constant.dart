@@ -8,6 +8,8 @@ const URL_EOS_API = 'https://bosapi.bitsflea.com';
 const URL_IPFS_GATEWAY = "https://source.bitsflea.com:10001/ipfs/";
 const DEFAULT_HEAD = 'QmbfSqvZJRTs4PcskkfhZDMXG4nxviQWN28sFAQdVfCV9W';
 
+const CONFIG_KEY = "app_config";
+
 //主网配置
 const MAIN_NET_CONTRACT_NAME = "eosio.token";
 const MAIN_NET_EOS_CONTRACT_NAME = "eosio.token";

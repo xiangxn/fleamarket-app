@@ -9,6 +9,7 @@ import 'package:bitsflea/widgets/line_button_group.dart';
 import 'package:bitsflea/widgets/line_button_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bitsflea/common/constant.dart';
 
 class SettingsRoute extends StatelessWidget {
   @override
@@ -104,6 +105,7 @@ class SettingProvider extends BaseProvider {
     final manager = DefaultCacheManager();
     showLoading();
     await manager.emptyCache();
+    Global.cleanCache(CONFIG_KEY);
     closeLoading();
     this.showToast(translate("setting.toast_clean_cache"));
   }

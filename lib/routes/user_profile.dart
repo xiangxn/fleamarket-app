@@ -260,9 +260,6 @@ class UserProfileProvider extends BaseProvider {
     notifyListeners();
   }
 
-  /// 申请评审员
-  tryReviewer() {}
-
   @override
   void dispose() {
     super.dispose();

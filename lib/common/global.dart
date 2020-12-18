@@ -52,7 +52,6 @@ class Global {
   }
 
   static Future<void> _getConfig() async {
-    const CONFIG_KEY = "app_config";
     String str = getCache(CONFIG_KEY, minutes: 1440);
     if (str == null || str.isEmpty || str == "{}") {
       _config = await DataApi().getConfig();
@@ -62,7 +61,7 @@ class Global {
       _config = Config();
       _config.mergeFromProto3Json(jsonDecode(str));
     }
-    console("config: $config");
+    console("config: { $config }");
   }
 
   // 持久化Profile信息
@@ -94,5 +93,10 @@ class Global {
       }
     }
     return _prefs.getString(key);
+  }
+
+  static cleanCache(String key) {
+    _prefs.remove(key);
+    _prefs.remove("dt_$key");
   }
 }
