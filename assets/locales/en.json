@@ -275,7 +275,8 @@
         "title": "我的密钥",
         "owner": "所有权公钥",
         "active": "活动权公钥",
-        "auth": "平台授权公钥"
+        "auth": "平台授权公钥",
+        "act_copy_key": "复制私钥"
     },
     "user_withdraw_addr": {
         "title": "提现地址",

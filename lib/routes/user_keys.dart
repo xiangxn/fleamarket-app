@@ -3,14 +3,17 @@ import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:bitsflea/states/theme.dart';
 import 'package:bitsflea/states/user.dart';
+import 'package:bitsflea/widgets/confirm_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:eosdart_ecc/eosdart_ecc.dart';
 
 class UserKeysRoute extends StatelessWidget {
   Widget _buildCard(UserKeysProvider provider, String keyName) {
     final um = Provider.of<UserModel>(provider.context, listen: false);
+    final style = Provider.of<ThemeModel>(provider.context, listen: false).theme;
     EOSPrivateKey priKey;
     switch (keyName) {
       case KEY_NAME_OWNER:
@@ -36,18 +39,29 @@ class UserKeysRoute extends StatelessWidget {
       child: Card(
         elevation: 0,
         margin: EdgeInsets.only(left: 16, top: 16, right: 16),
-        child: Container(
-          padding: EdgeInsets.all(8),
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(title),
-              Text(
-                pubKey,
-                style: TextStyle(color: Colors.grey[700], fontSize: 13),
-              ),
-            ],
+        child: Slidable(
+          actionPane: SlidableDrawerActionPane(),
+          actions: [
+            IconSlideAction(
+              caption: provider.translate("user_keys.act_copy_key"),
+              color: style.primarySwatch,
+              icon: Icons.copy,
+              onTap: () => provider.copyPrivateKey(keyName, priKey),
+            )
+          ],
+          child: Container(
+            padding: EdgeInsets.all(8),
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(title),
+                Text(
+                  pubKey,
+                  style: TextStyle(color: Colors.grey[700], fontSize: 13),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -83,4 +97,12 @@ class UserKeysRoute extends StatelessWidget {
 
 class UserKeysProvider extends BaseProvider {
   UserKeysProvider(BuildContext context) : super(context);
+
+  Future<void> copyPrivateKey(String keyName, EOSPrivateKey priKey) async {
+    final auth = await showModalBottomSheet<String>(context: context, builder: (_) => ConfirmPassword());
+    if (auth != null && auth.isNotEmpty) {
+      Clipboard.setData(ClipboardData(text: priKey.toString()));
+      this.showToast(this.translate("controller.copy_pubkey", translationParams: {"value": keyName}));
+    }
+  }
 }
