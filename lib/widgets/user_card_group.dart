@@ -73,9 +73,9 @@ class UserCardGroupProvider extends BaseProvider {
     if (isRefresh) {
       _page.clean();
     }
+    if (_page.hasMore() && load) _page.pageNo += 1;
     var data = await _refresh(pageNo: _page.pageNo, pageSize: _page.pageSize);
     data.update(_page.data);
-    if (data.hasMore()) data.pageNo += 1;
     _page = data;
     setBusy();
     // notifyListeners();

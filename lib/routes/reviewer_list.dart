@@ -52,7 +52,7 @@ class ReviewerListRoute extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return CustomRefreshIndicator(
                       onRefresh: () => model.fetchReviewers(isRefresh: true),
-                      onLoad: () => model.fetchReviewers(isLoad: true),
+                      onLoad: () => model.onLoad(),
                       hasMore: () => model.list.hasMore(),
                       child: ListView.separated(
                         // physics: ClampingScrollPhysics(),
@@ -153,7 +153,6 @@ class ReviewerListProvider extends BaseProvider {
         data.update(_list.data);
         _list = data;
         if (_list.hasMore()) {
-          _list.pageNo += 1;
           flag = true;
         }
       }
@@ -161,6 +160,15 @@ class ReviewerListProvider extends BaseProvider {
     setBusy();
     // notifyListeners();
     return flag;
+  }
+
+  Future<bool> onLoad() async {
+    if (_list.hasMore()) {
+      _list.pageNo += 1;
+      await this.fetchReviewers(isLoad: true);
+      return _list.hasMore();
+    }
+    return false;
   }
 
   void onToHome(User user) {

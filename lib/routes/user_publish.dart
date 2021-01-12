@@ -142,7 +142,6 @@ class UserPublishProvider extends BaseProvider {
       data.update(_page.data);
       _page = data;
       if (_page.hasMore()) {
-        _page.pageNo += 1;
         flag = true;
       }
     }
@@ -152,7 +151,9 @@ class UserPublishProvider extends BaseProvider {
 
   Future<bool> load() async {
     if (_page.hasMore()) {
+      _page.pageNo += 1;
       await fetchPublish();
+      return _page.hasMore();
     }
     return false;
   }

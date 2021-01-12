@@ -25,7 +25,7 @@ class OrderCardGroup extends StatelessWidget {
         print("build ordre card group......");
         return CustomRefreshIndicator(
             onRefresh: () => provider.refreshOrders(isRefresh: true),
-            onLoad: () => provider.refreshOrders(),
+            onLoad: () => provider.onLoad(),
             hasMore: () => provider.page.hasMore(),
             child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4),
@@ -80,11 +80,19 @@ class OrderCardGroupProvider extends BaseProvider {
     data.update(_page.data);
     _page = data;
     if (_page.hasMore()) {
-      _page.pageNo += 1;
       flag = true;
     }
     setBusy();
     return flag;
+  }
+
+  Future<bool> onLoad() async {
+    if (_page.hasMore()) {
+      _page.pageNo += 1;
+      await this.refreshOrders();
+      return _page.hasMore();
+    }
+    return false;
   }
 
   Future<void> updateOrder({Order obj}) async {

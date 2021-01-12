@@ -51,6 +51,7 @@ class UserKeysRoute extends StatelessWidget {
           ],
           child: Container(
             padding: EdgeInsets.all(8),
+            color: Colors.white,
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

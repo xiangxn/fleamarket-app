@@ -57,6 +57,7 @@ class _ProductList extends State<ProductList> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6),
             child: StaggeredGridView.countBuilder(
+              physics: ClampingScrollPhysics(),
               controller: widget.controller,
               itemCount: provider.productPage.data?.length ?? 0,
               staggeredTileBuilder: (inx) => StaggeredTile.fit(2),
@@ -205,7 +206,6 @@ class ProductListProvider extends BaseProvider {
     setBusy();
     _productPage = await this.onGetData(categoryid: categoryid, page: _productPage);
     if (_productPage.hasMore()) {
-      _productPage.pageNo += 1;
       flag = true;
     }
     setBusy();
@@ -218,6 +218,7 @@ class ProductListProvider extends BaseProvider {
   Future<bool> onLoad(int categoryid) async {
     int hc = 0;
     if (productPage.hasMore()) {
+      productPage.pageNo += 1;
       hc = productPage.hashCode;
       await this.onRefresh(categoryid: categoryid);
       return hc != productPage.hashCode;

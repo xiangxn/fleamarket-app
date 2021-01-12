@@ -151,7 +151,6 @@ class ProductReviewListProvider extends BaseProvider {
         data.update(_page.data);
         _page = data;
         if (_page.hasMore()) {
-          _page.pageNo += 1;
           flag = true;
         }
       }
@@ -164,7 +163,9 @@ class ProductReviewListProvider extends BaseProvider {
   Future<bool> load() async {
     bool flag = _page.hasMore();
     if (flag) {
+      _page.pageNo += 1;
       await fetchProducts();
+      flag = _page.hasMore();
     }
     return flag;
   }

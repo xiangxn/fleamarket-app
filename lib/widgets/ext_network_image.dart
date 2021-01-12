@@ -33,14 +33,27 @@ class ExtNetworkImage extends StatelessWidget {
     return p;
   }
 
+  Widget _buildChild() {
+    if (this.placeholder is bool && this.placeholder == false) {
+      return CachedNetworkImage(
+          imageUrl: this.url, width: this.width, height: this.height, imageBuilder: this.imageBuilder, cacheManager: DefaultCacheManager());
+    }
+    return CachedNetworkImage(
+        imageUrl: this.url,
+        width: this.width,
+        height: this.height,
+        placeholder: _placeholder,
+        imageBuilder: this.imageBuilder,
+        cacheManager: DefaultCacheManager());
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: this.onTap,
       child: ClipRRect(
         borderRadius: this.borderRadius ?? BorderRadius.zero,
-        child: CachedNetworkImage(imageUrl: this.url, width: this.width, height: this.height, placeholder: _placeholder, imageBuilder: this.imageBuilder,
-        cacheManager: DefaultCacheManager(),),
+        child: _buildChild(),
       ),
     );
   }
