@@ -72,6 +72,7 @@ class _ProductList extends State<ProductList> {
                       getIPFSUrl(product.photos[0]),
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                       onTap: () => provider.toDetail(i),
+                      height: 260,
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
