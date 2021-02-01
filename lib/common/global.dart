@@ -4,6 +4,7 @@ import 'package:amap_location/amap_location.dart';
 import 'package:bitsflea/grpc/bitsflea.pb.dart';
 import 'package:bitsflea/models/app_info.dart';
 import 'package:bitsflea/models/profile.dart';
+import 'package:bitsflea/models/coin.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data_api.dart';
@@ -28,6 +29,8 @@ class Global {
   //配置
   static Config _config;
   static Config get config => _config;
+  static Map<String, Coin> _coins;
+  static Map<String, Coin> get coins => _coins;
 
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
@@ -49,6 +52,22 @@ class Global {
     DataApi.init();
     await AMapLocationClient.setApiKey(KEY_AMAP);
     await getConfig();
+    await getCoins();
+  }
+
+  static Future<void> getCoins() async {
+    _coins = Map<String, Coin>();
+    DataApi api = DataApi();
+    final cs = await api.getCoins();
+    cs.forEach((e) {
+      if (e["sym"] == "4,CNY" && config.showCNY == false) return;
+      List<String> sym = e['sym'].split(",");
+      Coin c = Coin();
+      c.fee = double.parse(e['fee'].split(" ")[0]);
+      c.precision = int.parse(sym[0]);
+      c.isOut = e['is_out'] == 1;
+      _coins[sym[1]] = c;
+    });
   }
 
   static Future<void> getConfig() async {

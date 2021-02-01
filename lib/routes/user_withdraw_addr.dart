@@ -75,12 +75,10 @@ class UserWithdrawAddrProvider extends BaseProvider {
 
   Future<void> getCoins() async {
     final user = Provider.of<UserModel>(context, listen: false).user;
-    final coins = await api.getCoins();
-    coins.forEach((e) {
-      // String sym = e["sym"].toString().split(",")[1];
-      if (e["sym"] == "4,CNY" && Global.config.showCNY == false) return;
-      if (e["is_out"] == 1) {
-        _list[e["sym"]] = null;
+    _list.clear();
+    Global.coins.forEach((key, value) {
+      if (value.isOut) {
+        _list["${value.precision},$key"] = null;
       }
     });
     final res = await api.getCoinAddrs(user.userid);

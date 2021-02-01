@@ -336,6 +336,7 @@ class OrderDetailProvider extends BaseProvider {
     if (cache == null || cache.isEmpty) {
       final user = this.getUser();
       final res = await api.getLogisticsInfo(user.userid, _order.shipNum);
+      print(res);
       if (res.code != 0) {
         return null;
       } else {
@@ -457,13 +458,22 @@ class OrderDetailProvider extends BaseProvider {
     final mainPay = balance.amount >= total;
     PayInfo payInfo = PayInfo();
     payInfo.payMode = mainPay ? 0 : 1;
-    payInfo.orderid = _order.orderid;
-    payInfo.amount = total;
-    payInfo.symbol = price.currency;
-    payInfo.payAddr = (_order.payAddr == null || _order.payAddr.isEmpty) ? Global.config.mainContract : _order.payAddr;
-    payInfo.userId = $fixnum.Int64.parseInt(um.user.userid.toString());
-    payInfo.productId = _order.productInfo.productId;
-    payInfo.balance = balance.amount;
+    // payInfo.orderid = _order.orderid;
+    // payInfo.amount = total;
+    // payInfo.symbol = price.currency;
+    // payInfo.payAddr = (_order.payAddr == null || _order.payAddr.isEmpty) ? Global.config.mainContract : _order.payAddr;
+    // payInfo.userId = $fixnum.Int64.parseInt(um.user.userid.toString());
+    // payInfo.productId = _order.productInfo.productId;
+    // payInfo.balance = balance.amount;
+    final res = await api.createPayInfo(um.user.userid, _order.productInfo.productId, total, price.currency, mainPay, orderId: _order.orderid);
+    if (res.code == 0) {
+      res.data.unpackInto(payInfo);
+      payInfo.balance = balance.amount;
+    } else {
+      closeLoading();
+      showToast(this.translate("order.create_pay_info_err"));
+      return;
+    }
     //打开支付UI
     // Widget screen = PayConfirm(mainPay: mainPay, payInfo: payInfo);
     // final result = await this.showDialog(screen);

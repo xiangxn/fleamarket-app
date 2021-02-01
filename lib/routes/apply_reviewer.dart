@@ -79,12 +79,15 @@ class ApplyReviewerProvider extends BaseProvider {
   }
 
   fetchTerms() async {
-    _terms = Global.getCache(CACHE_KEY_CONVENTION, minutes: 1440);
-    if (_terms == null || _terms.isEmpty) {
-      _terms = await api.getConvention();
-      if (_terms != null && _terms.isNotEmpty) {
-        Global.setCache(CACHE_KEY_CONVENTION, _terms, dt: DateTime.now());
+    String tmp = Global.getCache(CACHE_KEY_CONVENTION, minutes: 1440);
+    if (tmp == null || tmp.isEmpty) {
+      tmp = await api.getConvention();
+      if (tmp != null && tmp.isNotEmpty) {
+        Global.setCache(CACHE_KEY_CONVENTION, tmp, dt: DateTime.now());
+        _terms = tmp;
       }
+    } else {
+      _terms = tmp;
     }
     notifyListeners();
   }

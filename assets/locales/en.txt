@@ -1,0 +1,372 @@
+{
+    "title": "希奇",
+    "dialog": {
+        "title": "温馨提示",
+        "loading": "处理中...",
+        "uploading": "图片上传中...",
+        "ok": "确定",
+        "cancel": "取消"
+    },
+    "search": {
+        "hint": "输入商品标题搜索",
+        "cancel": "取消",
+        "history": "最近",
+        "no_data": "没有找到相关商品"
+    },
+    "category": {
+        "0": "NEW",
+        "1": "数码",
+        "2": "玩具",
+        "3": "美妆",
+        "4": "居家",
+        "5": "服装",
+        "6": "图书",
+        "7": "虚拟",
+        "8": "其他"
+    },
+    "product_detail": {
+        "title": "商品详情",
+        "location": "发布于: {location} [{time}]",
+        "price": "价格:  ",
+        "postage": "运费:  ",
+        "favorite": "收藏",
+        "follow": "关注",
+        "comments": "留言",
+        "buy": "购买",
+        "contact": "联系",
+        "is_new": "是否全新:  {value}",
+        "is_returns": "是否可退:  {value}",
+        "true": "是",
+        "false": "否"
+    },
+    "login": {
+        "login_text": "登录",
+        "register_text": "注册",
+        "vcode": "验证码",
+        "vcode_counter": "已发送 {vcode}",
+        "get_vcode": "获取验证码",
+        "phone": "手机号",
+        "phone_invalid": "无效的手机号",
+        "phone_empty": "手机号不能为空",
+        "password": "密码",
+        "password_invalid": "密码至少八个字符，至少包含一个字母和一个数字",
+        "password_empty": "密码不能为空",
+        "vcode_invalid": "请填写6位数字验证码",
+        "recommended": "邀请码（可不填）",
+        "recommended_invalid": "无效的邀请码",
+        "failure": "登录失败",
+        "invalid_ref": "无效的引荐人"
+    },
+    "user_profile": {
+        "recommended": "邀请码:  ",
+        "favorite": "收藏",
+        "follow": "关注",
+        "fans": "粉丝",
+        "mine_publish": "我发布的",
+        "mine_buy": "我买到的",
+        "mine_sell": "我卖出的",
+        "mine_recommended": "我邀请的",
+        "mine_balances": "我的资产",
+        "mine_keys": "我的密钥",
+        "mine_address": "收货地址",
+        "mine_withdrawal": "提现地址",
+        "logout": "退出登录",
+        "user_normal": "普通用户",
+        "user_reviewer": "评审员",
+        "copy": "邀请码已复制到剪贴板",
+        "govern": "治理"
+    },
+    "user_favorite": {
+        "title": "我收藏的"
+    },
+    "photos": {
+        "album": "相册",
+        "camera": "相机",
+        "max_photos": "最多使用{max}张图片",
+        "done": "完成"
+    },
+    "user_edit": {
+        "title": "个人资料",
+        "head": "头像",
+        "nickname": "昵称",
+        "done": "完成",
+        "save_failure": "保存失败"
+    },
+    "permission": {
+        "location": "允许希奇访问您的位置",
+        "album_camera": "允许希奇访问您的相册和相机"
+    },
+    "publish": {
+        "title": "发布商品",
+        "edit_goods": "编辑商品",
+        "desc_hint": "品牌型号，新旧程度，入手渠道，转手原因...",
+        "title_hint": "商品标题",
+        "prices": "价格",
+        "type": "类型",
+        "address": "发货地址",
+        "publish_text": "发布",
+        "desc_empty": "请填写商品描述",
+        "prices_empty": "请填写价格",
+        "type_selector": "选择类型",
+        "address_selector": "发货地址",
+        "photos_selector": "选择图片",
+        "freight": "含运费 {amount}",
+        "none_freight": "包邮",
+        "failure": "发布失败",
+        "is_new": "是否全新",
+        "is_returns": "是否可退"
+    },
+    "number_pad": {
+        "pricing": "价格",
+        "pricing_hint": "0.0000",
+        "freight": "运费",
+        "freight_hint": "0.0000（运费0为包邮）",
+        "done": "确定"
+    },
+    "address_selector": {
+        "cur_address": "您的位置",
+        "change_address": "切换位置",
+        "no_permission": "暂时未获取到您当前的位置信息"
+    },
+    "message": {
+        "consignee_empty": "收货人不能为空",
+        "delete_address": "是否删除该地址",
+        "contact_empty": "请填写联系方式",
+        "phone_invalid": "无效的手机号",
+        "position_empty": "收货地址不能为空",
+        "agree_terms": "请阅读并勾选同意条款",
+        "goods_title_empty": "请填写商品标题",
+        "goods_desc_empty": "请填写商品描述",
+        "goods_title_limit": "商品标题超过最大长度",
+        "goods_desc_limit": "商品描述查过最大长度",
+        "goods_photos_empty": "至少选择一张商品图片",
+        "goods_price_empty": "请填写商品价格",
+        "goods_location_empty": "请选择商品发货地",
+        "goods_re_publish": "重新发布商品将导致商品再次进入审核流程",
+        "goods_del_publish": "确认下架该商品",
+        "address_no_data": "没有收货地址，请点击添加",
+        "order_no_address": "请选择或添加一个收货地址",
+        "password_empty": "请输入密码",
+        "password_error": "密码错误",
+        "request_error": "请求发生异常，请稍候再试",
+        "hint_password": "请输入密码",
+        "successful_operation": "操作成功"
+    },
+    "controller": {
+        "copy_pubkey": "{value} 已复制到剪贴板",
+        "add": "新增",
+        "edit": "编辑",
+        "delete": "删除",
+        "set_default": "设为默认",
+        "complete": "完成",
+        "paste": "粘贴",
+        "apply_reviewer": "确认申请",
+        "re_publish": "重新发布",
+        "del_publish": "下架商品",
+        "confirm_buy": "确认购买",
+        "ok": "确定",
+        "follow": "关注"
+    },
+    "combo_text": {
+        "consignee": "收货人:  {name}",
+        "contact": "联系方式:  {value}",
+        "shipping_address": "收货地址:  {addr}",
+        "user_credit": "信用分:  {amount}",
+        "vote_count": "票数:  {count}",
+        "favorite_count": "收藏数:  {count}",
+        "price": "价格:  {price}",
+        "postage": "运费:  {price}",
+        "seller": "卖家:  {name}",
+        "buyer": "买家:  {name}",
+        "order_no": "订单号:  {oid}",
+        "product_title": "商品:  {title}"
+    },
+    "user_card": {
+        "follow": "关注",
+        "followed": "取消关注"
+    },
+    "user_follow": {
+        "title": "我关注的"
+    },
+    "user_fans": {
+        "title": "我的粉丝"
+    },
+    "user_home": {
+        "other_publish": "他发布的",
+        "other_follow": "他关注的",
+        "other_fans": "他的粉丝",
+        "order_detail": "订单详情"
+    },
+    "user_publish": {
+        "title": "我发布的"
+    },
+    "product_type": {
+        "0": "待审核",
+        "100": "正常",
+        "200": "完成交易",
+        "300": "下架",
+        "400": "锁定"
+    },
+    "user_buys": {
+        "title": "我买到的"
+    },
+    "user_sells": {
+        "title": "我卖出的"
+    },
+    "order_type": {
+        "0": "待付款",
+        "100": "待确认",
+        "200": "已取消",
+        "300": "待发货",
+        "400": "待收货",
+        "500": "待结算",
+        "600": "已完成",
+        "700": "仲裁中",
+        "800": "退货中",
+        "-1": "已过期"
+    },
+    "order_detail": {
+        "title": "订单详情",
+        "total_price": "总计:  ",
+        "address": "收货地址: ",
+        "logistics_info": "物流信息: ",
+        "cancel": "取消订单",
+        "0": "付款",
+        "300": "确认发货",
+        "400": "确认收货",
+        "hint_enter_number": "请输入物流单号",
+        "number_err_msg": "物流单号不能为空",
+        "confirm_prompt": "确认收货后不能发起退货，你确定要收货吗？",
+        "not_logistics": "暂无物流跟踪信息",
+        "copy_ok": "订单号已经复制",
+        "btn_return": "退货",
+        "btn_return_show": "查看退货",
+        "msg_return": "如果需要请尽快联系卖家获得收货地址",
+        "hint_reasons": "请输入退货理由",
+        "msg_reasons_err": "退货理由不能为空",
+        "msg_apply_returns_ok": "你已经成功发起退货，请尽快联系卖家后发出商品",
+        "none": "无"
+    },
+    "returns_detail": {
+        "title": "退货信息",
+        "status": "状态:  ",
+        "reasons": "退货原因:  {reasons}"
+    },
+    "returns_status": {
+        "0": "待发货",
+        "100": "待收货",
+        "200": "已完成",
+        "300": "已取消",
+        "400": "仲裁中"
+    },
+    "user_invited": {
+        "title": "我邀请的"
+    },
+    "user_balances": {
+        "title": "我的资产",
+        "msg_no_withdraw": "此资产不能提现!",
+        "msg_no_empty": "输入的数额不能为空!",
+        "hint_input": "输入提现金额 <= {amount} {symbol}",
+        "msg_input_amount": "请输入合适的数额!",
+        "msg_withdraw_ok": "提现成功，请稍后前往钱包查看!",
+        "msg_no_bind_addr": "请检查是否绑定[{symbol}]了提现地址！"
+    },
+    "user_keys": {
+        "title": "我的密钥",
+        "owner": "所有权公钥",
+        "active": "活动权公钥",
+        "auth": "平台授权公钥",
+        "act_copy_key": "复制私钥"
+    },
+    "user_withdraw_addr": {
+        "title": "提现地址",
+        "edit_title": "编辑提现地址",
+        "hint": "请输入或粘贴提现地址",
+        "hint2": "请输入或粘贴提现地址(目前只支持EOS上的USDT)",
+        "set_error": "设置地址失败，请稍后再试",
+        "msg_not_empty": "提现地址不能为空"
+    },
+    "user_address": {
+        "title": "收货地址",
+        "no_data_address": "没有收货地址",
+        "add_address": "新增收货地址",
+        "edit_address": "编辑收货地址",
+        "consignee": "收货人",
+        "hint_consignee": "请填写收货人",
+        "contact": "联系方式",
+        "hint_contact": "请填写联系方式",
+        "location": "省市区",
+        "hint_location": "请选择省市区",
+        "address": "详细地址",
+        "hint_address": "请填写详细地址",
+        "postcode": "邮编",
+        "hint_postcode": "请填写邮编，默认为000000"
+    },
+    "setting": {
+        "title": "设置",
+        "version": "当前版本",
+        "language": "语言",
+        "theme": "主题",
+        "about": "关于我们",
+        "select_local": "选择语言",
+        "zh_CN": "中文简体",
+        "en_US": "English",
+        "null": "默认",
+        "select_theme": "选择主题",
+        "red": "红色",
+        "green": "绿色",
+        "clean_cache": "清理缓存",
+        "toast_clean_cache": "清理完成"
+    },
+    "govern": {
+        "title": "治理",
+        "vote_reviewer": "评审员",
+        "apply_reviewer": "申请评审员",
+        "audit_product": "审核商品",
+        "proposal": "提案",
+        "arbitration": "仲裁"
+    },
+    "reviewer_list": {
+        "title": "评审员投票",
+        "vote_error": "投票发生异常，请稍候再试",
+        "vote_error_1": "不能为自己投票",
+        "vote_already": "你已经投过票了"
+    },
+    "apply_reviewer": {
+        "title": "申请成为评审员",
+        "agree_terms": "请阅读并勾选同意条款"
+    },
+    "product_review": {
+        "title": "审核产品",
+        "puton": "上架",
+        "pulloff": "下架",
+        "memo_hint": "请输入下架原因",
+        "put_error": "商品状态已经变化，可能已经被其他评审员抢先了"
+    },
+    "order": {
+        "create_order": "购买商品",
+        "address_select": "选择收货地址",
+        "create_pay_info_err": "创建支付信息失败",
+        "create_order_err": "创建订单失败",
+        "price": "价格:  ",
+        "postage": "运费:  "
+    },
+    "pay_confirm": {
+        "order_info": "订单信息",
+        "pay_mode": "支付方式",
+        "btn_pay": "立即支付",
+        "btn_pay_ok": "已支付",
+        "0": "余额",
+        "1": "钱包",
+        "2": "手动支付",
+        "launch_tp_err": "你还没有安装{wallet}",
+        "confirm_title": "订单支付",
+        "pay_success": "支付成功",
+        "label_select_pay": "选择支付方式",
+        "label_pay_addr": "支付地址: ",
+        "label_pay_memo": "支付信息: ",
+        "msg_already_pay": "等待网络确认,请稍后查看订单!",
+        "msg_already_copy_addr": "支付地址已复制到剪贴板",
+        "msg_already_copy_memo": "支付信息已复制到剪贴板"
+    }
+}

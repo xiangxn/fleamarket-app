@@ -186,7 +186,10 @@ Widget buildShipNumber(String shipNum, Map data) {
   if (data == null) {
     return shipNum == null ? Text("") : Text("$shipNum");
   } else {
-    return Text("$shipNum (${data['expName']})");
+    if (data['expName'] == null)
+      return Text("$shipNum");
+    else
+      return Text("$shipNum (${data['expName']})");
   }
 }
 

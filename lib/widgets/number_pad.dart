@@ -1,4 +1,5 @@
 import 'package:bitsflea/common/constant.dart';
+import 'package:bitsflea/common/global.dart';
 import 'package:bitsflea/routes/base.dart';
 import 'package:bitsflea/states/base.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +128,7 @@ class NumberPadProvider extends BaseProvider {
   List<dynamic> get chars => _chars;
   List<dynamic> get btns => _btns;
   NumberPadProvider(BuildContext context, double pricingAmount, double freightAmount, String symbol, List<String> symbolList) : super(context) {
-    _symbolList = symbolList ?? COIN_PRECISION.keys.toList();
+    _symbolList = symbolList ?? Global.coins.keys.toList();
     _symbol = symbol ?? _symbolList[0];
     _inputs = [
       {'text': translate('number_pad.pricing'), 'hint': translate('number_pad.pricing_hint'), 'controller': _pricingController, 'focus': _pricingFocus},

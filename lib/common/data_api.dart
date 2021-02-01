@@ -553,7 +553,7 @@ class DataApi {
   }
 
   Future<BaseReply> transfer(EOSPrivateKey actKey, String from, String to, Holding asset, String memo, {String contract}) async {
-    Map data = {'from': from, 'to': to, 'quantity': "${asset.amount.toStringAsFixed(COIN_PRECISION[asset.currency])} ${asset.currency}", 'memo': memo};
+    Map data = {'from': from, 'to': to, 'quantity': "${asset.amount.toStringAsFixed(Global.coins[asset.currency].precision)} ${asset.currency}", 'memo': memo};
     return await _putAction(actKey, from, "transfer", data, contract: contract);
   }
 

@@ -13,6 +13,7 @@ import 'package:eosdart/eosdart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:convert/convert.dart';
 
 import 'confirm_password.dart';
 
@@ -214,13 +215,14 @@ class PayConfirmProvider extends BaseProvider {
     if (payInfo.balance >= payInfo.amount) {
       _availablePayModes.add(this.translate("pay_confirm.0"));
     }
-    switch (payInfo.symbol) {
-      case "NULS":
+    switch (payInfo.chain) {
+      case "nuls":
         _availablePayModes.add("Nabox");
         _availablePayModes.add("HebeWallet");
         break;
-      case "EOS":
-      case "USDT":
+      case "eos":
+      case "heco":
+      case "bsc":
         _availablePayModes.add("TokenPocket");
         break;
       default:
@@ -230,17 +232,26 @@ class PayConfirmProvider extends BaseProvider {
   }
 
   String getManualPayAddr() {
-    if (this._isIBCTransfer(payInfo.symbol)) {
+    if (this._isIBCTransfer(payInfo.chain)) {
       return Global.config.bosIBCContract;
     }
     return payInfo.payAddr;
   }
 
   String getManualPayMemo() {
-    if (this._isIBCTransfer(payInfo.symbol)) {
+    // print(payInfo);
+    if (this._isIBCTransfer(payInfo.chain)) {
       return "${payInfo.payAddr}@bos p:${payInfo.orderid}";
+    } else {
+      switch (payInfo.chain) {
+        case "eth":
+        case "heco":
+        case "bsc":
+          return "0x" + hex.encode(utf8.encode("p:${payInfo.orderid}"));
+        default:
+          return "p:${payInfo.orderid}";
+      }
     }
-    return "p:${payInfo.orderid}";
   }
 
   Future<void> onSelected(String payMode) async {
@@ -261,29 +272,6 @@ class PayConfirmProvider extends BaseProvider {
     Global.console("payInfo: $payInfo");
     pageController.animateToPage(0, duration: new Duration(milliseconds: 300), curve: Curves.decelerate);
     notifyListeners();
-  }
-
-  String _getChain(String symbol) {
-    String chain = "bos";
-    switch (symbol) {
-      case "ETH":
-        chain = "eth";
-        break;
-      case "USDT":
-      case "EOS":
-        chain = "eos";
-        break;
-      case "NULS":
-        chain = "nuls";
-        break;
-      case "BTS":
-        chain = "bts";
-        break;
-      default:
-        chain = "bos";
-        break;
-    }
-    return chain;
   }
 
   void changePage(int newIndex) {
@@ -321,16 +309,17 @@ class PayConfirmProvider extends BaseProvider {
   }
 
   Future<void> _walletPay() async {
-    switch (payInfo.symbol) {
-      case "NULS":
+    switch (payInfo.chain) {
+      case "nuls":
         if (this.selectedPayMode == "Nabox") {
           await _doNabox();
         } else {
           await _doHebeWallet();
         }
         break;
-      case "EOS":
-      case "USDT":
+      case "eos":
+      case "heco":
+      case "bsc":
         await _doTokenPocket();
         break;
       default:
@@ -416,11 +405,10 @@ class PayConfirmProvider extends BaseProvider {
     }
   }
 
-  bool _isIBCTransfer(String symbol) {
+  bool _isIBCTransfer(String chain) {
     bool flag = false;
-    switch (symbol) {
-      case "USDT":
-      case "EOS":
+    switch (chain) {
+      case "eos":
         flag = true;
         break;
       default:
@@ -431,21 +419,23 @@ class PayConfirmProvider extends BaseProvider {
 
   Future<void> _doTokenPocket() async {
     TokenPocket tp = TokenPocket();
-    tp.blockchain = this._getChain(_payInfo.symbol);
+    tp.blockchain = _payInfo.chain;
     tp.contract = this._getContract(_payInfo.symbol);
-    if (this._isIBCTransfer(_payInfo.symbol)) {
+    if (this._isIBCTransfer(_payInfo.chain)) {
       tp.to = Global.config.bosIBCContract;
-      tp.memo = "${_payInfo.payAddr}@bos p:${_payInfo.orderid}";
+      // tp.memo = "${_payInfo.payAddr}@bos p:${_payInfo.orderid}";
     } else {
       tp.to = _payInfo.payAddr;
-      tp.memo = "p:${_payInfo.orderid}";
+      // tp.memo = "p:${_payInfo.orderid}";
     }
+    tp.memo = getManualPayMemo();
     tp.amount = _payInfo.amount;
     tp.symbol = _payInfo.symbol;
-    tp.precision = COIN_PRECISION[_payInfo.symbol];
+    tp.precision = Global.coins[_payInfo.symbol].precision;
     tp.expired = (DateTime.now().add(Duration(minutes: 5)).millisecondsSinceEpoch / 1000).toString();
     tp.desc = translate("pay_confirm.confirm_title");
     String param = jsonEncode(tp);
+    Global.console(param);
     param = Uri.encodeComponent(param);
     String url = 'tpoutside://pull.activity?param=$param';
     bool isOk = await launch(url);

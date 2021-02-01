@@ -276,11 +276,11 @@ class PublishProvider extends BaseProvider {
   }
 
   get pricingAmount {
-    return _pricingAmount.toStringAsFixed(COIN_PRECISION[_symbol]);
+    return _pricingAmount.toStringAsFixed(Global.coins[_symbol].precision);
   }
 
   get freightAmount {
-    return _freightAmount.toStringAsFixed(COIN_PRECISION[_symbol]);
+    return _freightAmount.toStringAsFixed(Global.coins[_symbol].precision);
   }
 
   get titleLimit => 20;
@@ -298,13 +298,10 @@ class PublishProvider extends BaseProvider {
 
   List<String> get symbols => _symbols;
 
-  Future<void> fetchCoins() async {
-    final coins = await api.getCoins();
+  void fetchCoins() {
     _symbols.clear();
-    coins.forEach((e) {
-      if (e["sym"] == "4,CNY" && Global.config.showCNY == false) return;
-      _symbols.add(e["sym"].split(",")[1]);
-    });
+    _symbols = Global.coins.keys.toList();
+    _symbols.sort();
   }
 
   _checkPrice(String price) {
@@ -334,7 +331,7 @@ class PublishProvider extends BaseProvider {
   _init() async {
     setBusy();
     await fetchCategories();
-    await fetchCoins();
+    fetchCoins();
     if (_product.productId != 0) {
       _isUpdate = true;
       final result = await api.fetchProductInfo(_product.productId);
@@ -349,7 +346,7 @@ class PublishProvider extends BaseProvider {
     } else {
       _pricingAmount = 0;
       _freightAmount = 0;
-      _symbol = COIN_PRECISION.keys.first;
+      _symbol = _symbols[0];
     }
 
     _titleController.text = _product.title ?? '';

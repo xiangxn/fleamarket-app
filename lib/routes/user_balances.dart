@@ -66,7 +66,7 @@ class UserBalancesProvider extends BaseProvider {
 
   Future<void> withdraw(Holding asset) async {
     if (asset.amount <= 0) return;
-    bool withdrawable = COIN_WITHDRAWABLE.any((element) => element == asset.currency);
+    bool withdrawable = Global.coins[asset.currency].isOut;
     if (withdrawable == false) {
       this.showToast(this.translate("user_balances.msg_no_withdraw"));
       return;
