@@ -155,6 +155,8 @@ const Product$json = const {
     },
     const {'1': 'stockCount', '3': 17, '4': 1, '5': 13, '10': 'stockCount'},
     const {'1': 'isRetail', '3': 18, '4': 1, '5': 8, '10': 'isRetail'},
+    const {'1': 'width', '3': 19, '4': 1, '5': 13, '10': 'width'},
+    const {'1': 'height', '3': 20, '4': 1, '5': 13, '10': 'height'},
   ],
 };
 

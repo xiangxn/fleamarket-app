@@ -279,20 +279,20 @@ class DataApi {
   Future<BaseReply> fetchProductList(int categoryId, int pageNo, int pageSize, {int userid = 0}) async {
     String query = "{productByCid(categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
     if (userid > 0) query = "{productByCid(userid:$userid,categoryId:$categoryId,pageNo:$pageNo,pageSize:$pageSize)";
-    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{userid,head,nickname},photos,category{cid}}}}";
+    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,width,height,seller{userid,head,nickname},photos,category{cid}}}}";
     return await _search(query);
   }
 
   Future<BaseReply> getProductsByPublisher(int userid, int pageNo, int pageSize) async {
     String query = "{productByPublisher(userid:$userid,pageNo:$pageNo,pageSize:$pageSize)";
-    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{userid,head,nickname},photos}}}";
+    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,width,height,seller{userid,head,nickname},photos}}}";
     return await _search(query);
   }
 
   Future<BaseReply> searchProductByTitle(String title, int pageNo, int pageSize, {int userid = 0}) async {
     String query = "{productByTitle(title:\"$title\",pageNo:$pageNo,pageSize:$pageSize)";
     if (userid > 0) query = "{productByTitle(userid:$userid,title:\"$title\",pageNo:$pageNo,pageSize:$pageSize)";
-    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,seller{userid,head,nickname},photos}}}";
+    query += "{pageNo,pageSize,totalCount,list{productId,title,price,collections,width,height,seller{userid,head,nickname},photos}}}";
     return await _search(query);
   }
 
@@ -300,7 +300,7 @@ class DataApi {
     String query = "{products(productId:$productId){edges{node{";
     query +=
         "productId,title,status,isNew,isReturns,transMethod,postage,position,releaseTime,description,photos,collections,price,saleMethod,stockCount,isRetail,";
-    query += "category{cid,view},";
+    query += "category{cid,view},width,height,";
     query += "seller{userid,head,nickname,eosid}";
     query += "}}}}";
     return await _search(query);
@@ -339,7 +339,7 @@ class DataApi {
   Future<BaseReply> fetchFavoriteByUser(int userid, int pageNo, int pageSize) async {
     String query = "{favoriteByUser(userid:$userid, pageNo:$pageNo, pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "product{productId,title,price,collections,seller{head,nickname},photos}";
+    query += "product{productId,title,price,collections,width,height,seller{head,nickname},photos}";
     query += "}}}";
     return await _search(query);
   }
@@ -356,7 +356,7 @@ class DataApi {
   Future<BaseReply> fetchPublishByUser(int userid, int pageNo, int pageSize) async {
     String query = "{productByPublisher(userid:$userid, pageNo:$pageNo, pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "productId,title,price,postage,collections,seller{head,nickname},photos,status";
+    query += "productId,title,price,postage,collections,width,height,seller{head,nickname},photos,status";
     query += "}}}";
     return await _search(query);
   }
@@ -364,7 +364,7 @@ class DataApi {
   Future<BaseReply> fetchProductByStatus(int status, int ignoreUid, int pageNo, int pageSize) async {
     String query = "{productByStatus(status:$status, ignoreUid:$ignoreUid, pageNo:$pageNo, pageSize:$pageSize)";
     query += "{pageNo,pageSize,totalCount,list{";
-    query += "productId,title,price,postage,collections,seller{head,nickname},photos,status";
+    query += "productId,title,price,postage,collections,width,height,seller{head,nickname},photos,status";
     query += "}}}";
     return await _search(query);
   }
@@ -385,7 +385,7 @@ class DataApi {
     query += "{pageNo,pageSize,totalCount,list{";
     query += "oid,orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,toAddr,";
-    query += "productInfo{productId,title,photos,price,postage,isReturns,category{cid}}";
+    query += "productInfo{productId,title,photos,price,postage,isReturns,width,height,category{cid}}";
     query += "}}}";
     return await _search(query);
   }
@@ -395,7 +395,7 @@ class DataApi {
     query += "{pageNo,pageSize,totalCount,list{";
     query += "oid,orderid,buyer{userid,nickname,head},seller{userid,nickname,head},status,price,postage,payAddr,shipNum,createTime,payTime,payOutTime,";
     query += "shipTime,shipOutTime,receiptTime,receiptOutTime,endTime,delayedCount,toAddr,";
-    query += "productInfo{productId,title,photos,price,postage,isReturns,category{cid}}";
+    query += "productInfo{productId,title,photos,price,postage,isReturns,width,height,category{cid}}";
     query += "}}}";
     return await _search(query);
   }

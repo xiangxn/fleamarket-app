@@ -31,20 +31,22 @@ class UserCardGroup extends StatelessWidget {
                     onRefresh: () => provider.fetch(isRefresh: true),
                     onLoad: () => provider.fetch(load: true),
                     hasMore: () => provider.page.hasMore(),
-                    child: ListView.builder(
-                        controller: controller,
-                        // physics: ClampingScrollPhysics(),
-                        itemCount: provider.page.data.length,
-                        itemBuilder: (_, i) => Selector<UserCardGroupProvider, User>(
-                              selector: (_, provider) => provider.page.data[i],
-                              builder: (_, user, __) {
-                                return UserCard(
-                                  key: randomKey(),
-                                  user: user,
-                                  updateUser: provider.updateUser,
-                                );
-                              },
-                            )),
+                    child: provider.page.data.length < 1
+                        ? buildNoData(provider)
+                        : ListView.builder(
+                            controller: controller,
+                            // physics: ClampingScrollPhysics(),
+                            itemCount: provider.page.data.length,
+                            itemBuilder: (_, i) => Selector<UserCardGroupProvider, User>(
+                                  selector: (_, provider) => provider.page.data[i],
+                                  builder: (_, user, __) {
+                                    return UserCard(
+                                      key: randomKey(),
+                                      user: user,
+                                      updateUser: provider.updateUser,
+                                    );
+                                  },
+                                )),
                   );
                 } else {
                   return loading;

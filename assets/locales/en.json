@@ -8,10 +8,10 @@
         "cancel": "取消"
     },
     "search": {
-        "hint": "输入商品标题搜索",
+        "hint": "输入宝贝标题搜索",
         "cancel": "取消",
         "history": "最近",
-        "no_data": "没有找到相关商品"
+        "no_data": "没有找到相关宝贝"
     },
     "category": {
         "0": "NEW",
@@ -25,14 +25,14 @@
         "8": "其他"
     },
     "product_detail": {
-        "title": "商品详情",
+        "title": "宝贝详情",
         "location": "发布于: {location} [{time}]",
-        "price": "价格:  ",
+        "price": "兑换:  ",
         "postage": "运费:  ",
         "favorite": "收藏",
         "follow": "关注",
         "comments": "留言",
-        "buy": "购买",
+        "buy": "兑换",
         "contact": "联系",
         "is_new": "是否全新:  {value}",
         "is_returns": "是否可退:  {value}",
@@ -97,15 +97,15 @@
         "album_camera": "允许希奇访问您的相册和相机"
     },
     "publish": {
-        "title": "发布商品",
-        "edit_goods": "编辑商品",
+        "title": "发布宝贝",
+        "edit_goods": "编辑宝贝",
         "desc_hint": "品牌型号，新旧程度，入手渠道，转手原因...",
-        "title_hint": "商品标题",
-        "prices": "价格",
+        "title_hint": "宝贝标题",
+        "prices": "兑换",
         "type": "类型",
         "address": "发货地址",
         "publish_text": "发布",
-        "desc_empty": "请填写商品描述",
+        "desc_empty": "请填写宝贝描述",
         "prices_empty": "请填写价格",
         "type_selector": "选择类型",
         "address_selector": "发货地址",
@@ -135,15 +135,15 @@
         "phone_invalid": "无效的手机号",
         "position_empty": "收货地址不能为空",
         "agree_terms": "请阅读并勾选同意条款",
-        "goods_title_empty": "请填写商品标题",
-        "goods_desc_empty": "请填写商品描述",
-        "goods_title_limit": "商品标题超过最大长度",
-        "goods_desc_limit": "商品描述查过最大长度",
-        "goods_photos_empty": "至少选择一张商品图片",
-        "goods_price_empty": "请填写商品价格",
-        "goods_location_empty": "请选择商品发货地",
-        "goods_re_publish": "重新发布商品将导致商品再次进入审核流程",
-        "goods_del_publish": "确认下架该商品",
+        "goods_title_empty": "请填写宝贝标题",
+        "goods_desc_empty": "请填写宝贝描述",
+        "goods_title_limit": "宝贝标题超过最大长度",
+        "goods_desc_limit": "宝贝描述查过最大长度",
+        "goods_photos_empty": "至少选择一张宝贝图片",
+        "goods_price_empty": "请填写宝贝价格",
+        "goods_location_empty": "请选择宝贝发货地",
+        "goods_re_publish": "重新发布宝贝将导致宝贝再次进入审核流程",
+        "goods_del_publish": "确认下架该宝贝",
         "address_no_data": "没有收货地址，请点击添加",
         "order_no_address": "请选择或添加一个收货地址",
         "password_empty": "请输入密码",
@@ -162,8 +162,8 @@
         "paste": "粘贴",
         "apply_reviewer": "确认申请",
         "re_publish": "重新发布",
-        "del_publish": "下架商品",
-        "confirm_buy": "确认购买",
+        "del_publish": "下架宝贝",
+        "confirm_buy": "确认兑换",
         "ok": "确定",
         "follow": "关注"
     },
@@ -174,12 +174,13 @@
         "user_credit": "信用分:  {amount}",
         "vote_count": "票数:  {count}",
         "favorite_count": "收藏数:  {count}",
-        "price": "价格:  {price}",
+        "price": "兑换:  {price}",
         "postage": "运费:  {price}",
         "seller": "卖家:  {name}",
         "buyer": "买家:  {name}",
         "order_no": "订单号:  {oid}",
-        "product_title": "商品:  {title}"
+        "product_title": "宝贝:  {title}",
+        "no_data": "暂无数据"
     },
     "user_card": {
         "follow": "关注",
@@ -244,7 +245,7 @@
         "msg_return": "如果需要请尽快联系卖家获得收货地址",
         "hint_reasons": "请输入退货理由",
         "msg_reasons_err": "退货理由不能为空",
-        "msg_apply_returns_ok": "你已经成功发起退货，请尽快联系卖家后发出商品",
+        "msg_apply_returns_ok": "你已经成功发起退货，请尽快联系卖家后发出宝贝",
         "none": "无"
     },
     "returns_detail": {
@@ -322,7 +323,7 @@
         "title": "治理",
         "vote_reviewer": "评审员",
         "apply_reviewer": "申请评审员",
-        "audit_product": "审核商品",
+        "audit_product": "审核宝贝",
         "proposal": "提案",
         "arbitration": "仲裁"
     },
@@ -337,18 +338,18 @@
         "agree_terms": "请阅读并勾选同意条款"
     },
     "product_review": {
-        "title": "审核产品",
+        "title": "审核宝贝",
         "puton": "上架",
         "pulloff": "下架",
         "memo_hint": "请输入下架原因",
-        "put_error": "商品状态已经变化，可能已经被其他评审员抢先了"
+        "put_error": "宝贝状态已经变化，可能已经被其他评审员抢先了"
     },
     "order": {
-        "create_order": "购买商品",
+        "create_order": "兑换宝贝",
         "address_select": "选择收货地址",
         "create_pay_info_err": "创建支付信息失败",
         "create_order_err": "创建订单失败",
-        "price": "价格:  ",
+        "price": "兑换:  ",
         "postage": "运费:  "
     },
     "pay_confirm": {

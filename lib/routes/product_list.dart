@@ -43,9 +43,17 @@ class _ProductList extends State<ProductList> {
     );
   }
 
+  double _calcHeight(Size size, int imgWidth, int imgHeight) {
+    double rato = ((size.width - 12 - 12 - 10) / 2) / imgWidth;
+    double h = imgHeight * rato;
+    if (h < 50) h = 50;
+    return h;
+  }
+
   @override
   Widget build(BuildContext context) {
     print("product_list build ******** ");
+    final size = MediaQuery.of(context).size;
     return BaseWidget<ProductListProvider>(
       model: ProductListProvider(context, widget.productPage, onGetData: widget.onGetData),
       builder: (ctx, provider, child) {
@@ -72,7 +80,7 @@ class _ProductList extends State<ProductList> {
                       getIPFSUrl(product.photos[0]),
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                       onTap: () => provider.toDetail(i),
-                      height: 260,
+                      height: _calcHeight(size, product.width, product.height),
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(8, 8, 8, 0),

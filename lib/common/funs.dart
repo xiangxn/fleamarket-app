@@ -125,6 +125,14 @@ String getIPFSUrl(String path) {
   return path.startsWith("http://") || path.startsWith("https://") ? path : Global.config.ipfsGateway + path;
 }
 
+Widget buildNoData(BaseProvider provider) {
+  return Center(
+    child: Container(
+      child: Text(provider.translate('combo_text.no_data')),
+    ),
+  );
+}
+
 Widget buildReturnStatus(BaseProvider provider, ProReturn pr) {
   if (pr == null) return Text("");
   Color color = Colors.black;

@@ -55,67 +55,72 @@ class ProductReviewListRoute extends StatelessWidget {
                 future: provider.fetchProducts(isRefresh: true),
                 builder: (ctx, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    return ListView.builder(
-                        // physics: ClampingScrollPhysics(),
-                        itemCount: provider.productPage.data?.length ?? 0,
-                        itemBuilder: (_, i) {
-                          return Selector<ProductReviewListProvider, Product>(
-                            selector: (ctx, provider) => provider.productPage.data[i],
-                            builder: (ctx, product, _) {
-                              return InkWell(
-                                  onTap: () => provider.toEdit(i, product),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 4),
-                                    child: Card(
-                                        elevation: 0,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(16),
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Padding(
-                                                      padding: EdgeInsets.only(right: 10),
-                                                      child: SizedBox(
-                                                        width: 70,
-                                                        height: 70,
-                                                        child: ExtNetworkImage(getIPFSUrl(product.photos[0]),
-                                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4))),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                        child: Container(
-                                                            child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                    int itemCount = provider.productPage.data?.length ?? 0;
+                    return itemCount < 1
+                        ? buildNoData(provider)
+                        : ListView.builder(
+                            // physics: ClampingScrollPhysics(),
+                            itemCount: itemCount,
+                            itemBuilder: (_, i) {
+                              return Selector<ProductReviewListProvider, Product>(
+                                selector: (ctx, provider) => provider.productPage.data[i],
+                                builder: (ctx, product, _) {
+                                  return InkWell(
+                                      onTap: () => provider.toEdit(i, product),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 4),
+                                        child: Card(
+                                            elevation: 0,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(16),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Row(
                                                       children: <Widget>[
-                                                        Text(product.title, overflow: TextOverflow.ellipsis, maxLines: 1),
-                                                        Text(provider.translate('combo_text.price', translationParams: {"price": formatPrice2(product.price)}),
-                                                            style: style.smallFont),
-                                                        Text(
-                                                            provider
-                                                                .translate('combo_text.postage', translationParams: {"price": formatPrice2(product.postage)}),
-                                                            style: style.smallFont),
-                                                        Text(
-                                                          provider.translate('combo_text.favorite_count',
-                                                              translationParams: {"count": product.collections.toString()}),
-                                                          style: style.smallFont,
-                                                        )
+                                                        Padding(
+                                                          padding: EdgeInsets.only(right: 10),
+                                                          child: SizedBox(
+                                                            width: 70,
+                                                            height: 70,
+                                                            child: ExtNetworkImage(getIPFSUrl(product.photos[0]),
+                                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4))),
+                                                          ),
+                                                        ),
+                                                        Expanded(
+                                                            child: Container(
+                                                                child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(product.title, overflow: TextOverflow.ellipsis, maxLines: 1),
+                                                            Text(
+                                                                provider
+                                                                    .translate('combo_text.price', translationParams: {"price": formatPrice2(product.price)}),
+                                                                style: style.smallFont),
+                                                            Text(
+                                                                provider.translate('combo_text.postage',
+                                                                    translationParams: {"price": formatPrice2(product.postage)}),
+                                                                style: style.smallFont),
+                                                            Text(
+                                                              provider.translate('combo_text.favorite_count',
+                                                                  translationParams: {"count": product.collections.toString()}),
+                                                              style: style.smallFont,
+                                                            )
+                                                          ],
+                                                        )))
                                                       ],
-                                                    )))
-                                                  ],
-                                                ),
+                                                    ),
+                                                  ),
+                                                  _buildStatus(provider, product.status)
+                                                ],
                                               ),
-                                              _buildStatus(provider, product.status)
-                                            ],
-                                          ),
-                                        )),
-                                  ));
-                            },
-                          );
-                        });
+                                            )),
+                                      ));
+                                },
+                              );
+                            });
                   }
                   return loading;
                 },

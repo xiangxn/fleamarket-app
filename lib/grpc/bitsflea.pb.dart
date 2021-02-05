@@ -808,6 +808,8 @@ class Product extends $pb.GeneratedMessage {
     ..a<$core.int>(17, 'stockCount', $pb.PbFieldType.OU3,
         protoName: 'stockCount')
     ..aOB(18, 'isRetail', protoName: 'isRetail')
+    ..a<$core.int>(19, 'width', $pb.PbFieldType.OU3)
+    ..a<$core.int>(20, 'height', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   Product._() : super();
@@ -1041,6 +1043,30 @@ class Product extends $pb.GeneratedMessage {
   $core.bool hasIsRetail() => $_has(17);
   @$pb.TagNumber(18)
   void clearIsRetail() => clearField(18);
+
+  @$pb.TagNumber(19)
+  $core.int get width => $_getIZ(18);
+  @$pb.TagNumber(19)
+  set width($core.int v) {
+    $_setUnsignedInt32(18, v);
+  }
+
+  @$pb.TagNumber(19)
+  $core.bool hasWidth() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearWidth() => clearField(19);
+
+  @$pb.TagNumber(20)
+  $core.int get height => $_getIZ(19);
+  @$pb.TagNumber(20)
+  set height($core.int v) {
+    $_setUnsignedInt32(19, v);
+  }
+
+  @$pb.TagNumber(20)
+  $core.bool hasHeight() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearHeight() => clearField(20);
 }
 
 class Auction extends $pb.GeneratedMessage {
