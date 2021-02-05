@@ -223,6 +223,7 @@ class PayConfirmProvider extends BaseProvider {
       case "eos":
       case "heco":
       case "bsc":
+      case "bos":
         _availablePayModes.add("TokenPocket");
         break;
       default:
