@@ -2883,6 +2883,8 @@ class PayInfo extends $pb.GeneratedMessage {
     ..a<$core.int>(7, 'payMode', $pb.PbFieldType.OU3, protoName: 'payMode')
     ..a<$core.double>(8, 'balance', $pb.PbFieldType.OD)
     ..aOS(9, 'chain')
+    ..aOS(10, 'coinAddr', protoName: 'coinAddr')
+    ..a<$core.int>(11, 'precision', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   PayInfo._() : super();
@@ -3013,6 +3015,30 @@ class PayInfo extends $pb.GeneratedMessage {
   $core.bool hasChain() => $_has(8);
   @$pb.TagNumber(9)
   void clearChain() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.String get coinAddr => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set coinAddr($core.String v) {
+    $_setString(9, v);
+  }
+
+  @$pb.TagNumber(10)
+  $core.bool hasCoinAddr() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearCoinAddr() => clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.int get precision => $_getIZ(10);
+  @$pb.TagNumber(11)
+  set precision($core.int v) {
+    $_setUnsignedInt32(10, v);
+  }
+
+  @$pb.TagNumber(11)
+  $core.bool hasPrecision() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearPrecision() => clearField(11);
 }
 
 class PayInfoRequest extends $pb.GeneratedMessage {

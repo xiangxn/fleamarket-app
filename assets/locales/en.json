@@ -353,10 +353,11 @@
         "postage": "运费:  "
     },
     "pay_confirm": {
-        "order_info": "订单信息",
+        "order_info": "订单信息: ",
         "pay_mode": "支付方式",
         "btn_pay": "立即支付",
         "btn_pay_ok": "已支付",
+        "btn_approve": "授权",
         "0": "余额",
         "1": "钱包",
         "2": "手动支付",
@@ -368,6 +369,7 @@
         "label_pay_memo": "支付信息: ",
         "msg_already_pay": "等待网络确认,请稍后查看订单!",
         "msg_already_copy_addr": "支付地址已复制到剪贴板",
-        "msg_already_copy_memo": "支付信息已复制到剪贴板"
+        "msg_already_copy_memo": "支付信息已复制到剪贴板",
+        "msg_approve": "{symbol} 授权"
     }
 }

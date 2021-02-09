@@ -16,6 +16,8 @@ class TokenPocket {
   String desc;
   String expired;
   String callbackSchema = "bitsflea://";
+  String actions = "";
+  Map txData;
 
   TokenPocket();
 
@@ -37,6 +39,8 @@ class TokenPocket {
     this.desc = json['desc'];
     this.expired = json['expired'];
     this.callbackSchema = json['callbackSchema'];
+    this.actions = json['actions'];
+    this.txData = json['txData'];
   }
 
   Map toJson() {
@@ -57,7 +61,9 @@ class TokenPocket {
       "memo": this.memo,
       "desc": this.desc,
       "expired": this.expired,
-      "callbackSchema": this.callbackSchema
+      "callbackSchema": this.callbackSchema,
+      "actions": this.actions,
+      "txData": this.txData
     };
   }
 }

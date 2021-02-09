@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:bitsflea/common/constant.dart';
 import 'package:bitsflea/common/funs.dart';
@@ -118,6 +119,15 @@ class PayConfirm extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
+                              Offstage(
+                                  offstage: !model.authRequired,
+                                  child: CustomButton(
+                                    onTap: model.approve,
+                                    margin: EdgeInsets.only(left: 8, top: 8, right: 8),
+                                    padding: EdgeInsets.all(16),
+                                    color: Colors.green,
+                                    text: model.translate("pay_confirm.btn_approve"),
+                                  )),
                               CustomButton(
                                 onTap: model.onProc,
                                 margin: EdgeInsets.only(left: 8, top: 8, right: 8),
@@ -201,6 +211,10 @@ class PayConfirmProvider extends BaseProvider {
 
   bool get isBalance => selectedPayMode == this.translate("pay_confirm.0");
 
+  bool get authRequired {
+    return this._payInfo.coinAddr != null && this._payInfo.coinAddr.isNotEmpty && !isManual;
+  }
+
   void onCopyPayAddr() {
     Clipboard.setData(ClipboardData(text: this.getManualPayAddr()));
     this.showToast(translate('pay_confirm.msg_already_copy_addr'));
@@ -248,7 +262,11 @@ class PayConfirmProvider extends BaseProvider {
         case "eth":
         case "heco":
         case "bsc":
-          return "0x" + hex.encode(utf8.encode("p:${payInfo.orderid}"));
+          if (_payInfo.coinAddr != null && _payInfo.coinAddr.isNotEmpty)
+            return payInfo.orderid;
+          else
+            return "0x" + hex.encode(utf8.encode("p:${payInfo.orderid}"));
+          break;
         default:
           return "p:${payInfo.orderid}";
       }
@@ -296,6 +314,10 @@ class PayConfirmProvider extends BaseProvider {
     return contract;
   }
 
+  approve() async {
+    await _doERC20Approve();
+  }
+
   onProc() async {
     if (this.selectedPayMode == this.translate("pay_confirm.0")) {
       //合约主网支付
@@ -319,9 +341,16 @@ class PayConfirmProvider extends BaseProvider {
         }
         break;
       case "eos":
+        await _doTokenPocket();
+        break;
+      case "eth":
       case "heco":
       case "bsc":
-        await _doTokenPocket();
+        if (_payInfo.coinAddr != null && _payInfo.coinAddr.isNotEmpty) {
+          await _doERC20Pay();
+        } else {
+          await _doTokenPocket();
+        }
         break;
       default:
         break;
@@ -416,6 +445,85 @@ class PayConfirmProvider extends BaseProvider {
         break;
     }
     return flag;
+  }
+
+  Future<void> _doERC20Approve() async {
+    TokenPocket tp = TokenPocket();
+    String spender = "000000000000000000000000${_payInfo.payAddr.toLowerCase().substring(2)}";
+    String amount = (_payInfo.amount * pow(10, _payInfo.precision)).toInt().toRadixString(16);
+    while (amount.length < 64) {
+      amount = "0" + amount;
+    }
+    Map tp2 = {
+      "protocol": tp.protocol,
+      "blockchain": _payInfo.chain,
+      "version": tp.version,
+      "dappName": tp.dappName,
+      "dappIcon": tp.dappIcon,
+      "action": "pushTransaction",
+      "desc": translate("pay_confirm.msg_approve", translationParams: {"symbol": _payInfo.symbol}),
+      "txData": {
+        // "from": "0x40e5A542087FA4b966209707177b103d158Fd3A4",
+        // "gasPrice": "0x6c088e200",
+        // "gas": "0xea60",
+        // "chainId": "56",
+        "to": _payInfo.coinAddr,
+        "data": "0x095ea7b3$spender$amount"
+      }
+    };
+    String param = jsonEncode(tp2);
+    Global.console(param);
+    param = Uri.encodeComponent(param);
+    Global.console(param);
+    String url = 'tpoutside://pull.activity?param=$param';
+    bool isOk = await launch(url);
+    if (isOk == false) {
+      this.showToast(translate("pay_confirm.launch_tp_err", translationParams: {'wallet': this.selectedPayMode}));
+    }
+  }
+
+  Future<void> _doERC20Pay() async {
+    TokenPocket tp = TokenPocket();
+    String orderId = hex.encode(utf8.encode("${payInfo.orderid}"));
+    while (orderId.length < 64) {
+      orderId = "0" + orderId;
+    }
+    String amount = (_payInfo.amount * pow(10, _payInfo.precision)).toInt().toRadixString(16);
+    while (amount.length < 64) {
+      amount = "0" + amount;
+    }
+    String symbol = hex.encode(utf8.encode("${payInfo.symbol}"));
+    while (symbol.length < 64) {
+      symbol = "0" + symbol;
+    }
+    Map tp2 = {
+      "protocol": tp.protocol,
+      "blockchain": _payInfo.chain,
+      "version": tp.version,
+      "dappName": tp.dappName,
+      "dappIcon": tp.dappIcon,
+      "action": "pushTransaction",
+      "desc": translate("pay_confirm.confirm_title"),
+      "txData": {
+        // "from": "0x40e5A542087FA4b966209707177b103d158Fd3A4",
+        // "gasPrice": "0x6c088e200",
+        // "gas": "0xea60",
+        // "chainId": "56",
+        "to": _payInfo.payAddr,
+        "data": "0xdfc14c02$orderId$amount$symbol"
+      }
+    };
+    String param = jsonEncode(tp2);
+    Global.console(param);
+    param = Uri.encodeComponent(param);
+    Global.console(param);
+    String url = 'tpoutside://pull.activity?param=$param';
+    bool isOk = await launch(url);
+    if (isOk == false) {
+      this.showToast(translate("pay_confirm.launch_tp_err", translationParams: {'wallet': this.selectedPayMode}));
+    } else {
+      this.showToast(this.translate("pay_confirm.msg_already_pay")).then((value) => this.pop(false));
+    }
   }
 
   Future<void> _doTokenPocket() async {
